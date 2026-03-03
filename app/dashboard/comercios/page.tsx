@@ -1,0 +1,304 @@
+"use client"
+
+import { useState, useEffect, useRef } from "react"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Search, MapPin, Star, Phone, MessageSquare, Store, ArrowRight, BarChart3 } from "lucide-react"
+import Link from "next/link"
+import { useAuth } from "@/lib/auth-context"
+import { useCommerceAnalytics } from "@/hooks/use-commerce-analytics"
+import { SectionIntroBanner } from "@/components/ui/section-intro-banner"
+
+const categories = ["Todos", "Gastronom\u00eda", "Almac\u00e9n", "Salud", "Belleza", "Construcci\u00f3n", "Automotriz"]
+
+const commerces = [
+  {
+    id: "1",
+    name: "Almac\u00e9n Don Carlos",
+    category: "Almac\u00e9n",
+    logo: "DC",
+    rating: 4.8,
+    reviewCount: 42,
+    description: "Almac\u00e9n de barrio con productos frescos, fiambreria artesanal y reparto a domicilio.",
+    whatsapp: "+5411234567890",
+    phone: "+5411234567890",
+    address: "Av. Hudson 1234, Berazategui",
+    subscribed: true,
+  },
+  {
+    id: "2",
+    name: "Parrilla El Reci\u00e9n Llegado",
+    category: "Gastronom\u00eda",
+    logo: "PR",
+    rating: 4.9,
+    reviewCount: 67,
+    description: "Restaurante de parrilla con cortes premium, empanadas caseras y servicio de catering para eventos.",
+    whatsapp: "+5411345678901",
+    phone: "+5411345678901",
+    address: "Ruta 2 km 38.5, Hudson",
+    subscribed: true,
+  },
+  {
+    id: "3",
+    name: "Veterinaria Hudson",
+    category: "Salud",
+    logo: "VH",
+    rating: 4.7,
+    reviewCount: 31,
+    description: "Atenci\u00f3n veterinaria integral, guardia 24hs, cirug\u00eda, peluquer\u00eda canina y pet shop.",
+    whatsapp: "+5411456789012",
+    phone: "+5411456789012",
+    address: "Calle 43 N\u00b0 567, Hudson",
+    subscribed: true,
+  },
+  {
+    id: "4",
+    name: "Estudio Belleza Natural",
+    category: "Belleza",
+    logo: "BN",
+    rating: 4.6,
+    reviewCount: 28,
+    description: "Peluquer\u00eda, manicura, tratamientos faciales y corporales con productos org\u00e1nicos.",
+    whatsapp: "+5411567890123",
+    phone: "+5411567890123",
+    address: "Av. Mitre 890, Berazategui",
+    subscribed: true,
+  },
+  {
+    id: "5",
+    name: "Corral\u00f3n El Ladrillo",
+    category: "Construcci\u00f3n",
+    logo: "CL",
+    rating: 4.5,
+    reviewCount: 19,
+    description: "Materiales de construcci\u00f3n, herramientas, sanitarios, pinturas y asesoramiento t\u00e9cnico.",
+    whatsapp: "+5411678901234",
+    phone: "+5411678901234",
+    address: "Ruta 36 km 24, Hudson",
+    subscribed: true,
+  },
+  {
+    id: "6",
+    name: "Mec\u00e1nica Integral Auto Sur",
+    category: "Automotriz",
+    logo: "AS",
+    rating: 4.4,
+    reviewCount: 23,
+    description: "Service oficial multimarca, tren delantero, electricidad automotriz y grua 24hs.",
+    whatsapp: "+5411789012345",
+    phone: "+5411789012345",
+    address: "Calle 14 N\u00b0 321, Hudson",
+    subscribed: true,
+  },
+]
+
+export default function ComerciosPage() {
+  const [searchTerm, setSearchTerm] = useState("")
+  const [activeCategory, setActiveCategory] = useState("Todos")
+  const { auth } = useAuth()
+  const { trackSearchImpression, trackWhatsAppClick, trackCallClick } = useCommerceAnalytics()
+  const isResident = auth.accountType === "resident"
+
+  // Track search impressions only once per commerce per session
+  const trackedImpressions = useRef(new Set<string>())
+
+  const filtered = commerces.filter((c) => {
+    const matchesSearch = c.name.toLowerCase().includes(searchTerm.toLowerCase()) || c.description.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchesCat = activeCategory === "Todos" || c.category === activeCategory
+    return matchesSearch && matchesCat
+  })
+
+  // Track impressions for filtered results (deduplicated per session)
+  useEffect(() => {
+    filtered.forEach((c) => {
+      if (!trackedImpressions.current.has(c.id)) {
+        trackSearchImpression(c.id)
+        trackedImpressions.current.add(c.id)
+      }
+    })
+  }, [filtered, trackSearchImpression])
+
+  return (
+    <div className="flex flex-col gap-6 max-w-full">
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <div className="flex items-center gap-2">
+            <Store className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-bold text-foreground">Comercios</h1>
+          </div>
+          <p className="text-sm text-muted-foreground mt-1">{"Gu\u00eda de Comercios de la Zona"}</p>
+        </div>
+        {auth.hasCommerceProfile && (
+          <Button variant="outline" size="sm" asChild className="gap-1.5">
+            <Link href="/dashboard/comercios/panel">
+              <BarChart3 className="h-4 w-4" />
+              Panel de mi comercio
+            </Link>
+          </Button>
+        )}
+      </div>
+
+      <SectionIntroBanner
+        sectionId="comercios"
+        title={"Gu\u00eda de comercios de la zona"}
+        description="Encontr\u00e1 negocios locales verificados cerca tuyo."
+        howItWorks={{
+          title: "\u00bfC\u00f3mo funciona Comercios?",
+          steps: [
+            "Explor\u00e1 el mapa o busc\u00e1 por categor\u00eda.",
+            "Mir\u00e1 las rese\u00f1as de otros vecinos.",
+            "Contact\u00e1 por WhatsApp o llamada directa.",
+            "Dej\u00e1 tu rese\u00f1a despu\u00e9s de tu experiencia.",
+          ],
+        }}
+      />
+
+      {/* Subtle upsell for residents */}
+      {isResident && (
+        <div className="flex items-center justify-between gap-4 rounded-xl border border-dashed border-primary/30 bg-primary/5 px-4 py-3">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+              <Store className="h-4 w-4 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                ¿Ten&eacute;s un comercio en la zona?
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Sumalo a la gu&iacute;a por $9.999/mes y aparec&eacute; en el mapa
+              </p>
+            </div>
+          </div>
+          <Button size="sm" variant="outline" asChild className="shrink-0">
+            <Link href="/dashboard/suscripciones?plan=comercio">
+              Inscribir
+              <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+            </Link>
+          </Button>
+        </div>
+      )}
+
+      {/* Map placeholder */}
+      <div className="relative h-48 overflow-hidden rounded-xl border border-border bg-muted/50 md:h-64">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="grid h-full w-full grid-cols-4 grid-rows-3 gap-px opacity-20">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="bg-border" />
+            ))}
+          </div>
+        </div>
+        {/* Markers */}
+        <div className="absolute top-[20%] left-[30%]"><div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold shadow-lg">DC</div></div>
+        <div className="absolute top-[35%] left-[55%]"><div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold shadow-lg">PR</div></div>
+        <div className="absolute top-[60%] left-[40%]"><div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold shadow-lg">VH</div></div>
+        <div className="absolute top-[25%] left-[75%]"><div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold shadow-lg">BN</div></div>
+        <div className="absolute top-[70%] left-[65%]"><div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold shadow-lg">CL</div></div>
+        <div className="absolute top-[50%] left-[20%]"><div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground text-xs font-bold shadow-lg">AS</div></div>
+        <div className="absolute bottom-3 left-3 rounded-lg bg-card/90 px-3 py-1.5 text-xs font-medium text-foreground backdrop-blur-sm border border-border">
+          <MapPin className="mr-1 inline h-3 w-3 text-primary" />
+          Hudson &ndash; Berazategui
+        </div>
+        <div className="absolute top-3 right-3 rounded-lg bg-card/90 px-3 py-1.5 text-[10px] text-muted-foreground backdrop-blur-sm border border-border">
+          Mapa interactivo (pr\u00f3ximamente)
+        </div>
+      </div>
+
+      {/* Search and filters */}
+      <div className="flex flex-col gap-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            placeholder="Buscar comercio..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                activeCategory === cat
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:bg-muted/80"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Commerce cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {filtered.map((commerce) => {
+          const waUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${commerce.name}, los contacto desde VECINDO.`)}`
+          return (
+            <div
+              key={commerce.id}
+              className="group flex flex-col rounded-xl border border-border bg-card overflow-hidden transition-all hover:border-primary/30 hover:shadow-sm"
+            >
+              <div className="flex items-start gap-4 p-5">
+                <Avatar className="h-12 w-12 shrink-0">
+                  <AvatarFallback className="bg-primary/10 text-primary font-bold">{commerce.logo}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <Link href={`/dashboard/comercios/${commerce.id}`} className="hover:underline underline-offset-2">
+                    <h3 className="font-semibold text-foreground leading-snug">{commerce.name}</h3>
+                  </Link>
+                  <div className="flex items-center gap-2 mt-1">
+                    <Badge variant="secondary" className="text-[10px] px-1.5 py-0">{commerce.category}</Badge>
+                    <div className="flex items-center gap-1 text-xs">
+                      <Star className="h-3 w-3 fill-primary text-primary" />
+                      <span className="font-semibold text-foreground">{commerce.rating}</span>
+                      <span className="text-muted-foreground">({commerce.reviewCount})</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="px-5 pb-3">
+                <p className="text-xs text-muted-foreground line-clamp-2">{commerce.description}</p>
+                <p className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+                  <MapPin className="h-3 w-3 text-primary" />
+                  {commerce.address}
+                </p>
+              </div>
+              <div className="mt-auto flex border-t border-border">
+                <a
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackWhatsAppClick(commerce.id)}
+                  className="flex flex-1 items-center justify-center gap-1.5 py-2.5 text-xs font-medium text-success hover:bg-success/5 transition-colors border-r border-border"
+                >
+                  <MessageSquare className="h-3.5 w-3.5" />
+                  WhatsApp
+                </a>
+                <a
+                  href={`tel:${commerce.phone}`}
+                  onClick={() => trackCallClick(commerce.id)}
+                  className="flex flex-1 items-center justify-center gap-1.5 py-2.5 text-xs font-medium text-foreground hover:bg-muted/50 transition-colors"
+                >
+                  <Phone className="h-3.5 w-3.5" />
+                  Llamar
+                </a>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      {filtered.length === 0 && (
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border py-12 text-center">
+          <Store className="h-10 w-10 text-muted-foreground/30 mb-3" />
+          <p className="text-sm text-muted-foreground">No se encontraron comercios</p>
+          <p className="text-xs text-muted-foreground">Prob\u00e1 ajustando los filtros de b\u00fasqueda.</p>
+        </div>
+      )}
+    </div>
+  )
+}
