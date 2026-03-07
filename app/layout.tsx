@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next"
 import { DM_Sans, DM_Serif_Display } from "next/font/google"
 import "./globals.css"
 
-import type { ReactNode } from "react"
 import { Providers } from "@/components/providers"
 
 const dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-dm-sans" })
@@ -26,7 +25,7 @@ export const viewport: Viewport = {
   userScalable: false,
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
       <body className={`${dmSans.variable} ${dmSerif.variable} font-sans antialiased`}>
