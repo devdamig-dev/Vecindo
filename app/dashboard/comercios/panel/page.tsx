@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useCommerceStats, seedMockAnalytics } from "@/hooks/use-commerce-analytics"
 import { useAuth } from "@/lib/auth-context"
 import {
@@ -11,44 +11,32 @@ import {
   MessageSquare,
   Phone,
   Search,
-  Bookmark,
   TrendingUp,
   Store,
   ArrowLeft,
   Settings,
   BarChart3,
-  AlertCircle,
 } from "lucide-react"
 import Link from "next/link"
-
-// Mock commerce data for demo - in production this would come from auth context
-const myCommerce = {
-  id: "1",
-  name: "Almac\u00e9n Don Carlos",
-  category: "Almac\u00e9n",
-  logo: "DC",
-  subscribed: true,
-  subscriptionEnds: "15 de abril, 2026",
-}
+import { commerces } from "../page"
 
 export default function CommercePanelPage() {
   const { auth } = useAuth()
 
-  // Access check: only show panel if user manages a commerce
   if (!auth.hasCommerceProfile || auth.managesCommerceIds.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-muted mb-4">
           <Store className="h-7 w-7 text-muted-foreground" />
         </div>
-        <h1 className="text-xl font-bold text-foreground mb-2">No ten\u00e9s un comercio registrado</h1>
+        <h1 className="text-xl font-bold text-foreground mb-2">No tenés un comercio registrado</h1>
         <p className="text-sm text-muted-foreground mb-6">
-          Para acceder al panel de estad\u00edsticas necesit\u00e1s registrar tu comercio en la gu\u00eda de la zona.
+          Para acceder al panel de estadísticas necesitás registrar tu comercio en la guía de la zona.
         </p>
         <Button asChild>
           <Link href="/dashboard/suscripciones?plan=comercio">
             <Store className="h-4 w-4 mr-2" />
-            Registr\u00e1 tu comercio
+            Registrá tu comercio
           </Link>
         </Button>
         <Link href="/dashboard/comercios" className="mt-4 text-sm text-muted-foreground hover:text-foreground">
@@ -57,13 +45,16 @@ export default function CommercePanelPage() {
       </div>
     )
   }
+
+  const commerceId = auth.managesCommerceIds[0]
+  const myCommerce = commerces.find((c) => c.id === commerceId) ?? commerces[0]
+
   const [period, setPeriod] = useState<7 | 30>(7)
   const { stats, dailyStats, isLoading } = useCommerceStats(myCommerce.id, period)
 
-  // Seed mock data on first load for demo
   useEffect(() => {
     seedMockAnalytics(myCommerce.id)
-  }, [])
+  }, [myCommerce.id])
 
   const statCards = [
     {
@@ -88,7 +79,7 @@ export default function CommercePanelPage() {
       bgColor: "bg-amber-50",
     },
     {
-      label: "Apariciones en b\u00fasqueda",
+      label: "Apariciones en búsqueda",
       value: stats.searchImpressions,
       icon: Search,
       color: "text-primary",
@@ -96,7 +87,6 @@ export default function CommercePanelPage() {
     },
   ]
 
-  // Calculate max for chart scaling
   const maxValue = Math.max(
     ...dailyStats.map((d) => Math.max(d.profileViews, d.whatsappClicks * 5, d.callClicks * 5)),
     1
@@ -112,7 +102,6 @@ export default function CommercePanelPage() {
         Volver a Comercios
       </Link>
 
-      {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-center gap-4">
           <Avatar className="h-14 w-14">
@@ -128,15 +117,16 @@ export default function CommercePanelPage() {
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground">
-              {"Panel de estad\u00edsticas de tu comercio"}
+              Panel de estadísticas de tu comercio
             </p>
           </div>
         </div>
+
         <div className="flex gap-2">
           <Button variant="outline" size="sm" asChild>
             <Link href={`/dashboard/comercios/${myCommerce.id}`}>
               <Eye className="h-4 w-4 mr-1.5" />
-              {"Ver perfil p\u00fablico"}
+              Ver perfil público
             </Link>
           </Button>
           <Button variant="outline" size="sm" asChild>
@@ -148,7 +138,6 @@ export default function CommercePanelPage() {
         </div>
       </div>
 
-      {/* Subscription status */}
       <div className="rounded-xl border border-primary/20 bg-primary/5 px-5 py-4">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div className="flex items-center gap-3">
@@ -157,48 +146,42 @@ export default function CommercePanelPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-foreground">Plan Comercio activo</p>
-              <p className="text-xs text-muted-foreground">
-                {"Renovaci\u00f3n:"} {myCommerce.subscriptionEnds}
-              </p>
+              <p className="text-xs text-muted-foreground">Renovación: 15 de abril, 2026</p>
             </div>
           </div>
+
           <Button variant="outline" size="sm" asChild>
-            <Link href="/dashboard/suscripciones">{"Gestionar suscripci\u00f3n"}</Link>
+            <Link href="/dashboard/suscripciones">Gestionar suscripción</Link>
           </Button>
         </div>
       </div>
 
-      {/* Period toggle */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <BarChart3 className="h-5 w-5 text-primary" />
-          <h2 className="font-semibold text-foreground">{"Estad\u00edsticas"}</h2>
+          <h2 className="font-semibold text-foreground">Estadísticas</h2>
         </div>
+
         <div className="flex rounded-lg border border-border bg-muted/50 p-0.5">
           <button
             onClick={() => setPeriod(7)}
             className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-              period === 7
-                ? "bg-card text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
+              period === 7 ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {"\u00daltimos 7 d\u00edas"}
+            Últimos 7 días
           </button>
           <button
             onClick={() => setPeriod(30)}
             className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-              period === 30
-                ? "bg-card text-foreground shadow-sm"
-                : "text-muted-foreground hover:text-foreground"
+              period === 30 ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            {"\u00daltimos 30 d\u00edas"}
+            Últimos 30 días
           </button>
         </div>
       </div>
 
-      {/* Stats cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((stat) => (
           <div
@@ -218,7 +201,6 @@ export default function CommercePanelPage() {
         ))}
       </div>
 
-      {/* Simple bar chart */}
       <div className="rounded-xl border border-border bg-card p-5">
         <div className="flex items-center justify-between mb-4">
           <h3 className="font-medium text-foreground">Actividad diaria</h3>
@@ -267,7 +249,6 @@ export default function CommercePanelPage() {
         )}
       </div>
 
-      {/* Tips */}
       <div className="rounded-xl border border-border bg-muted/30 p-5">
         <div className="flex items-start gap-3">
           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 shrink-0">
@@ -276,7 +257,7 @@ export default function CommercePanelPage() {
           <div>
             <h3 className="font-medium text-foreground text-sm">Consejo para mejorar</h3>
             <p className="text-xs text-muted-foreground mt-1">
-              {"Los comercios con fotos de productos reciben un 40% m\u00e1s de clics en WhatsApp. Asegurate de tener im\u00e1genes actualizadas en tu perfil."}
+              Los comercios con fotos de productos reciben más clics en WhatsApp. Asegurate de tener imágenes actualizadas en tu perfil.
             </p>
           </div>
         </div>
