@@ -1,3 +1,5 @@
+"use client"
+
 type CommerceReview = {
   user: string
   initials: string
@@ -6,8 +8,6 @@ type CommerceReview = {
   date: string
   verified?: boolean
 }
-
-"use client"
 
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
