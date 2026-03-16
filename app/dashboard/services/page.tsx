@@ -1,32 +1,70 @@
+"use client"
+
+import { useMemo, useState } from "react"
 import { ServicesSearch } from "@/components/services/services-search"
-import { ServicesList } from "@/components/services/services-list"
+import { ServicesList, professionals } from "@/components/services/services-list"
 import { SectionIntroBanner } from "@/components/ui/section-intro-banner"
 import { NeighborRecommendations } from "@/components/services/neighbor-recommendations"
 
 export default function ServicesPage() {
+  const [query, setQuery] = useState("")
+  const [activeCategory, setActiveCategory] = useState("Todos")
+
+  const filteredProfessionals = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase()
+
+    return professionals.filter((pro) => {
+      const matchesCategory =
+        activeCategory === "Todos" || pro.category === activeCategory
+
+      const matchesQuery =
+        normalizedQuery.length === 0 ||
+        pro.name.toLowerCase().includes(normalizedQuery) ||
+        pro.title.toLowerCase().includes(normalizedQuery) ||
+        pro.description.toLowerCase().includes(normalizedQuery) ||
+        pro.category.toLowerCase().includes(normalizedQuery) ||
+        pro.tags.some((tag) => tag.toLowerCase().includes(normalizedQuery))
+
+      return matchesCategory && matchesQuery
+    })
+  }, [query, activeCategory])
+
   return (
-    <div className="flex flex-col gap-6 max-w-full">
+    <div className="flex max-w-full flex-col gap-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Directorio de Servicios</h1>
-        <p className="text-sm text-muted-foreground">{"Encontr\u00e1 profesionales verificados en tu zona"}</p>
+        <p className="text-sm text-muted-foreground">Encontrá profesionales verificados en tu zona</p>
       </div>
+
       <SectionIntroBanner
         sectionId="services"
         title="Profesionales verificados de tu zona"
-        description={"Todos los prestadores tienen rese\u00f1as reales de vecinos."}
+        description="Todos los prestadores tienen reseñas reales de vecinos."
         howItWorks={{
-          title: "\u00bfC\u00f3mo funciona Servicios?",
+          title: "¿Cómo funciona Servicios?",
           steps: [
-            "Busc\u00e1 por categor\u00eda o escribiendo el servicio que necesit\u00e1s.",
-            "Mir\u00e1 las rese\u00f1as y puntuaciones de otros vecinos.",
-            "Contact\u00e1 directamente por WhatsApp sin intermediarios.",
-            "Despu\u00e9s del trabajo, dej\u00e1 tu rese\u00f1a para ayudar a otros.",
+            "Buscá por categoría o escribiendo el servicio que necesitás.",
+            "Mirá las reseñas y puntuaciones de otros vecinos.",
+            "Contactá directamente por WhatsApp sin intermediarios.",
+            "Después del trabajo, dejá tu reseña para ayudar a otros.",
           ],
         }}
       />
+
       <NeighborRecommendations />
-      <ServicesSearch />
-      <ServicesList />
+
+      <ServicesSearch
+        query={query}
+        onQueryChange={setQuery}
+        activeCategory={activeCategory}
+        onCategoryChange={setActiveCategory}
+      />
+
+      <div className="text-sm text-muted-foreground">
+        {filteredProfessionals.length} resultado{filteredProfessionals.length === 1 ? "" : "s"}
+      </div>
+
+      <ServicesList professionals={filteredProfessionals} />
     </div>
   )
 }
