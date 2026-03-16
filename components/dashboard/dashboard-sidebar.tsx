@@ -21,6 +21,8 @@ import {
   CreditCard,
   Bookmark,
   Heart,
+  Info,
+  Building2,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -33,12 +35,14 @@ interface NavItem {
 }
 
 const allNavItems: NavItem[] = [
-  { label: "Inicio", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Inicio", href: "/dashboard", icon: LayoutDashboard, residentOnly: true },
   { label: "Servicios", href: "/dashboard/services", icon: Search },
   { label: "Preguntas", href: "/dashboard/questions", icon: MessageCircle, requireCapability: "canPublishQuestions" },
   { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, requireCapability: "canAccessMarketplace" },
-  { label: "Ayuda", href: "/dashboard/ayuda", icon: Heart },
+  { label: "Ayuda Comunitaria", href: "/dashboard/ayuda", icon: Heart },
   { label: "Comercios", href: "/dashboard/comercios", icon: Store, residentOnly: true },
+  { label: "Información útil", href: "/dashboard/informacion-util", icon: Info },
+  { label: "Mi barrio", href: "/dashboard/mi-barrio", icon: Building2, residentOnly: true },
   { label: "Suscripciones", href: "/dashboard/suscripciones", icon: CreditCard },
   { label: "Guardados", href: "/dashboard/guardados", icon: Bookmark, residentOnly: true },
 ]
@@ -64,7 +68,7 @@ export function DashboardSidebar() {
       <button
         className="fixed left-4 top-4 z-50 rounded-lg bg-sidebar p-2 text-sidebar-foreground lg:hidden"
         onClick={() => setOpen(true)}
-        aria-label="Abrir navegaci\u00f3n"
+        aria-label="Abrir navegación"
       >
         <Menu className="h-5 w-5" />
       </button>
@@ -83,14 +87,14 @@ export function DashboardSidebar() {
         )}
       >
         <div className="flex items-center justify-between border-b border-sidebar-border px-6 py-5">
-          <Link href="/dashboard" className="flex items-center gap-2">
+          <Link href={isResident ? "/dashboard" : "/dashboard/services"} className="flex items-center gap-2">
             <Shield className="h-6 w-6 text-sidebar-primary" />
             <span className="text-lg font-bold tracking-tight">VECINDO</span>
           </Link>
           <button
             className="lg:hidden text-sidebar-foreground"
             onClick={() => setOpen(false)}
-            aria-label="Cerrar navegaci\u00f3n"
+            aria-label="Cerrar navegación"
           >
             <X className="h-5 w-5" />
           </button>
@@ -99,7 +103,7 @@ export function DashboardSidebar() {
         <div className="px-4 py-3">
           <div className="rounded-lg bg-sidebar-accent px-3 py-2">
             <p className="text-xs text-sidebar-foreground/60">Zona</p>
-            <p className="text-sm font-semibold">Hudson &ndash; Berazategui</p>
+            <p className="text-sm font-semibold">Hudson – Berazategui</p>
           </div>
           <div className="mt-2 flex items-center gap-2 rounded-lg bg-sidebar-accent/50 px-3 py-2">
             {isResident ? (
@@ -119,7 +123,9 @@ export function DashboardSidebar() {
         <nav className="flex-1 overflow-y-auto px-3 py-2">
           <ul className="flex flex-col gap-1">
             {navItems.map((item) => {
-              const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
+              const isActive =
+                pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
+
               return (
                 <li key={item.href}>
                   <Link
@@ -166,14 +172,14 @@ export function DashboardSidebar() {
             )}
           >
             <Settings className="h-4 w-4" />
-            Configuraci\u00f3n
+            Configuración
           </Link>
           <Link
             href="/"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
           >
             <LogOut className="h-4 w-4" />
-            Cerrar Sesi\u00f3n
+            Cerrar sesión
           </Link>
         </div>
       </aside>

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Search, MessageCircle, ShoppingBag, PawPrint } from "lucide-react"
+import { Search, MessageCircle, ShoppingBag, Heart } from "lucide-react"
 
 const actions = [
   {
@@ -16,15 +16,15 @@ const actions = [
   },
   {
     label: "Ver Mercado",
-    description: "Articulos cerca tuyo",
+    description: "Artículos cerca tuyo",
     icon: ShoppingBag,
     href: "/dashboard/marketplace",
   },
   {
-    label: "Mascotas",
-    description: "Perdidos, encontrados y mas",
-    icon: PawPrint,
-    href: "/dashboard/pets",
+    label: "Ayuda Comunitaria",
+    description: "Mascotas, colectas y más",
+    icon: Heart,
+    href: "/dashboard/ayuda",
   },
 ]
 
