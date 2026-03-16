@@ -68,7 +68,20 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
     }
   }
 
-  if (updates.length === 0) return null
+  if (updates.length === 0) {
+  return (
+    <section>
+      <div className="mb-3">
+        <h2 className="text-sm font-semibold text-foreground">
+          Novedades de la zona
+        </h2>
+        <p className="text-xs text-muted-foreground">
+          Aún no hay novedades hoy
+        </p>
+      </div>
+    </section>
+  )
+}
 
   return (
     <section aria-label="Novedades de la zona">
