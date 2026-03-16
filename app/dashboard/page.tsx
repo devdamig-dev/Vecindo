@@ -9,17 +9,11 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">
-          Hudson – Berazategui
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Panel de tu comunidad
-        </p>
+        <h1 className="text-2xl font-bold text-foreground">Hudson – Berazategui</h1>
+        <p className="text-sm text-muted-foreground">Panel de tu comunidad</p>
       </div>
 
       <ZoneUpdatesCarousel zoneId="berazategui" />
-
-      <WeeklyActivity />
 
       <QuickActions />
 
@@ -27,6 +21,7 @@ export default function DashboardPage() {
         <div className="lg:col-span-2 flex flex-col gap-6">
           <RecentActivity />
           <RecentAyudaWidget />
+          <WeeklyActivity />
         </div>
 
         <ZoneOverview />
