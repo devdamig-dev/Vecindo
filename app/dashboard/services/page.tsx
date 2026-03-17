@@ -6,8 +6,7 @@ import { ServicesSearch } from "@/components/services/services-search"
 import { ServicesList, professionals } from "@/components/services/services-list"
 import { SectionIntroBanner } from "@/components/ui/section-intro-banner"
 import { NeighborRecommendations } from "@/components/services/neighbor-recommendations"
-import { Eye, MessageSquare, Phone, Star, PencilLine, CreditCard, UserRound } from "lucide-react"
-import Link from "next/link"
+import { Eye, Search as SearchIcon, TrendingUp } from "lucide-react"
 
 export default function ServicesPage() {
   const { auth } = useAuth()
@@ -39,128 +38,81 @@ export default function ServicesPage() {
     return (
       <div className="flex max-w-full flex-col gap-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Tu presencia en servicios</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            Directorio de servicios de la zona
+          </h1>
           <p className="text-sm text-muted-foreground">
-            Gestioná tu perfil profesional y seguí tu actividad dentro de la zona
+            Explorá cómo se muestran otros perfiles y detectá oportunidades dentro de la comunidad
           </p>
         </div>
 
         <SectionIntroBanner
-          sectionId="services-professional"
-          title="Tu perfil profesional en la comunidad"
-          description="Desde acá podés ver cómo te encuentran los vecinos y mejorar tu visibilidad."
+          sectionId="services-professional-directory"
+          title="Vista profesional del directorio"
+          description="Usá este espacio para analizar categorías, competencia y posicionamiento dentro de Hudson – Berazategui."
           howItWorks={{
-            title: "¿Cómo funciona tu perfil?",
+            title: "¿Cómo aprovechar este directorio?",
             steps: [
-              "Completá tu perfil profesional para aparecer mejor posicionado.",
-              "Recibí consultas y contactos desde vecinos de la zona.",
-              "Acumulá reseñas para generar más confianza.",
-              "Mejorá tu plan para obtener más visibilidad.",
+              "Explorá qué categorías tienen más oferta dentro de la zona.",
+              "Analizá cómo se presentan otros perfiles y qué información muestran.",
+              "Detectá oportunidades para destacar mejor tu servicio.",
+              "Volvé a tu panel profesional para optimizar tu perfil y suscripción.",
             ],
           }}
         />
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="rounded-xl border border-border bg-card p-4">
+            <div className="flex items-center gap-2 text-muted-foreground">
+              <SearchIcon className="h-4 w-4" />
+              <span className="text-sm">Categorías activas</span>
+            </div>
+            <p className="mt-2 text-2xl font-bold text-foreground">8</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Rubros visibles actualmente en la zona
+            </p>
+          </div>
+
           <div className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Eye className="h-4 w-4" />
-              <span className="text-sm">Visitas al perfil</span>
+              <span className="text-sm">Perfiles publicados</span>
             </div>
-            <p className="mt-2 text-2xl font-bold text-foreground">56</p>
+            <p className="mt-2 text-2xl font-bold text-foreground">{professionals.length}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Prestadores actualmente visibles en la plataforma
+            </p>
           </div>
 
           <div className="rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-2 text-muted-foreground">
-              <MessageSquare className="h-4 w-4" />
-              <span className="text-sm">Clics en WhatsApp</span>
+              <TrendingUp className="h-4 w-4" />
+              <span className="text-sm">Oportunidad destacada</span>
             </div>
-            <p className="mt-2 text-2xl font-bold text-foreground">8</p>
-          </div>
-
-          <div className="rounded-xl border border-border bg-card p-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Phone className="h-4 w-4" />
-              <span className="text-sm">Llamadas</span>
-            </div>
-            <p className="mt-2 text-2xl font-bold text-foreground">5</p>
-          </div>
-
-          <div className="rounded-xl border border-border bg-card p-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Star className="h-4 w-4" />
-              <span className="text-sm">Puntuación</span>
-            </div>
-            <p className="mt-2 text-2xl font-bold text-foreground">4.8</p>
+            <p className="mt-2 text-base font-semibold text-foreground">Clases y seguridad</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Menor competencia relativa frente a otros rubros
+            </p>
           </div>
         </div>
 
-        <div className="rounded-xl border border-border bg-card p-6">
-          <h2 className="mb-4 text-lg font-semibold text-foreground">Accesos rápidos</h2>
+        <ServicesSearch
+          query={query}
+          onQueryChange={setQuery}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+        />
 
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <Link
-              href="/dashboard/profile"
-              className="rounded-lg border border-border p-4 transition hover:bg-muted"
-            >
-              <div className="mb-2 flex items-center gap-2 text-foreground">
-                <UserRound className="h-4 w-4 text-primary" />
-                <span className="font-medium">Ver mi perfil</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Revisá cómo te ve la comunidad
-              </p>
-            </Link>
-
-            <Link
-              href="/dashboard/settings"
-              className="rounded-lg border border-border p-4 transition hover:bg-muted"
-            >
-              <div className="mb-2 flex items-center gap-2 text-foreground">
-                <PencilLine className="h-4 w-4 text-primary" />
-                <span className="font-medium">Editar perfil</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Actualizá tu descripción, rubro y experiencia
-              </p>
-            </Link>
-
-            <Link
-              href="/dashboard/suscripciones"
-              className="rounded-lg border border-border p-4 transition hover:bg-muted"
-            >
-              <div className="mb-2 flex items-center gap-2 text-foreground">
-                <CreditCard className="h-4 w-4 text-primary" />
-                <span className="font-medium">Gestionar suscripción</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Mejorá tu visibilidad dentro de la zona
-              </p>
-            </Link>
-
-            <Link
-              href="/dashboard/services"
-              className="rounded-lg border border-border p-4 transition hover:bg-muted"
-            >
-              <div className="mb-2 flex items-center gap-2 text-foreground">
-                <MessageSquare className="h-4 w-4 text-primary" />
-                <span className="font-medium">Explorar directorio</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Mirá cómo se muestran otros perfiles de servicios
-              </p>
-            </Link>
-          </div>
+        <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
+          <span>
+            {filteredProfessionals.length} resultado{filteredProfessionals.length === 1 ? "" : "s"}
+          </span>
+          <span className="rounded-full bg-muted px-3 py-1 text-xs">
+            Vista comparativa para prestadores
+          </span>
         </div>
 
-        <div className="rounded-xl border border-border bg-card p-6">
-          <h2 className="mb-2 text-lg font-semibold text-foreground">Consejos para mejorar tu perfil</h2>
-          <ul className="flex list-disc flex-col gap-2 pl-5 text-sm text-muted-foreground">
-            <li>Completá tu descripción con más detalle y especialidades.</li>
-            <li>Sumá fotos o trabajos realizados para generar más confianza.</li>
-            <li>Pedí reseñas a vecinos que ya hayan trabajado con vos.</li>
-            <li>Considerá un plan destacado para aparecer más arriba en búsquedas.</li>
-          </ul>
-        </div>
+        <ServicesList professionals={filteredProfessionals} />
       </div>
     )
   }
