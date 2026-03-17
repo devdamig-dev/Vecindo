@@ -19,6 +19,7 @@ export interface UserProfile {
   email: string
   whatsapp: string
   avatarInitials: string
+  avatarUrl?: string // 👈 NUEVO
   bio: string
   zone: string
   neighborhood: string
@@ -67,7 +68,6 @@ export interface AuthState {
   professionalProfile: ProfessionalProfileData | null
   businessProfile: BusinessProfileData | null
   savedItems: SavedItem[]
-  // Commerce management flags
   hasCommerceProfile: boolean
   managesCommerceIds: string[]
 }
@@ -103,21 +103,21 @@ const defaultResident: AuthState = {
     email: "maria.gonzalez@email.com",
     whatsapp: "+54 11 2345-6789",
     avatarInitials: "MG",
+    avatarUrl: "https://i.pravatar.cc/150?img=5", // 👈 DEMO
     bio: "Residente de Hudson. Amante de la jardineria y la buena vecindad.",
-    zone: "Hudson \u2013 Berazategui",
+    zone: "Hudson – Berazategui",
     neighborhood: "Los Ombues",
     memberSince: "Enero 2024",
   },
   professionalProfile: null,
   businessProfile: null,
   savedItems: [
-    { id: "s1", type: "service", title: "Pinturas Express", subtitle: "Pintura \u00b7 4.9 estrellas", savedAt: "hace 2 d\u00edas" },
-    { id: "s2", type: "marketplace", title: "Bicicleta Trek Marlin 7", subtitle: "$450.000 \u00b7 Diego P.", savedAt: "hace 3 d\u00edas" },
-    { id: "s3", type: "commerce", title: "Almac\u00e9n Don Carlos", subtitle: "Almac\u00e9n \u00b7 Hudson", savedAt: "hace 1 semana" },
+    { id: "s1", type: "service", title: "Pinturas Express", subtitle: "Pintura · 4.9 estrellas", savedAt: "hace 2 días" },
+    { id: "s2", type: "marketplace", title: "Bicicleta Trek Marlin 7", subtitle: "$450.000 · Diego P.", savedAt: "hace 3 días" },
+    { id: "s3", type: "commerce", title: "Almacén Don Carlos", subtitle: "Almacén · Hudson", savedAt: "hace 1 semana" },
   ],
-  // Demo: resident manages a commerce
   hasCommerceProfile: true,
-  managesCommerceIds: ["1"], // Almac\u00e9n Don Carlos
+  managesCommerceIds: ["1"],
 }
 
 const defaultExternal: AuthState = {
@@ -132,21 +132,23 @@ const defaultExternal: AuthState = {
     canPublishQuestions: false,
   },
   profile: {
-    name: "Roberto M\u00e9ndez",
+    name: "Roberto Méndez",
     email: "roberto.mendez@email.com",
     whatsapp: "+54 11 9876-5432",
     avatarInitials: "RM",
-    bio: "Electricista matriculado con m\u00e1s de 15 a\u00f1os de experiencia.",
-    zone: "Hudson \u2013 Berazategui",
+    avatarUrl: "https://i.pravatar.cc/150?img=12", // 👈 DEMO
+    bio: "Electricista matriculado con más de 15 años de experiencia.",
+    zone: "Hudson – Berazategui",
     neighborhood: "",
     memberSince: "Marzo 2023",
   },
   professionalProfile: {
     category: "Electricidad",
-    subcategories: ["Hogar Inteligente", "Iluminaci\u00f3n", "Emergencias"],
-    description: "M\u00e1s de 15 a\u00f1os de experiencia especializado en instalaciones de hogar inteligente, iluminaci\u00f3n de piscinas, reparaciones de emergencia y mejoras completas del sistema el\u00e9ctrico.",
+    subcategories: ["Hogar Inteligente", "Iluminación", "Emergencias"],
+    description:
+      "Más de 15 años de experiencia especializado en instalaciones de hogar inteligente, iluminación de piscinas, reparaciones de emergencia y mejoras completas del sistema eléctrico.",
     matricula: "MAT-2847",
-    serviceArea: "Hudson \u2013 Berazategui",
+    serviceArea: "Hudson – Berazategui",
     galleryCount: 8,
   },
   businessProfile: null,
@@ -177,9 +179,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     try {
       window.localStorage.setItem("vecindo_account_type", type)
-    } catch {
-      // ignore
-    }
+    } catch {}
   }
 
   const setCapability = (key: keyof UserCapabilities, value: boolean) => {
@@ -188,9 +188,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ...prev,
         capabilities: { ...prev.capabilities, [key]: value },
       }
+
       if (key === "canOfferServices" && !value) {
         next.professionalProfile = null
       }
+
       if (key === "canOfferServices" && value && !next.professionalProfile) {
         next.professionalProfile = {
           category: "",
@@ -201,9 +203,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           galleryCount: 0,
         }
       }
+
       if (key === "canSell" && !value) {
         next.businessProfile = null
       }
+
       if (key === "canSell" && value && !next.businessProfile) {
         next.businessProfile = {
           businessName: "",
@@ -213,12 +217,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           products: [],
         }
       }
+
       return next
     })
   }
 
   const updateProfile = (profile: Partial<UserProfile>) => {
-    setAuth((prev) => ({ ...prev, profile: { ...prev.profile, ...profile } }))
+    setAuth((prev) => ({
+      ...prev,
+      profile: { ...prev.profile, ...profile },
+    }))
   }
 
   const updateProfessionalProfile = (data: Partial<ProfessionalProfileData>) => {
