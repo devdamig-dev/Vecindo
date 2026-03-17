@@ -23,6 +23,7 @@ import {
   Heart,
   Info,
   Building2,
+  BarChart3,
 } from "lucide-react"
 import { useState } from "react"
 
@@ -32,14 +33,16 @@ interface NavItem {
   icon: typeof LayoutDashboard
   requireCapability?: string
   residentOnly?: boolean
+  professionalOnly?: boolean
 }
 
 const allNavItems: NavItem[] = [
   { label: "Inicio", href: "/dashboard", icon: LayoutDashboard, residentOnly: true },
+  { label: "Panel profesional", href: "/dashboard/pro", icon: BarChart3, professionalOnly: true },
   { label: "Servicios", href: "/dashboard/services", icon: Search },
   { label: "Preguntas", href: "/dashboard/questions", icon: MessageCircle, requireCapability: "canPublishQuestions" },
   { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, requireCapability: "canAccessMarketplace" },
-  { label: "Ayuda Comunitaria", href: "/dashboard/ayuda", icon: Heart },
+  { label: "Ayuda comunitaria", href: "/dashboard/ayuda", icon: Heart },
   { label: "Comercios", href: "/dashboard/comercios", icon: Store, residentOnly: true },
   { label: "Información útil", href: "/dashboard/informacion-util", icon: Info },
   { label: "Mi barrio", href: "/dashboard/mi-barrio", icon: Building2, residentOnly: true },
@@ -52,16 +55,20 @@ export function DashboardSidebar() {
   const [open, setOpen] = useState(false)
   const { auth } = useAuth()
   const isResident = auth.accountType === "resident"
+  const isProfessional = auth.accountType === "external_professional"
   const { capabilities } = auth
 
   const navItems = allNavItems.filter((item) => {
     if (item.residentOnly && !isResident) return false
+    if (item.professionalOnly && !isProfessional) return false
     if (item.requireCapability) {
       const cap = item.requireCapability as keyof typeof capabilities
       if (!capabilities[cap]) return false
     }
     return true
   })
+
+  const homeHref = isResident ? "/dashboard" : "/dashboard/pro"
 
   return (
     <>
@@ -87,7 +94,7 @@ export function DashboardSidebar() {
         )}
       >
         <div className="flex items-center justify-between border-b border-sidebar-border px-6 py-5">
-          <Link href={isResident ? "/dashboard" : "/dashboard/services"} className="flex items-center gap-2">
+          <Link href={homeHref} className="flex items-center gap-2">
             <Shield className="h-6 w-6 text-sidebar-primary" />
             <span className="text-lg font-bold tracking-tight">VECINDO</span>
           </Link>
@@ -159,8 +166,9 @@ export function DashboardSidebar() {
             )}
           >
             <User className="h-4 w-4" />
-            Mi Perfil
+            Mi perfil
           </Link>
+
           <Link
             href="/dashboard/settings"
             onClick={() => setOpen(false)}
@@ -174,6 +182,7 @@ export function DashboardSidebar() {
             <Settings className="h-4 w-4" />
             Configuración
           </Link>
+
           <Link
             href="/"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
