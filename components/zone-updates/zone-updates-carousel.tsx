@@ -27,23 +27,59 @@ function getInitials(name: string) {
 
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime()
-  const hours = Math.floor(diff / 3600000)
+  const hours = Math.max(0, Math.floor(diff / 3600000))
+
   if (hours < 1) return "ahora"
-  if (hours < 24) return `hace ${hours}h`
-  return `hace ${Math.floor(hours / 24)}d`
+  if (hours <= 24) return `hace ${hours}h`
+  return "hace 24h"
 }
 
-function getAvatarUrl(name: string) {
-  const map: Record<string, string> = {
-    "Pinturas Express": "https://i.pravatar.cc/150?img=12",
-    "Barbería Don": "https://i.pravatar.cc/150?img=33",
-    "Sofía L.": "https://i.pravatar.cc/150?img=20",
-    "Electricidad Pro": "https://i.pravatar.cc/150?img=47",
-    "Jardín Pro": "https://i.pravatar.cc/150?img=54",
-    "Diego P.": "https://i.pravatar.cc/150?img=15",
+function getFallbackImage(update: ZoneUpdate) {
+  const byTitle: Record<string, string> = {
+    "Promo": "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=300&h=300&fit=crop",
+    "Turnos hoy": "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=300&h=300&fit=crop",
+    "Novedad": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop",
+    "Disponible": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop",
+    "Nuevo servicio": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&h=300&fit=crop",
+    "Oferta": "https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=300&h=300&fit=crop",
   }
 
-  return map[name] || `https://i.pravatar.cc/150?u=${encodeURIComponent(name)}`
+  if (byTitle[update.title]) return byTitle[update.title]
+
+  if (update.type === "marketplace") {
+    return "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop"
+  }
+
+  if (update.type === "business") {
+    return "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=300&h=300&fit=crop"
+  }
+
+  return "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&h=300&fit=crop"
+}
+
+/**
+ * Intenta tomar una imagen real de la novedad si existe.
+ * Soporta varias estructuras posibles para no romper el MVP.
+ */
+function getPreviewImage(update: ZoneUpdate) {
+  const candidate =
+    (update as any)?.image ||
+    (update as any)?.imageUrl ||
+    (update as any)?.thumbnail ||
+    (update as any)?.thumbnailUrl ||
+    (update as any)?.coverImage ||
+    (update as any)?.coverUrl ||
+    (Array.isArray((update as any)?.images) ? (update as any).images[0] : undefined) ||
+    (Array.isArray((update as any)?.media) ? (update as any).media[0] : undefined)
+
+  if (typeof candidate === "string" && candidate.length > 0) return candidate
+
+  if (candidate && typeof candidate === "object") {
+    if (typeof candidate.url === "string") return candidate.url
+    if (typeof candidate.src === "string") return candidate.src
+  }
+
+  return getFallbackImage(update)
 }
 
 export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: string }) {
@@ -94,7 +130,7 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
     <section aria-label="Novedades de la zona">
       <div className="mb-3 flex items-center justify-between">
         <div>
-          <h2 className="text-sm font-semibold text-foreground">Novedades de la Zona</h2>
+          <h2 className="text-sm font-semibold text-foreground">Novedades de la zona</h2>
           <p className="text-xs text-muted-foreground">Promos, turnos y novedades de hoy</p>
         </div>
 
@@ -136,7 +172,7 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
         </button>
 
         {updates.map((update, i) => {
-          const avatarUrl = getAvatarUrl(update.author.name)
+          const previewImage = getPreviewImage(update)
 
           return (
             <button
@@ -157,10 +193,10 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
                 >
                   <div className="flex h-full w-full items-center justify-center overflow-hidden rounded-full bg-card">
                     <Avatar className="h-full w-full rounded-full">
-                      {avatarUrl ? (
+                      {previewImage ? (
                         <img
-                          src={avatarUrl}
-                          alt={update.author.name}
+                          src={previewImage}
+                          alt={update.title}
                           className="h-full w-full rounded-full object-cover"
                         />
                       ) : (
