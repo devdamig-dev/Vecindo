@@ -8,7 +8,7 @@ const actions = [
     icon: Search,
     href: "/dashboard/services",
     cardClass:
-      "border-sky-200 bg-sky-50/80 hover:bg-sky-100/80 hover:border-sky-300",
+      "border-sky-200 bg-sky-100/80 hover:bg-sky-100/100 hover:border-sky-300",
     iconWrapClass: "bg-sky-100 text-sky-700",
   },
   {
@@ -17,7 +17,7 @@ const actions = [
     icon: MessageCircle,
     href: "/dashboard/questions",
     cardClass:
-      "border-violet-200 bg-violet-50/80 hover:bg-violet-100/80 hover:border-violet-300",
+      "border-violet-200 bg-violet-100/80 hover:bg-violet-100/100 hover:border-violet-300",
     iconWrapClass: "bg-violet-100 text-violet-700",
   },
   {
@@ -26,7 +26,7 @@ const actions = [
     icon: ShoppingBag,
     href: "/dashboard/marketplace",
     cardClass:
-      "border-emerald-200 bg-emerald-50/80 hover:bg-emerald-100/80 hover:border-emerald-300",
+      "border-emerald-200 bg-emerald-100/80 hover:bg-emerald-100/100 hover:border-emerald-300",
     iconWrapClass: "bg-emerald-100 text-emerald-700",
   },
   {
@@ -35,7 +35,7 @@ const actions = [
     icon: Heart,
     href: "/dashboard/ayuda",
     cardClass:
-      "border-rose-200 bg-rose-50/80 hover:bg-rose-100/80 hover:border-rose-300",
+      "border-rose-200 bg-rose-100/80 hover:bg-rose-100/100 hover:border-rose-300",
     iconWrapClass: "bg-rose-100 text-rose-700",
   },
 ]
