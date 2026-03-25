@@ -36,7 +36,7 @@ const categoryOptions: { value: AyudaCategory; label: string; icon: typeof PawPr
   { value: "mascotas", label: "Mascotas", icon: PawPrint },
   { value: "donaciones", label: "Donaciones / Colectas", icon: Gift },
   { value: "objetos", label: "Objetos perdidos", icon: Key },
-  { value: "personal", label: "B\u00fasqueda de personal", icon: Users },
+  { value: "personal", label: "Búsqueda de personal", icon: Users },
   { value: "urgente", label: "Ayuda urgente", icon: AlertTriangle },
 ]
 
@@ -56,7 +56,6 @@ export function CreateAyudaForm({ open, onOpenChange }: CreateAyudaFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleAddMockImage = () => {
-    // Demo: add a placeholder image
     const placeholders = [
       "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=300&h=200&fit=crop",
       "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=300&h=200&fit=crop",
@@ -76,11 +75,9 @@ export function CreateAyudaForm({ open, onOpenChange }: CreateAyudaFormProps) {
     if (!category || !title || !description) return
 
     setIsSubmitting(true)
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1000))
     setIsSubmitting(false)
-    
-    // Reset form
+
     setCategory("")
     setTitle("")
     setDescription("")
@@ -93,21 +90,20 @@ export function CreateAyudaForm({ open, onOpenChange }: CreateAyudaFormProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Publicar aviso de ayuda</DialogTitle>
           <DialogDescription>
-            {"Compart\u00ed un aviso con tus vecinos de la zona."}
+            Compartí un aviso importante con tus vecinos de la zona.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-2">
-          {/* Category */}
+        <form onSubmit={handleSubmit} className="mt-2 flex flex-col gap-4">
           <div className="space-y-2">
-            <Label htmlFor="category">{"Categor\u00eda"} *</Label>
+            <Label htmlFor="category">Categoría *</Label>
             <Select value={category} onValueChange={(v) => setCategory(v as AyudaCategory)}>
-              <SelectTrigger id="category">
-                <SelectValue placeholder="Selecciona una categor\u00eda" />
+              <SelectTrigger id="category" className="focus:border-rose-500 focus:ring-2 focus:ring-rose-500">
+                <SelectValue placeholder="Seleccioná una categoría" />
               </SelectTrigger>
               <SelectContent>
                 {categoryOptions.map((opt) => (
@@ -122,44 +118,43 @@ export function CreateAyudaForm({ open, onOpenChange }: CreateAyudaFormProps) {
             </Select>
           </div>
 
-          {/* Title */}
           <div className="space-y-2">
-            <Label htmlFor="title">{"T\u00edtulo"} *</Label>
+            <Label htmlFor="title">Título *</Label>
             <Input
               id="title"
               placeholder="Ej: Perro perdido cerca de la plaza"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={80}
+              className="focus:border-rose-500 focus:ring-2 focus:ring-rose-500"
             />
             <p className="text-xs text-muted-foreground">{title.length}/80 caracteres</p>
           </div>
 
-          {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">{"Descripci\u00f3n"} *</Label>
+            <Label htmlFor="description">Descripción *</Label>
             <Textarea
               id="description"
-              placeholder={"Detalla lo m\u00e1s posible: caracter\u00edsticas, ubicaci\u00f3n, horarios, etc."}
+              placeholder="Detallá lo más posible: características, ubicación, horarios, etc."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
               maxLength={500}
+              className="focus:border-rose-500 focus:ring-2 focus:ring-rose-500"
             />
             <p className="text-xs text-muted-foreground">{description.length}/500 caracteres</p>
           </div>
 
-          {/* Images */}
           <div className="space-y-2">
-            <Label>{"Im\u00e1genes (opcional)"}</Label>
+            <Label>Imágenes (opcional)</Label>
             <div className="flex flex-wrap gap-2">
               {mockImages.map((img, i) => (
-                <div key={i} className="relative h-20 w-20 rounded-lg overflow-hidden bg-muted">
+                <div key={i} className="relative h-20 w-20 overflow-hidden rounded-lg bg-muted">
                   <img src={img} alt="" className="h-full w-full object-cover" />
                   <button
                     type="button"
                     onClick={() => handleRemoveImage(i)}
-                    className="absolute top-1 right-1 flex h-5 w-5 items-center justify-center rounded-full bg-background/80 text-foreground hover:bg-background"
+                    className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-background/80 text-foreground hover:bg-background"
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -169,27 +164,26 @@ export function CreateAyudaForm({ open, onOpenChange }: CreateAyudaFormProps) {
                 <button
                   type="button"
                   onClick={handleAddMockImage}
-                  className="flex h-20 w-20 items-center justify-center rounded-lg border-2 border-dashed border-border text-muted-foreground hover:border-primary hover:text-primary transition-colors"
+                  className="flex h-20 w-20 items-center justify-center rounded-lg border-2 border-dashed border-rose-200 text-rose-400 transition-colors hover:border-rose-400 hover:text-rose-600"
                 >
                   <ImagePlus className="h-6 w-6" />
                 </button>
               )}
             </div>
-            <p className="text-xs text-muted-foreground">{"M\u00e1ximo 4 im\u00e1genes"}</p>
+            <p className="text-xs text-muted-foreground">Máximo 4 imágenes</p>
           </div>
 
-          {/* Location */}
           <div className="space-y-2">
-            <Label htmlFor="location">{"Ubicaci\u00f3n aproximada (opcional)"}</Label>
+            <Label htmlFor="location">Ubicación aproximada (opcional)</Label>
             <Input
               id="location"
               placeholder="Ej: Cerca de la plaza central"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
+              className="focus:border-rose-500 focus:ring-2 focus:ring-rose-500"
             />
           </div>
 
-          {/* WhatsApp */}
           <div className="space-y-2">
             <Label htmlFor="whatsapp">WhatsApp de contacto *</Label>
             <Input
@@ -197,23 +191,26 @@ export function CreateAyudaForm({ open, onOpenChange }: CreateAyudaFormProps) {
               placeholder="+54 11 2345-6789"
               value={whatsapp}
               onChange={(e) => setWhatsapp(e.target.value)}
+              className="focus:border-rose-500 focus:ring-2 focus:ring-rose-500"
             />
           </div>
 
-          {/* Anti-spam note */}
-          <div className="flex items-start gap-2 rounded-lg bg-warning/10 px-3 py-2.5">
-            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-warning-foreground" />
-            <p className="text-xs text-warning-foreground leading-relaxed">
-              {"M\u00e1x. 2 publicaciones por semana. Los avisos expiran a los 7 d\u00edas si no se marcan como resueltos."}
+          <div className="flex items-start gap-2 rounded-lg bg-rose-100 px-3 py-2.5">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose-700" />
+            <p className="text-xs leading-relaxed text-rose-700">
+              Máx. 2 publicaciones por semana. Los avisos expiran a los 7 días si no se marcan como resueltos.
             </p>
           </div>
 
-          {/* Submit */}
           <div className="flex justify-end gap-3 pt-2">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancelar
             </Button>
-            <Button type="submit" disabled={!isValid || isSubmitting}>
+            <Button
+              type="submit"
+              disabled={!isValid || isSubmitting}
+              className="bg-rose-600 text-white hover:bg-rose-700"
+            >
               {isSubmitting ? "Publicando..." : "Publicar aviso"}
             </Button>
           </div>
