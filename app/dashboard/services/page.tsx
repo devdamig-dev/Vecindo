@@ -8,18 +8,12 @@ import { ServicesList, professionals } from "@/components/services/services-list
 import { SectionIntroBanner } from "@/components/ui/section-intro-banner"
 import { NeighborRecommendations } from "@/components/services/neighbor-recommendations"
 import { Button } from "@/components/ui/button"
-import {
-  Eye,
-  Search as SearchIcon,
-  TrendingUp,
-  Plus,
-  Briefcase,
-} from "lucide-react"
+import { Search as SearchIcon, Plus, Briefcase } from "lucide-react"
 
 export default function ServicesPage() {
   const { auth } = useAuth()
   const isProfessional = auth.accountType === "external_professional"
-  const canOfferServices = auth.capabilities?.canOfferServices
+  const isResident = auth.accountType === "resident"
 
   const [query, setQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState("Todos")
@@ -73,41 +67,6 @@ export default function ServicesPage() {
           }}
         />
 
-        <div className="grid gap-4 md:grid-cols-3">
-          <div className="rounded-xl border border-sky-200 bg-sky-100 p-4">
-            <div className="flex items-center gap-2 text-sky-700">
-              <SearchIcon className="h-4 w-4" />
-              <span className="text-sm">Categorías activas</span>
-            </div>
-            <p className="mt-2 text-2xl font-bold text-foreground">8</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Rubros visibles actualmente en la zona
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-sky-200 bg-sky-100 p-4">
-            <div className="flex items-center gap-2 text-sky-700">
-              <Eye className="h-4 w-4" />
-              <span className="text-sm">Perfiles publicados</span>
-            </div>
-            <p className="mt-2 text-2xl font-bold text-foreground">{professionals.length}</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Prestadores actualmente visibles en la plataforma
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-sky-200 bg-sky-100 p-4">
-            <div className="flex items-center gap-2 text-sky-700">
-              <TrendingUp className="h-4 w-4" />
-              <span className="text-sm">Oportunidad destacada</span>
-            </div>
-            <p className="mt-2 text-base font-semibold text-foreground">Clases y seguridad</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Menor competencia relativa frente a otros rubros
-            </p>
-          </div>
-        </div>
-
         <ServicesSearch
           query={query}
           onQueryChange={setQuery}
@@ -115,13 +74,8 @@ export default function ServicesPage() {
           onCategoryChange={setActiveCategory}
         />
 
-        <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
-          <span>
-            {filteredProfessionals.length} resultado{filteredProfessionals.length === 1 ? "" : "s"}
-          </span>
-          <span className="rounded-full bg-sky-100 px-3 py-1 text-xs text-sky-700">
-            Vista comparativa para prestadores
-          </span>
+        <div className="text-sm text-muted-foreground">
+          {filteredProfessionals.length} resultado{filteredProfessionals.length === 1 ? "" : "s"}
         </div>
 
         <ServicesList professionals={filteredProfessionals} />
@@ -158,31 +112,54 @@ export default function ServicesPage() {
         }}
       />
 
-      {canOfferServices && (
+      {isResident && (
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-sky-200 bg-sky-100 px-4 py-4">
-        <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-200 text-sky-700">
-            <Briefcase className="h-5 w-5" />
-          </div>
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-200 text-sky-700">
+              <Briefcase className="h-5 w-5" />
+            </div>
 
-          <div>
-            <p className="text-sm font-semibold text-foreground">
-              ¿Ofrecés un servicio en la zona?
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Creá tu perfil y empezá a recibir consultas de vecinos de tu comunidad.
-            </p>
+            <div>
+              <p className="text-sm font-semibold text-foreground">
+                ¿Ofrecés un servicio en la zona?
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Creá tu perfil y empezá a recibir consultas de vecinos de tu comunidad.
+              </p>
+            </div>
           </div>
-        </div>
 
           <Button asChild className="bg-sky-600 text-white hover:bg-sky-700">
-          <Link href="/dashboard/services/publicar">
-            <Plus className="h-4 w-4" />
-            Ofrecer servicios
-          </Link>
-        </Button>
+            <Link href="/dashboard/services/publicar">
+              <Plus className="h-4 w-4" />
+              Ofrecer servicios
+            </Link>
+          </Button>
         </div>
       )}
+
+      <div className="grid gap-3 md:grid-cols-3">
+        <div className="rounded-xl border border-sky-200 bg-sky-100 px-4 py-3">
+          <p className="text-sm font-semibold text-foreground">Perfiles recomendados</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Encontrá servicios sugeridos por vecinos de la zona.
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-sky-200 bg-sky-100 px-4 py-3">
+          <p className="text-sm font-semibold text-foreground">Contacto directo</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Hablá por WhatsApp sin intermediarios ni vueltas.
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-sky-200 bg-sky-100 px-4 py-3">
+          <p className="text-sm font-semibold text-foreground">Más confianza</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Reseñas y referencias para elegir mejor.
+          </p>
+        </div>
+      </div>
 
       <ServicesSearch
         query={query}
