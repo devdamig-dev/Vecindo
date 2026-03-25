@@ -32,79 +32,84 @@ export default function MarketplacePage() {
 
   return (
     <div className="flex max-w-full flex-col gap-6">
+      {/* HEADER */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
             <Store className="h-3.5 w-3.5" />
-            Compra y venta entre vecinos
+            Mercado de tu zona
           </div>
 
           <h1 className="text-2xl font-bold text-foreground">Mercado</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
-            Publicá, comprá y vendé productos dentro de tu comunidad. Sin comisiones y
-            con contacto directo.
+            Comprá y vendé productos dentro de tu comunidad, sin comisiones y con contacto directo.
           </p>
         </div>
 
-        <Button size="sm" className="gap-1.5">
+        <Button
+          size="sm"
+          className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+        >
           <Plus className="h-4 w-4" />
           <span>Publicar producto</span>
         </Button>
       </div>
 
+      {/* INTRO */}
       <SectionIntroBanner
         sectionId="marketplace"
         title="Mercado de la comunidad"
-        description="Comprá y vendé productos en tu zona, con contacto directo y sin intermediarios."
+        description="Compra y venta entre vecinos, simple y sin intermediarios."
         howItWorks={{
           title: "¿Cómo funciona?",
           steps: [
-            "Publicá un producto con fotos, precio y descripción.",
-            "Los vecinos interesados te contactan directamente.",
-            "Coordinan entrega, retiro y pago entre ustedes.",
-            "Todo dentro de una comunidad más cercana y confiable.",
+            "Publicá un producto con fotos y precio.",
+            "Los vecinos te contactan directamente.",
+            "Coordinan entrega y pago entre ustedes.",
+            "Sin comisiones y dentro de la comunidad.",
           ],
         }}
       />
 
+      {/* BENEFICIOS */}
       <div className="grid gap-3 md:grid-cols-3">
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-100 px-4 py-3">
           <p className="text-sm font-semibold text-foreground">Sin comisiones</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Publicá y vendé sin costos extra ni intermediarios.
+          <p className="mt-1 text-xs text-muted-foreground">
+            Vendé sin intermediarios ni costos extra.
           </p>
         </div>
 
-        <div className="rounded-xl border border-sky-200 bg-sky-50 px-4 py-3">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-100 px-4 py-3">
           <p className="text-sm font-semibold text-foreground">Contacto directo</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Hablá con el vecino interesado y definan todo por privado.
+          <p className="mt-1 text-xs text-muted-foreground">
+            Hablá con el comprador por WhatsApp o mensaje.
           </p>
         </div>
 
-        <div className="rounded-xl border border-violet-200 bg-violet-50 px-4 py-3">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-100 px-4 py-3">
           <p className="text-sm font-semibold text-foreground">Más confianza</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Las publicaciones circulan dentro de la comunidad y la zona.
+          <p className="mt-1 text-xs text-muted-foreground">
+            Solo vecinos de tu zona.
           </p>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3">
+      {/* BLOQUE CONFIANZA */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-100 px-4 py-3">
         <div className="flex items-start gap-2">
-          <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+          <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
           <p className="text-sm text-muted-foreground">
-            Vecindo facilita el encuentro entre vecinos. La coordinación de pago,
-            entrega y retiro se realiza directamente entre las partes.
+            Vecindo conecta vecinos. La compra se realiza directamente entre usuarios.
           </p>
         </div>
 
-        <div className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs text-muted-foreground">
-          <MessageCircleMore className="h-3.5 w-3.5" />
-          Contacto directo por WhatsApp o mensaje
+        <div className="text-xs font-medium text-emerald-700">
+          Contacto directo sin intermediarios
         </div>
       </div>
 
+      {/* FILTROS */}
       <MarketplaceFilters
         query={query}
         onQueryChange={setQuery}
@@ -112,6 +117,7 @@ export default function MarketplacePage() {
         onCategoryChange={setActiveCategory}
       />
 
+      {/* RESULTADOS */}
       <div className="text-sm text-muted-foreground">
         {filteredListings.length} resultado{filteredListings.length === 1 ? "" : "s"}
       </div>
