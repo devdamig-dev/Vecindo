@@ -160,27 +160,27 @@ export default function ServicesPage() {
 
       {canOfferServices && (
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-sky-200 bg-sky-100 px-4 py-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-200 text-sky-700">
-              <Briefcase className="h-5 w-5" />
-            </div>
-
-            <div>
-              <p className="text-sm font-semibold text-foreground">
-                ¿Querés ofrecer tus servicios a la comunidad?
-              </p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Publicá tu perfil, mostrale a los vecinos qué hacés y empezá a recibir consultas dentro de tu zona.
-              </p>
-            </div>
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-200 text-sky-700">
+            <Briefcase className="h-5 w-5" />
           </div>
 
+          <div>
+            <p className="text-sm font-semibold text-foreground">
+              ¿Ofrecés un servicio en la zona?
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Creá tu perfil y empezá a recibir consultas de vecinos de tu comunidad.
+            </p>
+          </div>
+        </div>
+
           <Button asChild className="bg-sky-600 text-white hover:bg-sky-700">
-            <Link href="/dashboard/settings">
-              <Plus className="h-4 w-4" />
-              Ofrecer servicios
-            </Link>
-          </Button>
+          <Link href="/dashboard/services/publicar">
+            <Plus className="h-4 w-4" />
+            Ofrecer servicios
+          </Link>
+        </Button>
         </div>
       )}
 
