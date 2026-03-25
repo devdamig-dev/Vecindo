@@ -2,7 +2,7 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { MapPin, Clock, MessageSquare } from "lucide-react"
+import { MapPin, Clock, MessageSquare, Eye, ShieldCheck } from "lucide-react"
 
 export const listings = [
   {
@@ -145,10 +145,28 @@ interface MarketplaceGridProps {
   listings: typeof listings
 }
 
+function getConditionBadgeClass(condition: string) {
+  const normalized = condition.toLowerCase()
+
+  if (normalized.includes("como nueva")) {
+    return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+  }
+
+  if (normalized.includes("excelente")) {
+    return "bg-sky-100 text-sky-700 hover:bg-sky-100"
+  }
+
+  if (normalized.includes("bueno")) {
+    return "bg-amber-100 text-amber-700 hover:bg-amber-100"
+  }
+
+  return "bg-muted text-muted-foreground hover:bg-muted"
+}
+
 export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
   if (listings.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center">
+      <div className="rounded-xl border border-dashed border-emerald-200 bg-emerald-50 p-8 text-center">
         <h3 className="text-base font-semibold text-foreground">No encontramos publicaciones</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           Probá con otra categoría o cambiá el texto de búsqueda.
@@ -158,86 +176,120 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
   }
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {listings.map((listing) => {
         const whatsappUrl = `https://wa.me/${listing.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
           `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VECINDO.`
         )}`
 
+        const detailHref = `/dashboard/mercado/${listing.id}`
+
         return (
-          <div
+          <article
             key={listing.id}
-            className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card transition-all hover:border-primary/30 hover:shadow-sm"
+            className="group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md"
           >
-            <Link href={`/dashboard/mercado/${listing.id}`} className="block">
-              <div className="relative h-40 overflow-hidden bg-muted/50">
+            <Link href={detailHref} className="block">
+              <div className="relative h-52 overflow-hidden bg-muted/40">
                 <img
                   src={listing.images[0]}
                   alt={listing.title}
-                  className="h-full w-full object-cover transition-transform group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   loading="lazy"
                 />
-                <span className="absolute bottom-2 right-2 rounded-md bg-primary px-2 py-1 text-xs font-bold text-primary-foreground shadow">
-                  {listing.price}
-                </span>
+
+                <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+                  <Badge className="bg-background/90 text-foreground hover:bg-background/90">
+                    {listing.category}
+                  </Badge>
+                  <Badge className={getConditionBadgeClass(listing.condition)}>
+                    {listing.condition}
+                  </Badge>
+                </div>
+
+                <div className="absolute bottom-3 left-3 rounded-xl bg-background/95 px-3 py-2 shadow-sm">
+                  <p className="text-lg font-bold leading-none text-foreground">{listing.price}</p>
+                </div>
               </div>
             </Link>
 
             <div className="flex flex-1 flex-col p-4">
-              <Link href={`/dashboard/mercado/${listing.id}`} className="block">
-                <h3 className="leading-snug font-semibold text-foreground transition-colors hover:text-primary">
-                  {listing.title}
-                </h3>
-              </Link>
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <Link href={detailHref} className="block">
+                    <h3 className="line-clamp-2 text-base font-semibold leading-snug text-foreground transition-colors hover:text-emerald-700">
+                      {listing.title}
+                    </h3>
+                  </Link>
 
-              <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{listing.description}</p>
-
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
-                  {listing.category}
-                </Badge>
-                <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
-                  {listing.condition}
-                </Badge>
+                  <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <MapPin className="h-3.5 w-3.5" />
+                      {listing.zone}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-3.5 w-3.5" />
+                      {listing.posted}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <div className="mt-3 border-t border-border pt-3">
+              <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                {listing.description}
+              </p>
+
+              <div className="mt-4 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2">
+                <div className="flex items-center justify-between gap-2">
+                  <div className="flex min-w-0 items-center gap-2">
+                    <Avatar className="h-7 w-7">
+                      <AvatarFallback className="bg-emerald-100 text-[10px] font-medium text-emerald-700">
+                        {listing.initials}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    <div className="min-w-0">
+                      <p className="truncate text-xs font-medium text-foreground">{listing.seller}</p>
+                      <div className="flex items-center gap-1 text-[11px] text-emerald-700">
+                        <ShieldCheck className="h-3 w-3" />
+                        Vecino de la zona
+                      </div>
+                    </div>
+                  </div>
+
+                  <Link
+                    href={detailHref}
+                    className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 transition-colors hover:text-emerald-800"
+                  >
+                    <Eye className="h-3.5 w-3.5" />
+                    Ver más
+                  </Link>
+                </div>
+              </div>
+
+              <div className="mt-4 flex gap-2">
+                <Button
+                  asChild
+                  size="sm"
+                  className="flex-1 gap-2 bg-emerald-600 text-white hover:bg-emerald-700"
+                >
+                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                    <MessageSquare className="h-3.5 w-3.5" />
+                    Consultar
+                  </a>
+                </Button>
+
                 <Button
                   asChild
                   variant="outline"
                   size="sm"
-                  className="w-full gap-2 border-success/30 text-success hover:bg-success/5 hover:text-success"
+                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-700"
                 >
-                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                    <MessageSquare className="h-3.5 w-3.5" />
-                    Contactar por WhatsApp
-                  </a>
+                  <Link href={detailHref}>Detalle</Link>
                 </Button>
               </div>
-
-              <div className="flex items-center justify-between pt-3">
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-6 w-6">
-                    <AvatarFallback className="bg-muted text-[9px] text-foreground">
-                      {listing.initials}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-xs text-muted-foreground">{listing.seller}</span>
-                </div>
-
-                <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <MapPin className="h-3 w-3" />
-                    {listing.zone}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {listing.posted}
-                  </span>
-                </div>
-              </div>
             </div>
-          </div>
+          </article>
         )
       })}
     </div>
