@@ -37,12 +37,15 @@ export default function ServicesPage() {
   if (isProfessional) {
     return (
       <div className="flex max-w-full flex-col gap-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
-            Directorio de servicios de la zona
-          </h1>
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-2 rounded-full bg-sky-100 px-3 py-1 text-xs font-medium text-sky-700">
+            <SearchIcon className="h-3.5 w-3.5" />
+            Servicios de tu zona
+          </div>
+
+          <h1 className="text-2xl font-bold text-foreground">Servicios</h1>
           <p className="text-sm text-muted-foreground">
-            Explorá cómo se muestran otros perfiles y detectá oportunidades dentro de la comunidad
+            Explorá cómo se muestran otros perfiles y detectá oportunidades dentro de la comunidad.
           </p>
         </div>
 
@@ -62,8 +65,8 @@ export default function ServicesPage() {
         />
 
         <div className="grid gap-4 md:grid-cols-3">
-          <div className="rounded-xl border border-border bg-card p-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="rounded-xl border border-sky-200 bg-sky-100 p-4">
+            <div className="flex items-center gap-2 text-sky-700">
               <SearchIcon className="h-4 w-4" />
               <span className="text-sm">Categorías activas</span>
             </div>
@@ -73,8 +76,8 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          <div className="rounded-xl border border-border bg-card p-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="rounded-xl border border-sky-200 bg-sky-100 p-4">
+            <div className="flex items-center gap-2 text-sky-700">
               <Eye className="h-4 w-4" />
               <span className="text-sm">Perfiles publicados</span>
             </div>
@@ -84,8 +87,8 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          <div className="rounded-xl border border-border bg-card p-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
+          <div className="rounded-xl border border-sky-200 bg-sky-100 p-4">
+            <div className="flex items-center gap-2 text-sky-700">
               <TrendingUp className="h-4 w-4" />
               <span className="text-sm">Oportunidad destacada</span>
             </div>
@@ -107,7 +110,7 @@ export default function ServicesPage() {
           <span>
             {filteredProfessionals.length} resultado{filteredProfessionals.length === 1 ? "" : "s"}
           </span>
-          <span className="rounded-full bg-muted px-3 py-1 text-xs">
+          <span className="rounded-full bg-sky-100 px-3 py-1 text-xs text-sky-700">
             Vista comparativa para prestadores
           </span>
         </div>
@@ -119,24 +122,29 @@ export default function ServicesPage() {
 
   return (
     <div className="flex max-w-full flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Directorio de servicios</h1>
+      <div className="space-y-1">
+        <div className="inline-flex items-center gap-2 rounded-full bg-sky-100 px-3 py-1 text-xs font-medium text-sky-700">
+          <SearchIcon className="h-3.5 w-3.5" />
+          Servicios de tu zona
+        </div>
+
+        <h1 className="text-2xl font-bold text-foreground">Servicios</h1>
         <p className="text-sm text-muted-foreground">
-          Encontrá profesionales verificados en tu zona
+          Encontrá oficios, ayuda y servicios recomendados dentro de tu zona.
         </p>
       </div>
 
       <SectionIntroBanner
         sectionId="services"
-        title="Profesionales verificados de tu zona"
-        description="Todos los prestadores tienen reseñas reales de vecinos."
+        title="Servicios de la comunidad"
+        description="Encontrá perfiles con reseñas reales y contacto directo."
         howItWorks={{
           title: "¿Cómo funciona Servicios?",
           steps: [
             "Buscá por categoría o escribiendo el servicio que necesitás.",
-            "Mirá las reseñas y puntuaciones de otros vecinos.",
+            "Mirá reseñas, experiencia y datos del perfil.",
             "Contactá directamente por WhatsApp sin intermediarios.",
-            "Después del trabajo, dejá tu reseña para ayudar a otros.",
+            "Después del trabajo, dejá tu reseña para ayudar a otros vecinos.",
           ],
         }}
       />

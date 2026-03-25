@@ -40,7 +40,7 @@ const allNavItems: NavItem[] = [
   { label: "Inicio", href: "/dashboard", icon: LayoutDashboard, residentOnly: true },
   { label: "Panel profesional", href: "/dashboard/pro", icon: BarChart3, professionalOnly: true },
   { label: "Servicios", href: "/dashboard/services", icon: Search },
-  { label: "Preguntas", href: "/dashboard/questions", icon: MessageCircle, requireCapability: "canPublishQuestions" },
+  { label: "Comunidad", href: "/dashboard/questions", icon: MessageCircle, requireCapability: "canPublishQuestions" },
   { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, requireCapability: "canAccessMarketplace" },
   { label: "Ayuda comunitaria", href: "/dashboard/ayuda", icon: Heart },
   { label: "Comercios", href: "/dashboard/comercios", icon: Store, residentOnly: true },
@@ -49,6 +49,14 @@ const allNavItems: NavItem[] = [
   { label: "Suscripciones", href: "/dashboard/suscripciones", icon: CreditCard },
   { label: "Guardados", href: "/dashboard/guardados", icon: Bookmark, residentOnly: true },
 ]
+
+function getActiveClass(href: string) {
+  if (href.includes("/dashboard/services")) return "bg-sky-600 text-white"
+  if (href.includes("/dashboard/questions")) return "bg-violet-600 text-white"
+  if (href.includes("/dashboard/marketplace")) return "bg-emerald-600 text-white"
+  if (href.includes("/dashboard/ayuda")) return "bg-rose-600 text-white"
+  return "bg-sidebar-primary text-sidebar-primary-foreground"
+}
 
 export function DashboardSidebar() {
   const pathname = usePathname()
@@ -99,7 +107,7 @@ export function DashboardSidebar() {
             <span className="text-lg font-bold tracking-tight">VECINDO</span>
           </Link>
           <button
-            className="lg:hidden text-sidebar-foreground"
+            className="text-sidebar-foreground lg:hidden"
             onClick={() => setOpen(false)}
             aria-label="Cerrar navegación"
           >
@@ -141,7 +149,7 @@ export function DashboardSidebar() {
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                       isActive
-                        ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                        ? getActiveClass(item.href)
                         : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                     )}
                   >

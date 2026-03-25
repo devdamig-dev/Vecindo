@@ -103,7 +103,7 @@ interface ServicesListProps {
 export function ServicesList({ professionals }: ServicesListProps) {
   if (professionals.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-border bg-card p-8 text-center">
+      <div className="rounded-xl border border-dashed border-sky-200 bg-sky-50 p-8 text-center">
         <h3 className="text-base font-semibold text-foreground">No encontramos resultados</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           Probá con otra categoría o cambiá el texto de búsqueda.
@@ -118,7 +118,7 @@ export function ServicesList({ professionals }: ServicesListProps) {
         <Link
           key={pro.id}
           href={`/dashboard/services/${pro.id}`}
-          className="group flex flex-col gap-3 rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/30 hover:shadow-sm sm:flex-row sm:items-start"
+          className="group flex flex-col gap-3 rounded-xl border border-border bg-card p-5 transition-all hover:border-sky-300 hover:shadow-sm sm:flex-row sm:items-start"
         >
           <Avatar className="h-14 w-14 shrink-0">
             {pro.avatarUrl ? (
@@ -128,7 +128,7 @@ export function ServicesList({ professionals }: ServicesListProps) {
                 className="h-full w-full rounded-full object-cover"
               />
             ) : (
-              <AvatarFallback className="bg-primary/10 font-semibold text-primary">
+              <AvatarFallback className="bg-sky-100 font-semibold text-sky-700">
                 {pro.initials}
               </AvatarFallback>
             )}
@@ -138,7 +138,7 @@ export function ServicesList({ professionals }: ServicesListProps) {
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="font-semibold text-foreground">{pro.name}</h3>
 
-              {pro.verified && <ShieldCheck className="h-4 w-4 text-primary" />}
+              {pro.verified && <ShieldCheck className="h-4 w-4 text-sky-600" />}
 
               {pro.isTop && (
                 <Badge className="border-0 bg-yellow-500/10 text-[10px] text-yellow-700 hover:bg-yellow-500/10">
