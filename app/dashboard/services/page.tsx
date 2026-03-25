@@ -96,9 +96,10 @@ export default function ServicesPage() {
           Encontrá oficios, ayuda y servicios recomendados dentro de tu zona.
         </p>
       </div>
-
+      
       <SectionIntroBanner
         sectionId="services"
+        variant="services"
         title="Servicios de la comunidad"
         description="Encontrá perfiles con reseñas reales y contacto directo."
         howItWorks={{

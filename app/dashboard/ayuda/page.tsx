@@ -252,6 +252,7 @@ export default function AyudaPage() {
 
       <SectionIntroBanner
         sectionId="ayuda"
+        variant="ayuda"
         title="Ayuda entre vecinos"
         description="Publicá y encontrá avisos importantes: mascotas perdidas, donaciones, objetos extraviados y más."
         howItWorks={{

@@ -58,6 +58,7 @@ export default function MarketplacePage() {
       {/* INTRO */}
       <SectionIntroBanner
         sectionId="marketplace"
+        variant="marketplace"
         title="Mercado de la comunidad"
         description="Compra y venta entre vecinos, simple y sin intermediarios."
         howItWorks={{
