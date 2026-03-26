@@ -1,88 +1,21 @@
-"use client"
-
-export const dynamic = "force-dynamic"
-
 import Link from "next/link"
-import { useMemo } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Store, Sparkles, MapPin, ChevronRight, Briefcase, Clock3, Search, Package } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 import { hasCommercialActivity } from "@/lib/commercial"
+import { commerces } from "@/lib/commerces-data"
 
-type CommercialType = "commerce" | "entrepreneur"
-
-export const commerces = [
-    {
-    id: "1",
-    type: "commerce" as CommercialType,
-    title: "Farmacia de la Zona",
-    description: "Atención presencial, dermocosmética, perfumería y asesoramiento para vecinos.",
-    badge: "Local físico",
-    location: "Berazategui",
-    meta: "Abierto hoy · Dirección visible",
-    cta: "Ver comercio",
-  },
-  {
-    id: "2",
-    type: "commerce" as CommercialType,
-    title: "Punto Café",
-    description: "Cafetería y pastelería con combos, promos del día y beneficios para la comunidad.",
-    badge: "Promos activas",
-    location: "Plátanos",
-    meta: "Retiro por local · WhatsApp",
-    cta: "Ver comercio",
-  },
-  {
-    id: "3",
-    type: "commerce" as CommercialType,
-    title: "Mueblería Nórdica Hudson",
-    description: "Muebles, deco y objetos para el hogar con showroom y atención en la zona.",
-    badge: "Showroom",
-    location: "Hudson",
-    meta: "Catálogo + atención local",
-    cta: "Ver comercio",
-  },
-  {
-    id: "4",
-    type: "entrepreneur" as CommercialType,
-    title: "Mikage Deco",
-    description: "Mesas, racks y muebles a pedido hechos por un emprendimiento local con entregas coordinadas.",
-    badge: "Catálogo",
-    location: "Zona Hudson - Berazategui",
-    meta: "Sin local físico · Respuesta por WhatsApp",
-    cta: "Ver emprendimiento",
-  },
-  {
-    id: "5",
-    type: "entrepreneur" as CommercialType,
-    title: "Luna Cerámica",
-    description: "Piezas artesanales para el hogar, regalos y deco realizadas por encargo.",
-    badge: "Hecho a pedido",
-    location: "Zona Hudson - Berazategui",
-    meta: "Producción local · Entregas coordinadas",
-    cta: "Ver emprendimiento",
-  },
-  {
-    id: "6",
-    type: "entrepreneur" as CommercialType,
-    title: "Dulce Sur",
-    description: "Tortas, boxes y mesas dulces personalizadas para cumpleaños y fechas especiales.",
-    badge: "Por encargo",
-    location: "Zona Hudson - Berazategui",
-    meta: "Pedidos anticipados · Atención directa",
-    cta: "Ver emprendimiento",
-  },
-]
+type PageProps = {
+  searchParams?: Promise<{ tipo?: string }>
+}
 
 function CommercialListCard({ item }: { item: (typeof commerces)[number] }) {
   const isCommerce = item.type === "commerce"
 
   return (
     <Link
-      href="#"
+      href={`/dashboard/comercios/${item.id}`}
       className={`group rounded-2xl border p-5 transition-all hover:-translate-y-0.5 hover:shadow-sm ${
         isCommerce ? "border-sky-200 bg-sky-50" : "border-amber-200 bg-amber-50"
       }`}
@@ -125,30 +58,27 @@ function CommercialListCard({ item }: { item: (typeof commerces)[number] }) {
   )
 }
 
-export default function ComerciosPage() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
+export default async function ComerciosPage({ searchParams }: PageProps) {
+  const params = (await searchParams) ?? {}
+  const activeTab = params.tipo === "emprendimientos" ? "emprendimientos" : "comercios"
+  const filteredProfiles = commerces.filter((item) =>
+    activeTab === "emprendimientos" ? item.type === "entrepreneur" : item.type === "commerce"
+  )
+
+  return (
+    <ComerciosPageContent activeTab={activeTab} filteredProfiles={filteredProfiles} />
+  )
+}
+
+function ComerciosPageContent({
+  activeTab,
+  filteredProfiles,
+}: {
+  activeTab: "comercios" | "emprendimientos"
+  filteredProfiles: typeof commerces
+}) {
   const { auth } = useAuth()
   const showMyBusiness = hasCommercialActivity(auth)
-
-  const tipo = searchParams.get("tipo")
-  const activeTab = tipo === "emprendimientos" ? "emprendimientos" : "comercios"
-
-  const filteredProfiles = useMemo(() => {
-    return commerces.filter((item) =>
-      activeTab === "emprendimientos" ? item.type === "entrepreneur" : item.type === "commerce"
-    )
-  }, [activeTab])
-
-  const handleTabChange = (value: string) => {
-    if (value === "emprendimientos") {
-      router.push("/dashboard/comercios?tipo=emprendimientos")
-      return
-    }
-
-    router.push("/dashboard/comercios")
-  }
-
   const isCommerceTab = activeTab === "comercios"
 
   return (
@@ -169,18 +99,24 @@ export default function ComerciosPage() {
         </p>
       </div>
 
-      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="grid w-full max-w-md grid-cols-2">
-          <TabsTrigger value="comercios" className="gap-2">
+      <div className="flex flex-wrap gap-2">
+        <Button asChild variant={isCommerceTab ? "default" : "outline"} className={isCommerceTab ? "bg-sky-600 text-white hover:bg-sky-700" : ""}>
+          <Link href="/dashboard/comercios">
             <Store className="h-4 w-4" />
             Comercios
-          </TabsTrigger>
-          <TabsTrigger value="emprendimientos" className="gap-2">
+          </Link>
+        </Button>
+        <Button
+          asChild
+          variant={!isCommerceTab ? "default" : "outline"}
+          className={!isCommerceTab ? "bg-amber-600 text-white hover:bg-amber-700" : ""}
+        >
+          <Link href="/dashboard/comercios?tipo=emprendimientos">
             <Sparkles className="h-4 w-4" />
             Emprendimientos locales
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+          </Link>
+        </Button>
+      </div>
 
       <div
         className={`rounded-xl border p-4 ${
