@@ -12,8 +12,8 @@ import { hasCommercialActivity } from "@/lib/commercial"
 
 type CommercialType = "commerce" | "entrepreneur"
 
-const commercialProfiles = [
-  {
+export const commerces = [
+    {
     id: "1",
     type: "commerce" as CommercialType,
     title: "Farmacia de la Zona",
@@ -75,7 +75,7 @@ const commercialProfiles = [
   },
 ]
 
-function CommercialListCard({ item }: { item: (typeof commercialProfiles)[number] }) {
+function CommercialListCard({ item }: { item: (typeof commerces)[number] }) {
   const isCommerce = item.type === "commerce"
 
   return (
@@ -133,7 +133,7 @@ export default function ComerciosPage() {
   const activeTab = tipo === "emprendimientos" ? "emprendimientos" : "comercios"
 
   const filteredProfiles = useMemo(() => {
-    return commercialProfiles.filter((item) =>
+    return commerces.filter((item) =>
       activeTab === "emprendimientos" ? item.type === "entrepreneur" : item.type === "commerce"
     )
   }, [activeTab])
