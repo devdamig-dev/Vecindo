@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/lib/auth-context"
+import { hasCommercialActivity } from "@/lib/commercial"
 import {
   Shield,
   LayoutDashboard,
@@ -43,17 +44,12 @@ const allNavItems: NavItem[] = [
   { label: "Servicios", href: "/dashboard/services", icon: Search },
   { label: "Comunidad", href: "/dashboard/questions", icon: MessageCircle, requireCapability: "canPublishQuestions" },
   { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, requireCapability: "canAccessMarketplace" },
-
-  // Público
   { label: "Espacio comercial", href: "/dashboard/espacio-comercial", icon: Store },
-
   { label: "Ayuda comunitaria", href: "/dashboard/ayuda", icon: Heart },
   { label: "Información útil", href: "/dashboard/informacion-util", icon: Info },
   { label: "Mi barrio", href: "/dashboard/mi-barrio", icon: Building2, residentOnly: true },
   { label: "Suscripciones", href: "/dashboard/suscripciones", icon: CreditCard },
   { label: "Guardados", href: "/dashboard/guardados", icon: Bookmark, residentOnly: true },
-
-  // Privado / solo comercial
   { label: "Mi negocio", href: "/dashboard/comercial", icon: Briefcase, commercialOnly: true },
 ]
 
@@ -63,7 +59,9 @@ function getActiveClass(href: string) {
   if (href.includes("/dashboard/marketplace")) return "bg-emerald-600 text-white"
   if (href.includes("/dashboard/ayuda")) return "bg-rose-600 text-white"
   if (href.includes("/dashboard/espacio-comercial")) return "bg-amber-600 text-white"
-  if (href.includes("/dashboard/comercial")) return "bg-amber-700 text-white"
+  if (href.includes("/dashboard/comercial")) {
+    return "bg-sidebar-primary text-sidebar-primary-foreground"
+  }
 
   return "bg-sidebar-primary text-sidebar-primary-foreground"
 }
@@ -76,13 +74,7 @@ export function DashboardSidebar() {
   const isProfessional = auth.accountType === "external_professional"
   const { capabilities } = auth
 
-  // Mock temporal hasta conectar lógica real
-  const hasMarketplaceListings = true
-  const hasServiceProfile = true
-  const hasCommercialProfile = true
-
-  const showCommercialPanel =
-    hasMarketplaceListings || hasServiceProfile || hasCommercialProfile
+  const showCommercialPanel = hasCommercialActivity(auth)
 
   const navItems = allNavItems.filter((item) => {
     if (item.residentOnly && !isResident) return false
@@ -161,9 +153,7 @@ export function DashboardSidebar() {
         <nav className="flex-1 overflow-y-auto px-3 py-2">
           <ul className="flex flex-col gap-1">
             {navItems.map((item) => {
-              const isActive =
-                pathname === item.href ||
-                (item.href !== "/dashboard" && pathname.startsWith(item.href))
+              const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
 
               return (
                 <li key={item.href}>
@@ -220,7 +210,7 @@ export function DashboardSidebar() {
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
           >
             <LogOut className="h-4 w-4" />
-            Cerrar sesión
+            Salir
           </Link>
         </div>
       </aside>

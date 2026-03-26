@@ -19,7 +19,7 @@ export interface UserProfile {
   email: string
   whatsapp: string
   avatarInitials: string
-  avatarUrl?: string // 👈 NUEVO
+  avatarUrl?: string
   bio: string
   zone: string
   neighborhood: string
@@ -51,6 +51,13 @@ export interface BusinessProduct {
   image: string
 }
 
+export interface CommercialActivity {
+  marketplaceListingsCount: number
+  serviceListingsCount: number
+  hasEntrepreneurProfile: boolean
+  hasBusinessProfile: boolean
+}
+
 export type SavedItemType = "service" | "marketplace" | "zone_update" | "commerce" | "ayuda"
 
 export interface SavedItem {
@@ -70,6 +77,7 @@ export interface AuthState {
   savedItems: SavedItem[]
   hasCommerceProfile: boolean
   managesCommerceIds: string[]
+  commercialActivity: CommercialActivity
 }
 
 interface AuthContextType {
@@ -79,6 +87,7 @@ interface AuthContextType {
   updateProfile: (profile: Partial<UserProfile>) => void
   updateProfessionalProfile: (data: Partial<ProfessionalProfileData>) => void
   updateBusinessProfile: (data: Partial<BusinessProfileData>) => void
+  updateCommercialActivity: (data: Partial<CommercialActivity>) => void
   addProduct: (product: Omit<BusinessProduct, "id">) => void
   removeProduct: (id: string) => void
   updateProduct: (id: string, data: Partial<BusinessProduct>) => void
@@ -90,8 +99,8 @@ interface AuthContextType {
 const defaultResident: AuthState = {
   accountType: "resident",
   capabilities: {
-    canOfferServices: false,
-    canSell: false,
+    canOfferServices: true,
+    canSell: true,
     canPostPets: true,
     canPostZoneUpdates: true,
     canAccessMarketplace: true,
@@ -103,14 +112,37 @@ const defaultResident: AuthState = {
     email: "maria.gonzalez@email.com",
     whatsapp: "+54 11 2345-6789",
     avatarInitials: "MG",
-    avatarUrl: "https://i.pravatar.cc/150?img=5", // 👈 DEMO
+    avatarUrl: "https://i.pravatar.cc/150?img=5",
     bio: "Residente de Hudson. Amante de la jardineria y la buena vecindad.",
     zone: "Hudson – Berazategui",
     neighborhood: "Los Ombues",
     memberSince: "Enero 2024",
   },
-  professionalProfile: null,
-  businessProfile: null,
+  professionalProfile: {
+    category: "Diseño de interiores",
+    subcategories: ["Asesoramiento", "Muebles a medida"],
+    description:
+      "Asesoramiento y diseño para espacios del hogar, con foco en muebles y ambientación.",
+    matricula: "",
+    serviceArea: "Hudson – Berazategui",
+    galleryCount: 4,
+  },
+  businessProfile: {
+    businessName: "Mikage Deco",
+    description:
+      "Emprendimiento local de muebles y objetos de diseño para el hogar.",
+    whatsapp: "+54 11 2345-6789",
+    bannerImage: "",
+    products: [
+      {
+        id: "1",
+        title: "Mesa de comedor",
+        price: "$420.000",
+        description: "Mesa de hierro con tapa simil mármol.",
+        image: "",
+      },
+    ],
+  },
   savedItems: [
     { id: "s1", type: "service", title: "Pinturas Express", subtitle: "Pintura · 4.9 estrellas", savedAt: "hace 2 días" },
     { id: "s2", type: "marketplace", title: "Bicicleta Trek Marlin 7", subtitle: "$450.000 · Diego P.", savedAt: "hace 3 días" },
@@ -118,6 +150,12 @@ const defaultResident: AuthState = {
   ],
   hasCommerceProfile: true,
   managesCommerceIds: ["1"],
+  commercialActivity: {
+    marketplaceListingsCount: 2,
+    serviceListingsCount: 1,
+    hasEntrepreneurProfile: true,
+    hasBusinessProfile: false,
+  },
 }
 
 const defaultExternal: AuthState = {
@@ -136,7 +174,7 @@ const defaultExternal: AuthState = {
     email: "roberto.mendez@email.com",
     whatsapp: "+54 11 9876-5432",
     avatarInitials: "RM",
-    avatarUrl: "https://i.pravatar.cc/150?img=12", // 👈 DEMO
+    avatarUrl: "https://i.pravatar.cc/150?img=12",
     bio: "Electricista matriculado con más de 15 años de experiencia.",
     zone: "Hudson – Berazategui",
     neighborhood: "",
@@ -155,6 +193,12 @@ const defaultExternal: AuthState = {
   savedItems: [],
   hasCommerceProfile: false,
   managesCommerceIds: [],
+  commercialActivity: {
+    marketplaceListingsCount: 0,
+    serviceListingsCount: 3,
+    hasEntrepreneurProfile: false,
+    hasBusinessProfile: false,
+  },
 }
 
 const AuthContext = createContext<AuthContextType | null>(null)
@@ -191,6 +235,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (key === "canOfferServices" && !value) {
         next.professionalProfile = null
+        next.commercialActivity = {
+          ...next.commercialActivity,
+          serviceListingsCount: 0,
+        }
       }
 
       if (key === "canOfferServices" && value && !next.professionalProfile) {
@@ -206,6 +254,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (key === "canSell" && !value) {
         next.businessProfile = null
+        next.commercialActivity = {
+          ...next.commercialActivity,
+          marketplaceListingsCount: 0,
+          hasBusinessProfile: false,
+        }
       }
 
       if (key === "canSell" && value && !next.businessProfile) {
@@ -244,6 +297,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       businessProfile: prev.businessProfile
         ? { ...prev.businessProfile, ...data }
         : null,
+      commercialActivity: {
+        ...prev.commercialActivity,
+        hasBusinessProfile: true,
+      },
+    }))
+  }
+
+  const updateCommercialActivity = (data: Partial<CommercialActivity>) => {
+    setAuth((prev) => ({
+      ...prev,
+      commercialActivity: {
+        ...prev.commercialActivity,
+        ...data,
+      },
     }))
   }
 
@@ -253,12 +320,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       businessProfile: prev.businessProfile
         ? {
             ...prev.businessProfile,
-            products: [
-              ...prev.businessProfile.products,
-              { ...product, id: Date.now().toString() },
-            ],
+            products: [...prev.businessProfile.products, { ...product, id: Date.now().toString() }],
           }
         : null,
+      commercialActivity: {
+        ...prev.commercialActivity,
+        marketplaceListingsCount: prev.commercialActivity.marketplaceListingsCount + 1,
+        hasBusinessProfile: true,
+      },
     }))
   }
 
@@ -271,6 +340,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             products: prev.businessProfile.products.filter((p) => p.id !== id),
           }
         : null,
+      commercialActivity: {
+        ...prev.commercialActivity,
+        marketplaceListingsCount: Math.max(0, prev.commercialActivity.marketplaceListingsCount - 1),
+      },
     }))
   }
 
@@ -280,9 +353,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       businessProfile: prev.businessProfile
         ? {
             ...prev.businessProfile,
-            products: prev.businessProfile.products.map((p) =>
-              p.id === id ? { ...p, ...data } : p
-            ),
+            products: prev.businessProfile.products.map((p) => (p.id === id ? { ...p, ...data } : p)),
           }
         : null,
     }))
@@ -291,10 +362,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const saveItem = (item: Omit<SavedItem, "id" | "savedAt">) => {
     setAuth((prev) => ({
       ...prev,
-      savedItems: [
-        { ...item, id: Date.now().toString(), savedAt: "ahora" },
-        ...prev.savedItems,
-      ],
+      savedItems: [{ ...item, id: Date.now().toString(), savedAt: "ahora" }, ...prev.savedItems],
     }))
   }
 
@@ -318,6 +386,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         updateProfile,
         updateProfessionalProfile,
         updateBusinessProfile,
+        updateCommercialActivity,
         addProduct,
         removeProduct,
         updateProduct,

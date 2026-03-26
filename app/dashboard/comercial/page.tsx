@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/lib/auth-context"
+import { hasCommercialActivity } from "@/lib/commercial"
 import {
   Briefcase,
   Store,
@@ -13,8 +15,6 @@ import {
   Package,
   Settings,
   ChevronRight,
-  ShoppingBag,
-  Search,
   BarChart3,
 } from "lucide-react"
 
@@ -65,7 +65,7 @@ const stats = [
 ]
 
 const recentListings: RecentListing[] = [
-    {
+  {
     id: "1",
     title: "Mesa de comedor de hierro y tapa simil mármol",
     type: "product",
@@ -130,24 +130,63 @@ function getListingStatusClass(status: string) {
 }
 
 export default function ComercialPage() {
+  const { auth } = useAuth()
   const profileBadge = getProfileTypeBadge(commercialProfile.type)
   const ProfileIcon = profileBadge.icon
+  const canAccessCommercialPanel = hasCommercialActivity(auth)
+
+  if (!canAccessCommercialPanel) {
+    return (
+      <div className="flex max-w-full flex-col gap-6">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground">
+            <Briefcase className="h-3.5 w-3.5" />
+            Mi negocio
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">Mi negocio</h1>
+          <p className="text-sm text-muted-foreground">
+            Este panel aparece cuando publicás productos, ofrecés servicios o creás tu perfil comercial.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-6">
+          <h2 className="text-lg font-semibold text-foreground">Todavía no tenés actividad comercial</h2>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+            Cuando publiques en Mercado, actives tus servicios o crees tu emprendimiento o comercio,
+            vas a poder gestionar todo desde acá.
+          </p>
+
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Button asChild>
+              <Link href="/dashboard/marketplace">Publicar en Mercado</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/dashboard/services">Ofrecer servicios</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/dashboard/espacio-comercial">Ir a Espacio comercial</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex max-w-full flex-col gap-6">
       <div className="space-y-1">
-        <div className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">
+        <div className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-medium text-foreground">
           <Briefcase className="h-3.5 w-3.5" />
-          Mi Negocio
+          Mi negocio
         </div>
 
-        <h1 className="text-2xl font-bold text-foreground">Mi Negocio</h1>
+        <h1 className="text-2xl font-bold text-foreground">Mi negocio</h1>
         <p className="text-sm text-muted-foreground">
           Gestioná tu perfil, tus publicaciones y las consultas que recibís dentro de la comunidad.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5">
+      <div className="rounded-2xl border border-border bg-card p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
@@ -161,9 +200,7 @@ export default function ComercialPage() {
 
             <div>
               <h2 className="text-xl font-bold text-foreground">{commercialProfile.name}</h2>
-              <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-                {commercialProfile.description}
-              </p>
+              <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{commercialProfile.description}</p>
             </div>
 
             <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
@@ -176,7 +213,7 @@ export default function ComercialPage() {
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Button asChild className="bg-amber-600 text-white hover:bg-amber-700">
+            <Button asChild>
               <Link href="/dashboard/marketplace">
                 <Plus className="h-4 w-4" />
                 Nueva publicación
@@ -194,20 +231,16 @@ export default function ComercialPage() {
       </div>
 
       {!commercialProfile.isProfileComplete && (
-        <div className="rounded-xl border border-dashed border-amber-300 bg-background p-4">
+        <div className="rounded-xl border border-dashed border-border bg-background p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <p className="text-sm font-semibold text-foreground">
-                Completá tu perfil comercial
-              </p>
+              <p className="text-sm font-semibold text-foreground">Completá tu perfil comercial</p>
               <p className="mt-1 text-sm text-muted-foreground">
                 Sumá logo, portada, Instagram y más datos para generar confianza y recibir más consultas.
               </p>
             </div>
 
-            <Button variant="outline" className="border-amber-200 text-amber-700 hover:bg-amber-50 hover:text-amber-700">
-              Completar perfil
-            </Button>
+            <Button variant="outline">Completar perfil</Button>
           </div>
         </div>
       )}
@@ -235,9 +268,7 @@ export default function ComercialPage() {
             </div>
 
             <Button asChild variant="outline" size="sm">
-              <Link href="/dashboard/marketplace">
-                Ver todas
-              </Link>
+              <Link href="/dashboard/marketplace">Ver todas</Link>
             </Button>
           </div>
 
@@ -254,7 +285,7 @@ export default function ComercialPage() {
                   <p className="mt-1 text-sm text-muted-foreground">{item.price}</p>
                 </div>
 
-                <Button asChild variant="ghost" size="sm" className="text-amber-700 hover:bg-amber-50 hover:text-amber-700">
+                <Button asChild variant="ghost" size="sm">
                   <Link href={item.href}>
                     Ver
                     <ChevronRight className="h-4 w-4" />
@@ -265,67 +296,37 @@ export default function ComercialPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
+        <div className="space-y-4">
           <div className="rounded-2xl border border-border bg-card p-5">
             <h2 className="font-semibold text-foreground">Accesos rápidos</h2>
-
             <div className="mt-4 grid gap-2">
-              <Button asChild variant="outline" className="justify-start">
+              <Button asChild variant="outline" className="justify-between">
                 <Link href="/dashboard/marketplace">
-                  <ShoppingBag className="h-4 w-4" />
-                  Publicar producto
+                  Gestionar productos
+                  <ChevronRight className="h-4 w-4" />
                 </Link>
               </Button>
 
-              <Button asChild variant="outline" className="justify-start">
+              <Button asChild variant="outline" className="justify-between">
                 <Link href="/dashboard/services">
-                  <Search className="h-4 w-4" />
-                  Ofrecer servicios
+                  Gestionar servicios
+                  <ChevronRight className="h-4 w-4" />
                 </Link>
               </Button>
 
-              <Button variant="outline" className="justify-start">
-                <Store className="h-4 w-4" />
-                Ver ficha comercial
-              </Button>
-
-              <Button variant="outline" className="justify-start">
-                <BarChart3 className="h-4 w-4" />
-                Ver estadísticas
+              <Button asChild variant="outline" className="justify-between">
+                <Link href="/dashboard/espacio-comercial">
+                  Ver espacio comercial
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
               </Button>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-border bg-card p-5">
-            <h2 className="font-semibold text-foreground">Consultas recientes</h2>
-
-            <div className="mt-4 space-y-3">
-              <div className="rounded-xl border border-border p-3">
-                <p className="text-sm font-medium text-foreground">
-                  Consulta por “Mesa de comedor de hierro”
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Te escribieron desde Mercado por WhatsApp hace 2 horas.
-                </p>
-              </div>
-
-              <div className="rounded-xl border border-border p-3">
-                <p className="text-sm font-medium text-foreground">
-                  Interés en tu servicio de diseño
-                </p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Un vecino vio tu perfil de servicios y pidió más info.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
-            <p className="text-sm font-medium text-foreground">
-              Tu perfil comercial conecta Mercado, Servicios y Comercios.
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Más adelante vas a poder gestionar visibilidad, destacadas y métricas avanzadas desde acá.
+          <div className="rounded-xl border border-border bg-muted/40 px-4 py-3">
+            <p className="text-sm font-medium text-foreground">Sugerencia</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Completá tu perfil y mantené publicaciones activas para mejorar visibilidad y generar más consultas.
             </p>
           </div>
         </div>
