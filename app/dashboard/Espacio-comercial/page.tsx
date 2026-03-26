@@ -226,32 +226,6 @@ export default function EspacioComercialPage() {
           )}
         </div>
       </div>
-
-      <div className="rounded-xl border border-border bg-card p-5">
-        <h3 className="font-semibold text-foreground">Diferencia principal</h3>
-
-        <div className="mt-4 grid gap-3 md:grid-cols-2">
-          <div className="rounded-xl border border-sky-200 bg-sky-50 p-4">
-            <div className="flex items-center gap-2 text-sky-700">
-              <Store className="h-4 w-4" />
-              <span className="font-medium">Comercio</span>
-            </div>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Tiene una ficha más institucional y puede mostrarse con dirección, horarios, ubicación y atención en un punto físico.
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-4">
-            <div className="flex items-center gap-2 text-amber-700">
-              <Sparkles className="h-4 w-4" />
-              <span className="font-medium">Emprendimiento local</span>
-            </div>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Tiene perfil comercial y catálogo, pero no depende de una geolocalización fija: se apoya más en marca, productos y contacto.
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
   )
 }
