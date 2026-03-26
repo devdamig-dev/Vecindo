@@ -42,6 +42,7 @@ const allNavItems: NavItem[] = [
   { label: "Servicios", href: "/dashboard/services", icon: Search },
   { label: "Comunidad", href: "/dashboard/questions", icon: MessageCircle, requireCapability: "canPublishQuestions" },
   { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, requireCapability: "canAccessMarketplace" },
+  { label: "Mi espacio comercial", href: "/dashboard/comercial", icon: Briefcase },
   { label: "Ayuda comunitaria", href: "/dashboard/ayuda", icon: Heart },
   { label: "Comercios", href: "/dashboard/comercios", icon: Store, residentOnly: true },
   { label: "Información útil", href: "/dashboard/informacion-util", icon: Info },
@@ -55,6 +56,7 @@ function getActiveClass(href: string) {
   if (href.includes("/dashboard/questions")) return "bg-violet-600 text-white"
   if (href.includes("/dashboard/marketplace")) return "bg-emerald-600 text-white"
   if (href.includes("/dashboard/ayuda")) return "bg-rose-600 text-white"
+  if (href.includes("/dashboard/comercial")) return "bg-amber-600 text-white"
   return "bg-sidebar-primary text-sidebar-primary-foreground"
 }
 

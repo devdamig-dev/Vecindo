@@ -11,28 +11,7 @@ import {
   Bookmark,
 } from "lucide-react"
 
-export type ListingStatus = "Disponible" | "Reservado" | "Vendido"
-
-export type Listing = {
-  id: string
-  title: string
-  price: string
-  priceNum: number
-  category: string
-  condition: string
-  status: ListingStatus
-  seller: string
-  sellerId: string
-  initials: string
-  whatsapp: string
-  zone: string
-  posted: string
-  description: string
-  fullDescription: string
-  images: string[]
-}
-
-export const listings: Listing[] = [
+export const listings = [
   {
     id: "1",
     title: "Parrilla Weber Genesis",
@@ -176,7 +155,7 @@ export const listings: Listing[] = [
 ]
 
 interface MarketplaceGridProps {
-  listings: Listing[]
+  listings: typeof listings
 }
 
 function getConditionBadgeClass(condition: string) {
@@ -197,16 +176,18 @@ function getConditionBadgeClass(condition: string) {
   return "bg-muted text-muted-foreground hover:bg-muted"
 }
 
-function getStatusBadgeClass(status: ListingStatus) {
-  if (status === "Disponible") {
+function getStatusBadgeClass(status: string) {
+  const normalized = status.toLowerCase()
+
+  if (normalized.includes("disponible")) {
     return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
   }
 
-  if (status === "Reservado") {
+  if (normalized.includes("reservado")) {
     return "bg-amber-100 text-amber-700 hover:bg-amber-100"
   }
 
-  if (status === "Vendido") {
+  if (normalized.includes("vendido")) {
     return "bg-muted text-muted-foreground hover:bg-muted"
   }
 
@@ -233,7 +214,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
         )}`
 
         const detailHref = `/dashboard/marketplace/${listing.id}`
-        const isSold = listing.status === "Vendido"
+        const isSold = listing.status.toLowerCase() === "vendido"
 
         return (
           <article
