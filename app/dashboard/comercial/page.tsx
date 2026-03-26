@@ -138,10 +138,10 @@ export default function ComercialPage() {
       <div className="space-y-1">
         <div className="inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">
           <Briefcase className="h-3.5 w-3.5" />
-          Mi espacio comercial
+          Mi Negocio
         </div>
 
-        <h1 className="text-2xl font-bold text-foreground">Mi espacio comercial</h1>
+        <h1 className="text-2xl font-bold text-foreground">Mi Negocio</h1>
         <p className="text-sm text-muted-foreground">
           Gestioná tu perfil, tus publicaciones y las consultas que recibís dentro de la comunidad.
         </p>

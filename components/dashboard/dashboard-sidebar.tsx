@@ -34,6 +34,7 @@ interface NavItem {
   requireCapability?: string
   residentOnly?: boolean
   professionalOnly?: boolean
+  commercialOnly?: boolean
 }
 
 const allNavItems: NavItem[] = [
@@ -42,13 +43,18 @@ const allNavItems: NavItem[] = [
   { label: "Servicios", href: "/dashboard/services", icon: Search },
   { label: "Comunidad", href: "/dashboard/questions", icon: MessageCircle, requireCapability: "canPublishQuestions" },
   { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, requireCapability: "canAccessMarketplace" },
-  { label: "Mi espacio comercial", href: "/dashboard/comercial", icon: Briefcase },
+
+  // Público
+  { label: "Espacio comercial", href: "/dashboard/espacio-comercial", icon: Store },
+
   { label: "Ayuda comunitaria", href: "/dashboard/ayuda", icon: Heart },
-  { label: "Comercios", href: "/dashboard/comercios", icon: Store, residentOnly: true },
   { label: "Información útil", href: "/dashboard/informacion-util", icon: Info },
   { label: "Mi barrio", href: "/dashboard/mi-barrio", icon: Building2, residentOnly: true },
   { label: "Suscripciones", href: "/dashboard/suscripciones", icon: CreditCard },
   { label: "Guardados", href: "/dashboard/guardados", icon: Bookmark, residentOnly: true },
+
+  // Privado / solo comercial
+  { label: "Mi negocio", href: "/dashboard/comercial", icon: Briefcase, commercialOnly: true },
 ]
 
 function getActiveClass(href: string) {
@@ -56,7 +62,9 @@ function getActiveClass(href: string) {
   if (href.includes("/dashboard/questions")) return "bg-violet-600 text-white"
   if (href.includes("/dashboard/marketplace")) return "bg-emerald-600 text-white"
   if (href.includes("/dashboard/ayuda")) return "bg-rose-600 text-white"
-  if (href.includes("/dashboard/comercial")) return "bg-amber-600 text-white"
+  if (href.includes("/dashboard/espacio-comercial")) return "bg-amber-600 text-white"
+  if (href.includes("/dashboard/comercial")) return "bg-amber-700 text-white"
+
   return "bg-sidebar-primary text-sidebar-primary-foreground"
 }
 
@@ -68,13 +76,24 @@ export function DashboardSidebar() {
   const isProfessional = auth.accountType === "external_professional"
   const { capabilities } = auth
 
+  // Mock temporal hasta conectar lógica real
+  const hasMarketplaceListings = true
+  const hasServiceProfile = true
+  const hasCommercialProfile = true
+
+  const showCommercialPanel =
+    hasMarketplaceListings || hasServiceProfile || hasCommercialProfile
+
   const navItems = allNavItems.filter((item) => {
     if (item.residentOnly && !isResident) return false
     if (item.professionalOnly && !isProfessional) return false
+    if (item.commercialOnly && !showCommercialPanel) return false
+
     if (item.requireCapability) {
       const cap = item.requireCapability as keyof typeof capabilities
       if (!capabilities[cap]) return false
     }
+
     return true
   })
 
@@ -131,7 +150,9 @@ export function DashboardSidebar() {
             ) : (
               <>
                 <Briefcase className="h-3.5 w-3.5 text-sidebar-primary" />
-                <span className="text-xs font-medium text-sidebar-foreground/80">Prestador de servicios</span>
+                <span className="text-xs font-medium text-sidebar-foreground/80">
+                  Prestador de servicios
+                </span>
               </>
             )}
           </div>
@@ -141,7 +162,8 @@ export function DashboardSidebar() {
           <ul className="flex flex-col gap-1">
             {navItems.map((item) => {
               const isActive =
-                pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
+                pathname === item.href ||
+                (item.href !== "/dashboard" && pathname.startsWith(item.href))
 
               return (
                 <li key={item.href}>
