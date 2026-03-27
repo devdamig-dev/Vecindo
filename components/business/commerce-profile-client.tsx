@@ -28,13 +28,14 @@ import type { CommerceItem, CommerceReview } from "@/lib/commerces-data"
 
 type Props = {
   commerce: CommerceItem
+  activeTab?: "comercios" | "emprendimientos"
 }
 
 function ratingStars(value: number) {
   return Array.from({ length: 5 }).map((_, i) => i < Math.floor(value))
 }
 
-export function CommerceProfileClient({ commerce }: Props) {
+export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   const { saveItem, isSaved, auth } = useAuth()
   const { trackProfileView, trackWhatsAppClick, trackCallClick, trackSave } = useCommerceAnalytics()
 
@@ -49,8 +50,15 @@ export function CommerceProfileClient({ commerce }: Props) {
 
   const saved = isSaved(commerce.name)
   const isCommerce = commerce.type === "commerce"
-  const backHref = isCommerce ? "/dashboard/comercios" : "/dashboard/comercios?tipo=emprendimientos"
-  const backLabel = isCommerce ? "Volver a Comercios" : "Volver a Emprendimientos locales"
+  const cameFromEntrepreneurTab = activeTab === "emprendimientos"
+
+  const backHref = cameFromEntrepreneurTab
+    ? "/dashboard/comercios?tipo=emprendimientos"
+    : "/dashboard/comercios"
+
+  const backLabel = cameFromEntrepreneurTab
+    ? "Volver a Emprendimientos locales"
+    : "Volver a Comercios"
 
   const waUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
     `Hola ${commerce.name}, los contacto desde VECINDO.`
