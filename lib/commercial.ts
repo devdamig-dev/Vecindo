@@ -3,19 +3,19 @@ import type { AuthState } from "@/lib/auth-context"
 export function hasCommercialActivity(auth: AuthState | null | undefined) {
   if (!auth) return false
 
-  const activity = auth.commercialActivity
-
-  const hasMarketplaceListings = (activity?.marketplaceListingsCount ?? 0) > 0
-  const hasServiceListings = (activity?.serviceListingsCount ?? 0) > 0
-  const hasEntrepreneurProfile = Boolean(activity?.hasEntrepreneurProfile)
-  const hasBusinessProfile = Boolean(activity?.hasBusinessProfile)
-  const hasManagedCommerce = Array.isArray(auth.managesCommerceIds) && auth.managesCommerceIds.length > 0
+  const marketplaceListings = auth.commercialActivity?.marketplaceListingsCount ?? 0
+  const serviceListings = auth.commercialActivity?.serviceListingsCount ?? 0
+  const hasEntrepreneurProfile = Boolean(auth.commercialActivity?.hasEntrepreneurProfile)
+  const hasBusinessProfile = Boolean(auth.commercialActivity?.hasBusinessProfile)
+  const hasProfessionalProfile = Boolean(auth.professionalProfile)
+  const managesCommerce = Array.isArray(auth.managesCommerceIds) && auth.managesCommerceIds.length > 0
 
   return (
-    hasMarketplaceListings ||
-    hasServiceListings ||
+    marketplaceListings > 0 ||
+    serviceListings > 0 ||
     hasEntrepreneurProfile ||
     hasBusinessProfile ||
-    hasManagedCommerce
+    hasProfessionalProfile ||
+    managesCommerce
   )
 }
