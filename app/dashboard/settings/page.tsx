@@ -110,7 +110,7 @@ export default function SettingsPage() {
             <h2 className="text-lg font-semibold text-foreground">Mercado y emprendimiento</h2>
           </div>
           <p className="mb-4 text-sm text-muted-foreground">
-            Gestioná tu perfil comercial y los productos que mostrás dentro de Vecindo.
+            Gestioná tu perfil comercial y los productos que mostrás dentro de VEZI.
           </p>
 
           <BusinessProfileEditor />

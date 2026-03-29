@@ -6,12 +6,10 @@ import { cn } from "@/lib/utils"
 import { useAuth } from "@/lib/auth-context"
 import { hasCommercialActivity } from "@/lib/commercial"
 import {
-  Shield,
   LayoutDashboard,
-  Search,
+  Wrench,
   ShoppingBag,
   MessageCircle,
-  User,
   Settings,
   LogOut,
   X,
@@ -23,10 +21,10 @@ import {
   Bookmark,
   Heart,
   Info,
-  Building2,
   BarChart3,
 } from "lucide-react"
 import { useState } from "react"
+import { VeziLogo } from "@/components/shared/vezi-logo"
 
 interface NavItem {
   label: string
@@ -41,15 +39,14 @@ interface NavItem {
 const allNavItems: NavItem[] = [
   { label: "Inicio", href: "/dashboard", icon: LayoutDashboard, residentOnly: true },
   { label: "Panel profesional", href: "/dashboard/pro", icon: BarChart3, professionalOnly: true },
-  { label: "Servicios", href: "/dashboard/services", icon: Search },
-  { label: "Comunidad", href: "/dashboard/questions", icon: MessageCircle, requireCapability: "canPublishQuestions" },
   { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, requireCapability: "canAccessMarketplace" },
+  { label: "Servicios", href: "/dashboard/services", icon: Wrench },
   { label: "Espacio comercial", href: "/dashboard/espacio-comercial", icon: Store },
+  { label: "Comunidad", href: "/dashboard/questions", icon: MessageCircle, requireCapability: "canPublishQuestions" },
   { label: "Ayuda comunitaria", href: "/dashboard/ayuda", icon: Heart },
   { label: "Información útil", href: "/dashboard/informacion-util", icon: Info },
-  { label: "Mi barrio", href: "/dashboard/mi-barrio", icon: Building2, residentOnly: true },
-  { label: "Suscripciones", href: "/dashboard/suscripciones", icon: CreditCard },
   { label: "Guardados", href: "/dashboard/guardados", icon: Bookmark, residentOnly: true },
+  { label: "Suscripciones", href: "/dashboard/suscripciones", icon: CreditCard },
   { label: "Mi negocio", href: "/dashboard/comercial", icon: Briefcase, commercialOnly: true },
 ]
 
@@ -59,10 +56,7 @@ function getActiveClass(href: string) {
   if (href.includes("/dashboard/marketplace")) return "bg-emerald-600 text-white"
   if (href.includes("/dashboard/ayuda")) return "bg-rose-600 text-white"
   if (href.includes("/dashboard/espacio-comercial")) return "bg-amber-600 text-white"
-  if (href.includes("/dashboard/comercial")) {
-    return "bg-sidebar-primary text-sidebar-primary-foreground"
-  }
-
+  if (href.includes("/dashboard/comercial")) return "bg-sidebar-primary text-sidebar-primary-foreground"
   return "bg-sidebar-primary text-sidebar-primary-foreground"
 }
 
@@ -101,29 +95,17 @@ export function DashboardSidebar() {
         <Menu className="h-5 w-5" />
       </button>
 
-      {open && (
-        <div
-          className="fixed inset-0 z-40 bg-foreground/20 backdrop-blur-sm lg:hidden"
-          onClick={() => setOpen(false)}
-        />
-      )}
+      {open && <div className="fixed inset-0 z-40 bg-foreground/20 backdrop-blur-sm lg:hidden" onClick={() => setOpen(false)} />}
 
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-50 flex w-64 flex-col bg-sidebar text-sidebar-foreground transition-transform duration-200 lg:translate-x-0",
-          open ? "translate-x-0" : "-translate-x-full"
+          open ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex items-center justify-between border-b border-sidebar-border px-6 py-5">
-          <Link href={homeHref} className="flex items-center gap-2">
-            <Shield className="h-6 w-6 text-sidebar-primary" />
-            <span className="text-lg font-bold tracking-tight">VECINDO</span>
-          </Link>
-          <button
-            className="text-sidebar-foreground lg:hidden"
-            onClick={() => setOpen(false)}
-            aria-label="Cerrar navegación"
-          >
+          <VeziLogo href={homeHref} textClassName="text-lg text-sidebar-foreground" iconClassName="text-sidebar-primary" compact />
+          <button className="text-sidebar-foreground lg:hidden" onClick={() => setOpen(false)} aria-label="Cerrar navegación">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -134,19 +116,8 @@ export function DashboardSidebar() {
             <p className="text-sm font-semibold">Hudson – Berazategui</p>
           </div>
           <div className="mt-2 flex items-center gap-2 rounded-lg bg-sidebar-accent/50 px-3 py-2">
-            {isResident ? (
-              <>
-                <ShieldCheck className="h-3.5 w-3.5 text-sidebar-primary" />
-                <span className="text-xs font-medium text-sidebar-foreground/80">Residente</span>
-              </>
-            ) : (
-              <>
-                <Briefcase className="h-3.5 w-3.5 text-sidebar-primary" />
-                <span className="text-xs font-medium text-sidebar-foreground/80">
-                  Prestador de servicios
-                </span>
-              </>
-            )}
+            <ShieldCheck className="h-3.5 w-3.5 text-sidebar-primary" />
+            <span className="text-xs font-medium text-sidebar-foreground/80">{isResident ? "Residente" : "Prestador de servicios"}</span>
           </div>
         </div>
 
@@ -154,7 +125,6 @@ export function DashboardSidebar() {
           <ul className="flex flex-col gap-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
-
               return (
                 <li key={item.href}>
                   <Link
@@ -164,7 +134,7 @@ export function DashboardSidebar() {
                       "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                       isActive
                         ? getActiveClass(item.href)
-                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
                     )}
                   >
                     <item.icon className="h-4 w-4" />
@@ -178,37 +148,20 @@ export function DashboardSidebar() {
 
         <div className="border-t border-sidebar-border px-3 py-4">
           <Link
-            href="/dashboard/profile"
-            onClick={() => setOpen(false)}
-            className={cn(
-              "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
-              pathname === "/dashboard/profile"
-                ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-            )}
-          >
-            <User className="h-4 w-4" />
-            Mi perfil
-          </Link>
-
-          <Link
             href="/dashboard/settings"
             onClick={() => setOpen(false)}
             className={cn(
               "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
               pathname === "/dashboard/settings"
                 ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
             )}
           >
             <Settings className="h-4 w-4" />
             Configuración
           </Link>
 
-          <Link
-            href="/"
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-          >
+          <Link href="/" className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground">
             <LogOut className="h-4 w-4" />
             Salir
           </Link>

@@ -27,7 +27,7 @@ const commerceItems = [
     title: "Punto Café",
     description: "Cafetería y pastelería con promos para vecinos y retiro por local.",
     badge: "Promos activas",
-    meta: "Plátanos · Beneficios Vecindo",
+    meta: "Plátanos · Beneficios VEZI",
     href: "/dashboard/comercios",
   },
 ]

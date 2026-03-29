@@ -101,7 +101,7 @@ export default function MarketplacePage() {
         <div className="flex items-start gap-2">
           <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
           <p className="text-sm text-muted-foreground">
-            Vecindo conecta vecinos. La compra se realiza directamente entre usuarios.
+            VEZI conecta vecinos. La compra se realiza directamente entre usuarios.
           </p>
         </div>
 

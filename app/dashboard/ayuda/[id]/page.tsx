@@ -59,7 +59,7 @@ export default function AyudaDetailPage() {
   const saved = isSaved(post.title)
   const isAuthor = isResident && post.authorId === "resident1" // Demo: first resident is the author
 
-  const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VECINDO.`)}`
+  const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VEZI.`)}`
 
   // Related posts (same category, excluding current)
   const relatedPosts = ayudaPosts

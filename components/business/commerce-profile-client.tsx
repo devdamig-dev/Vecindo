@@ -21,10 +21,12 @@ import {
   Package,
   Truck,
   MapPinned,
+  Share2,
 } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 import { useCommerceAnalytics } from "@/hooks/use-commerce-analytics"
 import type { CommerceItem, CommerceReview } from "@/lib/commerces-data"
+import CatalogWhatsAppOrder from "@/components/business/catalog-whatsapp-order"
 
 type Props = {
   commerce: CommerceItem
@@ -51,18 +53,12 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   const saved = isSaved(commerce.name)
   const isCommerce = commerce.type === "commerce"
   const cameFromEntrepreneurTab = activeTab === "emprendimientos"
+  const publicUrl = `/comercio/${commerce.publicSlug}`
 
-  const backHref = cameFromEntrepreneurTab
-    ? "/dashboard/comercios?tipo=emprendimientos"
-    : "/dashboard/comercios"
+  const backHref = cameFromEntrepreneurTab ? "/dashboard/comercios?tipo=emprendimientos" : "/dashboard/comercios"
+  const backLabel = cameFromEntrepreneurTab ? "Volver a Emprendimientos locales" : "Volver a Comercios"
 
-  const backLabel = cameFromEntrepreneurTab
-    ? "Volver a Emprendimientos locales"
-    : "Volver a Comercios"
-
-  const waUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-    `Hola ${commerce.name}, los contacto desde VECINDO.`
-  )}`
+  const waUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${commerce.name}, los contacto desde VEZI.`)}`
 
   const handleSubmitReview = () => {
     if (reviewRating === 0 || reviewText.trim() === "") return
@@ -91,19 +87,13 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
     })
   }
 
-  const trustBullets = useMemo(() => {
-    return isCommerce
-      ? [
-          "Ubicación visible en la zona",
-          "Horarios y atención publicados",
-          "Ficha comercial institucional",
-        ]
-      : [
-          "Atención directa por WhatsApp",
-          "Pedidos o encargos coordinados",
-          "Entrega o retiro a convenir",
-        ]
-  }, [isCommerce])
+  const trustBullets = useMemo(
+    () =>
+      isCommerce
+        ? ["Ubicación visible en la zona", "Horarios publicados", "Ficha comercial institucional"]
+        : ["Atención directa por WhatsApp", "Pedidos o encargos coordinados", "Entrega o retiro flexible"],
+    [isCommerce],
+  )
 
   return (
     <div className="flex max-w-6xl flex-col gap-6">
@@ -131,31 +121,19 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                 <div className="min-w-0 pt-2">
                   <div className="mb-2 flex flex-wrap items-center gap-2">
                     <Badge className={isCommerce ? "bg-sky-100 text-sky-700 hover:bg-sky-100" : "bg-amber-100 text-amber-700 hover:bg-amber-100"}>
-                      {isCommerce ? (
-                        <><Store className="mr-1 h-3.5 w-3.5" /> Comercio</>
-                      ) : (
-                        <><Sparkles className="mr-1 h-3.5 w-3.5" /> Emprendimiento</>
-                      )}
+                      {isCommerce ? <><Store className="mr-1 h-3.5 w-3.5" /> Comercio</> : <><Sparkles className="mr-1 h-3.5 w-3.5" /> Emprendimiento</>}
                     </Badge>
                     <Badge variant="secondary">{commerce.category}</Badge>
                   </div>
 
-                  <h1 className="max-w-3xl text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-                    {commerce.name}
-                  </h1>
-
-                  <p className="mt-2 max-w-3xl text-base leading-relaxed text-muted-foreground">
-                    {commerce.longDescription}
-                  </p>
+                  <h1 className="max-w-3xl text-3xl font-bold tracking-tight text-foreground md:text-4xl">{commerce.name}</h1>
+                  <p className="mt-2 max-w-3xl text-base leading-relaxed text-muted-foreground">{commerce.longDescription}</p>
 
                   <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1.5">
                       <div className="flex items-center gap-1">
                         {ratingStars(commerce.rating).map((filled, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${filled ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30"}`}
-                          />
+                          <Star key={i} className={`h-4 w-4 ${filled ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30"}`} />
                         ))}
                       </div>
                       <span className="font-semibold text-foreground">{commerce.rating}</span>
@@ -175,17 +153,21 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                   Contactar por WhatsApp
                 </a>
               </Button>
-
               <Button asChild variant="outline" className="gap-2">
                 <a href={`tel:${commerce.phone}`} onClick={() => trackCallClick(commerce.id)}>
                   <Phone className="h-4 w-4" />
                   Llamar
                 </a>
               </Button>
-
               <Button variant="outline" className="gap-2" onClick={handleSave}>
                 <Bookmark className={`h-4 w-4 ${saved ? "fill-current" : ""}`} />
                 {saved ? "Guardado" : "Guardar"}
+              </Button>
+              <Button asChild variant="outline" className="gap-2">
+                <Link href={publicUrl} target="_blank">
+                  <Share2 className="h-4 w-4" />
+                  Catálogo público
+                </Link>
               </Button>
             </div>
           </div>
@@ -202,6 +184,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           </div>
         </div>
       </div>
+
+      <CatalogWhatsAppOrder products={commerce.products} whatsapp={commerce.whatsapp} commerceName={commerce.name} isEntrepreneur={!isCommerce} />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-6">
@@ -227,27 +211,17 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     <div>
                       <MapPinned className="mx-auto h-8 w-8 text-sky-700" />
                       <p className="mt-3 font-medium text-foreground">Mapa de geolocalización</p>
-                      <p className="mt-1 text-sm text-muted-foreground">Acá se visualiza la ubicación del comercio dentro de la zona.</p>
+                      <p className="mt-1 text-sm text-muted-foreground">Ubicación visible para encontrar el comercio dentro de la zona.</p>
                     </div>
                   </div>
                 </div>
               </div>
-
               <div className="rounded-3xl border border-border bg-card p-6">
                 <h2 className="text-lg font-semibold text-foreground">Qué vas a encontrar</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-3">
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Atención en local</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Experiencia presencial, asesoramiento y compra directa en la zona.</p>
-                  </div>
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Beneficios para vecinos</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Promociones, convenios o ventajas exclusivas dentro de Vecindo.</p>
-                  </div>
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Ficha institucional</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Perfil más formal para generar confianza y facilitar la elección.</p>
-                  </div>
+                  <div className="rounded-2xl border border-border p-4"><p className="font-medium text-foreground">Atención de cercanía</p><p className="mt-1 text-sm text-muted-foreground">Ideal para resolver compras frecuentes y consultas rápidas.</p></div>
+                  <div className="rounded-2xl border border-border p-4"><p className="font-medium text-foreground">Promos y beneficios</p><p className="mt-1 text-sm text-muted-foreground">Ofertas, combos o ventajas para vecinos dentro de VEZI.</p></div>
+                  <div className="rounded-2xl border border-border p-4"><p className="font-medium text-foreground">Ficha institucional</p><p className="mt-1 text-sm text-muted-foreground">Información clara para elegir con confianza.</p></div>
                 </div>
               </div>
             </>
@@ -259,135 +233,63 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                   <h2 className="text-lg font-semibold">Cómo trabaja este emprendimiento</h2>
                 </div>
                 <div className="grid gap-4 md:grid-cols-3">
-                  <div className="rounded-2xl border border-amber-200 bg-white p-4">
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
-                      <Sparkles className="h-4 w-4" />
-                    </div>
-                    <p className="font-medium text-foreground">Pedido directo</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Consultás por WhatsApp, coordinás detalles y resolvés sin vueltas.</p>
-                  </div>
-                  <div className="rounded-2xl border border-amber-200 bg-white p-4">
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
-                      <Clock className="h-4 w-4" />
-                    </div>
-                    <p className="font-medium text-foreground">Producción o armado</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Ideal para encargos, trabajos a pedido o productos con tiempos coordinados.</p>
-                  </div>
-                  <div className="rounded-2xl border border-amber-200 bg-white p-4">
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
-                      <Truck className="h-4 w-4" />
-                    </div>
-                    <p className="font-medium text-foreground">Entrega o retiro</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Entrega pactada, retiro o coordinación flexible según cada caso.</p>
-                  </div>
+                  <div className="rounded-2xl border border-amber-200 bg-white p-4"><p className="text-sm font-medium text-foreground">Modelo de atención</p><p className="mt-1 text-sm text-muted-foreground">{commerce.hours}</p></div>
+                  <div className="rounded-2xl border border-amber-200 bg-white p-4"><p className="text-sm font-medium text-foreground">Forma de entrega</p><p className="mt-1 text-sm text-muted-foreground">{commerce.address}</p></div>
+                  <div className="rounded-2xl border border-amber-200 bg-white p-4"><p className="text-sm font-medium text-foreground">Cobertura</p><p className="mt-1 text-sm text-muted-foreground">{commerce.location}</p></div>
                 </div>
               </div>
-
               <div className="rounded-3xl border border-border bg-card p-6">
-                <h2 className="text-lg font-semibold text-foreground">Qué destaca de este perfil</h2>
+                <h2 className="text-lg font-semibold text-foreground">Qué esperar del pedido</h2>
                 <div className="mt-4 grid gap-4 md:grid-cols-3">
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Catálogo o propuesta propia</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Productos o servicios con identidad, especialización y trato directo.</p>
-                  </div>
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Atención personalizada</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Conversación directa con quien emprende, sin intermediarios.</p>
-                  </div>
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Modelo flexible</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Ideal para pedidos especiales, producción a medida o encargos.</p>
-                  </div>
+                  <div className="rounded-2xl border border-border p-4"><p className="font-medium text-foreground">Catálogo flexible</p><p className="mt-1 text-sm text-muted-foreground">Seleccionás productos y coordinás detalles sin checkout complejo.</p></div>
+                  <div className="rounded-2xl border border-border p-4"><p className="font-medium text-foreground">Hecho por pedido</p><p className="mt-1 text-sm text-muted-foreground">Ideal para productos personalizados, producción local o encargos.</p></div>
+                  <div className="rounded-2xl border border-border p-4"><p className="font-medium text-foreground">Atención directa</p><p className="mt-1 text-sm text-muted-foreground">Consultás por WhatsApp y coordinás sin intermediarios.</p></div>
                 </div>
               </div>
             </>
           )}
 
           <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-lg font-semibold text-foreground">Reseñas</h2>
-
+            <h2 className="text-lg font-semibold text-foreground">Opiniones</h2>
             <div className="mt-4 space-y-4">
-              {reviews.length > 0 ? (
+              {reviews.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-border p-5 text-sm text-muted-foreground">Todavía no hay reseñas. Este perfil puede empezar a construir confianza con sus primeras recomendaciones.</div>
+              ) : (
                 reviews.map((review, index) => (
-                  <div key={`${review.user}-${index}`} className="rounded-2xl border border-border p-4">
-                    <div className="flex items-start justify-between gap-3">
+                  <div key={index} className="rounded-2xl border border-border bg-background p-4">
+                    <div className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarFallback>{review.initials}</AvatarFallback>
-                        </Avatar>
+                        <Avatar className="h-10 w-10"><AvatarFallback>{review.initials}</AvatarFallback></Avatar>
                         <div>
-                          <div className="flex items-center gap-2">
-                            <p className="text-sm font-medium text-foreground">{review.user}</p>
-                            {review.verified && (
-                              <span className="inline-flex items-center gap-1 text-xs text-emerald-600">
-                                <CheckCircle2 className="h-3.5 w-3.5" />
-                                Verificado
-                              </span>
-                            )}
-                          </div>
+                          <div className="flex items-center gap-2"><p className="font-medium text-foreground">{review.user}</p>{review.verified && <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100"><CheckCircle2 className="mr-1 h-3.5 w-3.5" />Verificada</Badge>}</div>
                           <p className="text-xs text-muted-foreground">{review.date}</p>
                         </div>
                       </div>
-
-                      <div className="flex items-center gap-1">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star key={i} className={`h-4 w-4 ${i < review.rating ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30"}`} />
-                        ))}
-                      </div>
+                      <div className="flex items-center gap-1">{ratingStars(review.rating).map((filled, i) => <Star key={i} className={`h-4 w-4 ${filled ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30"}`} />)}</div>
                     </div>
-                    <p className="mt-3 text-sm text-muted-foreground">{review.text}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{review.text}</p>
                   </div>
                 ))
-              ) : (
-                <div className="rounded-2xl border border-dashed border-border p-4 text-sm text-muted-foreground">
-                  Todavía no hay reseñas. Sé la primera persona en dejar una.
-                </div>
               )}
+            </div>
+            <div className="mt-6 rounded-2xl border border-border bg-background p-4">
+              <p className="font-medium text-foreground">Dejá tu reseña</p>
+              <div className="mt-3 flex gap-2">{[1,2,3,4,5].map((star) => <button key={star} onClick={() => setReviewRating(star)} className="text-muted-foreground hover:text-amber-400"><Star className={`h-5 w-5 ${reviewRating >= star ? "fill-amber-400 text-amber-400" : ""}`} /></button>)}</div>
+              <Textarea className="mt-3" value={reviewText} onChange={(e) => setReviewText(e.target.value)} placeholder="Contá cómo fue tu experiencia" />
+              <div className="mt-3 flex justify-end"><Button onClick={handleSubmitReview}>Enviar reseña</Button></div>
+              {reviewSubmitted && <p className="mt-2 text-sm text-emerald-700">¡Gracias! Tu reseña ya quedó publicada.</p>}
             </div>
           </div>
         </div>
 
-        <aside className="space-y-6">
-          <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-base font-semibold text-foreground">Datos clave</h2>
-            <div className="mt-4 space-y-4 text-sm">
-              <div>
-                <p className="font-medium text-foreground">Zona</p>
-                <p className="mt-1 text-muted-foreground">{commerce.location}</p>
-              </div>
-              <div>
-                <p className="font-medium text-foreground">Categoría</p>
-                <p className="mt-1 text-muted-foreground">{commerce.category}</p>
-              </div>
-              <div>
-                <p className="font-medium text-foreground">Atención</p>
-                <p className="mt-1 text-muted-foreground">{commerce.hours}</p>
-              </div>
-              <div>
-                <p className="font-medium text-foreground">Dirección / modalidad</p>
-                <p className="mt-1 text-muted-foreground">{isCommerce ? commerce.address : "Coordinación directa según pedido o entrega."}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-base font-semibold text-foreground">Dejá tu reseña</h2>
-            <div className="mt-4 flex items-center gap-2">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <button key={i} type="button" onClick={() => setReviewRating(i + 1)} className="rounded-md p-1">
-                  <Star className={`h-5 w-5 ${i < reviewRating ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30"}`} />
-                </button>
-              ))}
-            </div>
-            <Textarea
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-              placeholder="Contá tu experiencia con este perfil..."
-              className="mt-4 min-h-28"
-            />
-            <div className="mt-4 flex items-center gap-3">
-              <Button onClick={handleSubmitReview}>Enviar reseña</Button>
-              {reviewSubmitted && <span className="text-sm text-emerald-600">Tu reseña fue enviada.</span>}
+        <aside className="space-y-4">
+          <div className="rounded-3xl border border-border bg-card p-5">
+            <p className="text-sm font-semibold text-foreground">Datos clave</p>
+            <div className="mt-4 space-y-3 text-sm text-muted-foreground">
+              <div><p className="font-medium text-foreground">Rubro</p><p>{commerce.category}</p></div>
+              <div><p className="font-medium text-foreground">Zona</p><p>{commerce.location}</p></div>
+              <div><p className="font-medium text-foreground">Modalidad</p><p>{commerce.meta}</p></div>
+              <div><p className="font-medium text-foreground">Plan preparado</p><p>{commerce.planDraft.productLimit} productos · {commerce.planDraft.code}</p></div>
             </div>
           </div>
         </aside>
