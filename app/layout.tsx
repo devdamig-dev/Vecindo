@@ -12,9 +12,9 @@ const dmSerif = DM_Serif_Display({
 })
 
 export const metadata: Metadata = {
-  title: "VEZI · Comunidad privada para tu zona",
+  title: "VECINDO - Servicios de Confianza para tu Comunidad",
   description:
-    "VEZI organiza mercado, servicios, comunidad y comercios dentro de tu zona con una experiencia simple, privada y pensada para generar confianza.",
+    "Plataforma privada de reputacion y servicios para comunidades cerradas. Encontra profesionales verificados, conecta con vecinos y construi confianza.",
 }
 
 export const viewport: Viewport = {

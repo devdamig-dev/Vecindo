@@ -266,29 +266,6 @@ export default function AyudaPage() {
         }}
       />
 
-      <div className="grid gap-3 md:grid-cols-3">
-        <div className="rounded-xl border border-rose-200 bg-rose-100 px-4 py-3">
-          <p className="text-sm font-semibold text-foreground">Rápido de publicar</p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Compartí un aviso con título, descripción e imágenes.
-          </p>
-        </div>
-
-        <div className="rounded-xl border border-rose-200 bg-rose-100 px-4 py-3">
-          <p className="text-sm font-semibold text-foreground">Difusión local</p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Tu aviso llega a vecinos de la zona que pueden ayudar.
-          </p>
-        </div>
-
-        <div className="rounded-xl border border-rose-200 bg-rose-100 px-4 py-3">
-          <p className="text-sm font-semibold text-foreground">Seguimiento simple</p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Guardá avisos o marcá como resuelto cuando ya esté solucionado.
-          </p>
-        </div>
-      </div>
-
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-2">
           {categoryFilters.map((opt) => (
@@ -333,7 +310,7 @@ export default function AyudaPage() {
           {filtered.map((post) => {
             const cat = categoryConfig[post.category]
             const CatIcon = cat.icon
-            const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VEZI.`)}`
+            const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VECINDO.`)}`
             const saved = isSaved(post.title)
 
             return (

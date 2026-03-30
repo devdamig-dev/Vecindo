@@ -52,7 +52,7 @@ function SubScoreBar({ label, score }: { label: string; score: number }) {
 export function ProfessionalProfile({ id }: { id: string }) {
   const pro = proData[id] || proData["1"]
 
-  const whatsappUrl = `https://wa.me/${pro.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${pro.name}, te contacto desde VEZI por tu servicio de ${pro.category}.`)}`
+  const whatsappUrl = `https://wa.me/${pro.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${pro.name}, te contacto desde VECINDO por tu servicio de ${pro.category}.`)}`
 
   return (
     <div className="flex flex-col gap-6">

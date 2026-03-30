@@ -65,7 +65,7 @@ export function RecentActivity() {
 
       <div className="divide-y divide-border">
         {activities.map((item, i) => (
-          <div key={i} className="flex items-start gap-3 px-5 py-4">
+          <div key={i} className="flex items-start gap-3 px-4 py-4 sm:px-5">
             <Avatar className="h-9 w-9 shrink-0">
               <AvatarFallback className="bg-muted text-foreground text-xs">
                 {item.initials}
@@ -73,7 +73,7 @@ export function RecentActivity() {
             </Avatar>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="text-sm font-medium text-foreground">
                   {item.user}
                 </span>
@@ -87,12 +87,12 @@ export function RecentActivity() {
                 </Badge>
               </div>
 
-              <p className="mt-0.5 text-sm text-muted-foreground truncate">
+              <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground sm:truncate">
                 {item.content}
               </p>
             </div>
 
-            <span className="shrink-0 text-xs text-muted-foreground whitespace-nowrap">
+            <span className="hidden shrink-0 whitespace-nowrap text-xs text-muted-foreground sm:block">
               {item.time}
             </span>
           </div>

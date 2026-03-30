@@ -94,7 +94,7 @@ export function NeighborRecommendations() {
 
       <div className="divide-y divide-border">
         {recommendations.map((rec) => {
-          const waUrl = `https://wa.me/${rec.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${rec.name}, te contacto por recomendaci\u00f3n de VEZI.`)}`
+          const waUrl = `https://wa.me/${rec.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${rec.name}, te contacto por recomendaci\u00f3n de VECINDO.`)}`
           return (
             <div key={rec.id} className="flex items-start gap-4 px-5 py-4">
               <Avatar className="h-10 w-10 shrink-0">

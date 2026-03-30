@@ -206,7 +206,7 @@ const AuthContext = createContext<AuthContextType | null>(null)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<AuthState>(() => {
     try {
-      const stored = window.localStorage.getItem("vezi_account_type") as AccountType | null
+      const stored = window.localStorage.getItem("vecindo_account_type") as AccountType | null
       if (stored === "external_professional") return defaultExternal
       return defaultResident
     } catch {
@@ -222,7 +222,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      window.localStorage.setItem("vezi_account_type", type)
+      window.localStorage.setItem("vecindo_account_type", type)
     } catch {}
   }
 

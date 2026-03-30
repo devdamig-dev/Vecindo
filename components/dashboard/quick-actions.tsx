@@ -38,19 +38,14 @@ const actions = [
 
 export function QuickActions() {
   return (
-    <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3">
       {actions.map((action) => (
-        <Link
-          key={action.href}
-          href={action.href}
-          className={`group flex min-h-[160px] flex-col items-start gap-4 rounded-2xl border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm ${action.cardClass}`}
-        >
+        <Link key={action.href} href={action.href} className={`group flex min-h-[150px] flex-col items-start gap-4 rounded-[24px] border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm ${action.cardClass}`}>
           <div className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-colors ${action.iconWrapClass}`}>
             <action.icon className="h-5 w-5" />
           </div>
-
           <div className="space-y-1.5">
-            <p className="text-base font-semibold leading-none text-foreground">{action.label}</p>
+            <p className="text-base font-semibold leading-tight text-foreground">{action.label}</p>
             <p className="text-sm leading-relaxed text-muted-foreground">{action.description}</p>
           </div>
         </Link>
