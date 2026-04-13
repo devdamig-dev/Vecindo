@@ -310,7 +310,7 @@ export default function AyudaPage() {
           {filtered.map((post) => {
             const cat = categoryConfig[post.category]
             const CatIcon = cat.icon
-            const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VECINDO.`)}`
+            const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VEZI.`)}`
             const saved = isSaved(post.title)
 
             return (
