@@ -83,7 +83,7 @@ export default function MarketplaceDetailPage() {
   const isReserved = listing.status === "Reservado"
 
   const whatsappUrl = `https://wa.me/${listing.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-    `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VECINDO.`
+    `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VEZI.`
   )}`
 
   const sellerListings = listings.filter(
@@ -331,7 +331,7 @@ export default function MarketplaceDetailPage() {
 
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-center">
             <p className="text-xs text-muted-foreground">
-              Transacción entre vecinos. Vecindo no interviene en pagos ni entregas.
+              Transacción entre vecinos. VEZI no interviene en pagos ni entregas.
             </p>
           </div>
         </aside>

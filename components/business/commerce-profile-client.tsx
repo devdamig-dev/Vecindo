@@ -242,7 +242,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                   </div>
                   <div className="rounded-2xl border border-border p-4">
                     <p className="font-medium text-foreground">Beneficios para vecinos</p>
-                    <p className="mt-1 text-sm text-muted-foreground">Promociones, convenios o ventajas exclusivas dentro de Vecindo.</p>
+                    <p className="mt-1 text-sm text-muted-foreground">Promociones, convenios o ventajas exclusivas dentro de VEZI.</p>
                   </div>
                   <div className="rounded-2xl border border-border p-4">
                     <p className="font-medium text-foreground">Ficha institucional</p>
