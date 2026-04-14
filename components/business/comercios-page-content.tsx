@@ -76,6 +76,9 @@ function CommercialListCard({
                 {firstBadge}
               </Badge>
             )}
+            <Badge className={isCommerce ? "bg-sky-100 text-sky-700 hover:bg-sky-100" : "bg-amber-100 text-amber-700 hover:bg-amber-100"}>
+              {isCommerce ? "Comercio local" : "Emprendimiento local"}
+            </Badge>
           </div>
 
           <p className="line-clamp-2 text-sm text-slate-600">
@@ -92,7 +95,7 @@ function CommercialListCard({
         </div>
 
         <Button asChild variant="link" className="h-auto p-0 text-slate-950">
-          <Link href={detailHref}>Ver perfil</Link>
+          <Link href={detailHref}>Ver perfil completo</Link>
         </Button>
       </div>
     </article>
