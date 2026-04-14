@@ -11,10 +11,16 @@ import {
   Bookmark,
   CheckCircle2,
   Clock,
+  Copy,
+  ExternalLink,
   MapPin,
   MessageSquare,
+  Minus,
   Phone,
+  Plus,
+  Share2,
   ShieldCheck,
+  ShoppingCart,
   Sparkles,
   Star,
   Store,
@@ -24,7 +30,7 @@ import {
 } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 import { useCommerceAnalytics } from "@/hooks/use-commerce-analytics"
-import type { CommerceItem, CommerceReview } from "@/lib/commerces-data"
+import type { CommerceItem, CommerceProduct, CommerceReview } from "@/lib/commerces-data"
 
 type Props = {
   commerce: CommerceItem
@@ -35,6 +41,14 @@ function ratingStars(value: number) {
   return Array.from({ length: 5 }).map((_, i) => i < Math.floor(value))
 }
 
+function formatARS(value: number) {
+  return new Intl.NumberFormat("es-AR", {
+    style: "currency",
+    currency: "ARS",
+    maximumFractionDigits: 0,
+  }).format(value)
+}
+
 export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   const { saveItem, isSaved, auth } = useAuth()
   const { trackProfileView, trackWhatsAppClick, trackCallClick, trackSave } = useCommerceAnalytics()
@@ -43,6 +57,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   const [reviewText, setReviewText] = useState("")
   const [reviewSubmitted, setReviewSubmitted] = useState(false)
   const [reviews, setReviews] = useState<CommerceReview[]>(commerce.reviews ?? [])
+  const [cart, setCart] = useState<Record<string, number>>({})
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     trackProfileView(commerce.id)
@@ -63,6 +79,73 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   const waUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
     `Hola ${commerce.name}, los contacto desde VEZI.`
   )}`
+
+  const publicProfileUrl = `/dashboard/comercios/${commerce.id}${cameFromEntrepreneurTab ? "?tipo=emprendimientos" : ""}`
+
+  const cartItems = useMemo(() => {
+    return commerce.products
+      .filter((product) => cart[product.id] > 0)
+      .map((product) => ({
+        product,
+        quantity: cart[product.id],
+        lineTotal: product.price * cart[product.id],
+      }))
+  }, [cart, commerce.products])
+
+  const cartTotal = useMemo(
+    () => cartItems.reduce((acc, item) => acc + item.lineTotal, 0),
+    [cartItems],
+  )
+
+  const orderWhatsappUrl = useMemo(() => {
+    if (cartItems.length === 0) return null
+    const lines = cartItems
+      .map((item) => `- ${item.quantity}x ${item.product.name} (${formatARS(item.lineTotal)})`)
+      .join("\n")
+
+    const text = [
+      `Hola ${commerce.name}, quiero hacer este pedido desde VEZI:`,
+      "",
+      lines,
+      "",
+      `Total estimado: ${formatARS(cartTotal)}`,
+      "",
+      "¿Me confirman disponibilidad y tiempos de entrega/retiro?",
+    ].join("\n")
+
+    return `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(text)}`
+  }, [cartItems, cartTotal, commerce.name, commerce.whatsapp])
+
+  const adjustCart = (product: CommerceProduct, delta: number) => {
+    setCart((prev) => {
+      const nextQty = Math.max(0, (prev[product.id] ?? 0) + delta)
+      const next = { ...prev, [product.id]: nextQty }
+      if (nextQty === 0) {
+        delete next[product.id]
+      }
+      return next
+    })
+  }
+
+  const shareProfile = async () => {
+    const absoluteUrl = typeof window !== "undefined" ? `${window.location.origin}${publicProfileUrl}` : publicProfileUrl
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${commerce.name} en VEZI`,
+          text: `Mirá el catálogo de ${commerce.name} en VEZI.`,
+          url: absoluteUrl,
+        })
+        return
+      } catch {}
+    }
+
+    try {
+      await navigator.clipboard.writeText(absoluteUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {}
+  }
 
   const handleSubmitReview = () => {
     if (reviewRating === 0 || reviewText.trim() === "") return
@@ -187,6 +270,11 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                 <Bookmark className={`h-4 w-4 ${saved ? "fill-current" : ""}`} />
                 {saved ? "Guardado" : "Guardar"}
               </Button>
+
+              <Button variant="outline" className="gap-2" onClick={shareProfile}>
+                {copied ? <Copy className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
+                {copied ? "Link copiado" : "Compartir perfil"}
+              </Button>
             </div>
           </div>
 
@@ -304,6 +392,53 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           )}
 
           <div className="rounded-3xl border border-border bg-card p-6">
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Catálogo público</h2>
+                <p className="mt-1 text-sm text-muted-foreground">Sumá productos al carrito y enviá el pedido por WhatsApp.</p>
+              </div>
+              <Button asChild variant="outline" size="sm">
+                <Link href={publicProfileUrl}>
+                  Ver catálogo
+                  <ExternalLink className="h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {commerce.products.map((product) => {
+                const quantity = cart[product.id] ?? 0
+                return (
+                  <article key={product.id} className="overflow-hidden rounded-2xl border border-border bg-background">
+                    <img src={product.imageUrl} alt={product.name} className="h-36 w-full object-cover" />
+                    <div className="p-4">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="font-medium text-foreground">{product.name}</h3>
+                        <span className="text-sm font-semibold text-foreground">{formatARS(product.price)}</span>
+                      </div>
+                      <p className="mt-1 text-sm text-muted-foreground">{product.shortDescription}</p>
+                      <div className="mt-4 flex items-center justify-between gap-2">
+                        <div className="inline-flex items-center rounded-lg border border-border">
+                          <button type="button" aria-label={`Quitar ${product.name}`} className="px-2.5 py-1.5 text-muted-foreground hover:text-foreground" onClick={() => adjustCart(product, -1)}>
+                            <Minus className="h-3.5 w-3.5" />
+                          </button>
+                          <span className="min-w-8 text-center text-sm font-medium text-foreground">{quantity}</span>
+                          <button type="button" aria-label={`Agregar ${product.name}`} className="px-2.5 py-1.5 text-muted-foreground hover:text-foreground" onClick={() => adjustCart(product, 1)}>
+                            <Plus className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                        <Button size="sm" onClick={() => adjustCart(product, 1)}>
+                          Agregar
+                        </Button>
+                      </div>
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-border bg-card p-6">
             <h2 className="text-lg font-semibold text-foreground">Reseñas</h2>
 
             <div className="mt-4 space-y-4">
@@ -348,6 +483,50 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
         </div>
 
         <aside className="space-y-6">
+          <div className="rounded-3xl border border-border bg-card p-6 lg:sticky lg:top-24">
+            <div className="flex items-center gap-2">
+              <ShoppingCart className="h-5 w-5 text-foreground" />
+              <h2 className="text-base font-semibold text-foreground">Tu carrito</h2>
+            </div>
+            {cartItems.length === 0 ? (
+              <p className="mt-3 text-sm text-muted-foreground">Todavía no agregaste productos. Elegí items del catálogo para armar tu pedido.</p>
+            ) : (
+              <>
+                <div className="mt-4 space-y-3">
+                  {cartItems.map((item) => (
+                    <div key={item.product.id} className="rounded-xl border border-border p-3">
+                      <p className="text-sm font-medium text-foreground">{item.product.name}</p>
+                      <div className="mt-2 flex items-center justify-between gap-2">
+                        <div className="inline-flex items-center rounded-lg border border-border">
+                          <button type="button" className="px-2 py-1.5 text-muted-foreground hover:text-foreground" onClick={() => adjustCart(item.product, -1)}>
+                            <Minus className="h-3 w-3" />
+                          </button>
+                          <span className="min-w-8 text-center text-sm">{item.quantity}</span>
+                          <button type="button" className="px-2 py-1.5 text-muted-foreground hover:text-foreground" onClick={() => adjustCart(item.product, 1)}>
+                            <Plus className="h-3 w-3" />
+                          </button>
+                        </div>
+                        <p className="text-sm font-semibold text-foreground">{formatARS(item.lineTotal)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 border-t border-border pt-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-muted-foreground">Total estimado</span>
+                    <span className="font-semibold text-foreground">{formatARS(cartTotal)}</span>
+                  </div>
+                  <Button asChild className="mt-3 w-full gap-2 bg-emerald-700 text-white hover:bg-emerald-800">
+                    <a href={orderWhatsappUrl ?? waUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick(commerce.id)}>
+                      <MessageSquare className="h-4 w-4" />
+                      Pedir por WhatsApp
+                    </a>
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+
           <div className="rounded-3xl border border-border bg-card p-6">
             <h2 className="text-base font-semibold text-foreground">Datos clave</h2>
             <div className="mt-4 space-y-4 text-sm">
