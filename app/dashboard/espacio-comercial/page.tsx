@@ -23,7 +23,7 @@ function CommercialPreviewCard({ title, description, badge, meta, href, type }: 
   return (
     <Link href={href} className={`group rounded-[24px] border p-5 transition-all hover:-translate-y-0.5 hover:shadow-sm ${isCommerce ? "border-sky-200 bg-sky-50" : "border-amber-200 bg-amber-50"}`}>
       <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${isCommerce ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"}`}>{isCommerce ? <Store className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}</div>
-      <div className="mt-4 flex flex-wrap items-center gap-2"><h3 className="text-base font-semibold text-foreground">{title}</h3><Badge variant="secondary">{badge}</Badge></div>
+      <div className="mt-4 flex flex-wrap items-center gap-2"><h3 className="text-base font-semibold text-foreground">{title}</h3><Badge className={isCommerce ? "bg-sky-100 text-sky-700 hover:bg-sky-100" : "bg-amber-100 text-amber-700 hover:bg-amber-100"}>{badge}</Badge></div>
       <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{description}</p>
       <p className="mt-3 text-xs text-muted-foreground">{meta}</p>
       <div className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-foreground">Ver perfil <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" /></div>
@@ -46,6 +46,11 @@ export default function EspacioComercialPage() {
       <div className="rounded-[28px] border border-amber-200 bg-amber-800 p-5 text-white">
         <h2 className="text-lg font-semibold">Un único módulo, dos tipos de perfiles</h2>
         <p className="mt-2 max-w-3xl text-sm text-white/85">Los comercios muestran ubicación visible y ficha institucional. Los emprendimientos destacan catálogo, atención directa y entregas coordinadas, aunque no tengan local físico.</p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Badge className="bg-white/15 text-white hover:bg-white/15">Contacto directo</Badge>
+          <Badge className="bg-white/15 text-white hover:bg-white/15">Perfiles locales</Badge>
+          <Badge className="bg-white/15 text-white hover:bg-white/15">Sin intermediarios</Badge>
+        </div>
       </div>
 
       <Tabs defaultValue="comercios" className="w-full">
