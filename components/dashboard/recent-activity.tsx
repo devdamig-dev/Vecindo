@@ -42,11 +42,11 @@ const tagStyles: Record<string, string> = {
 
 export function RecentActivity() {
   return (
-    <section className="rounded-3xl border border-border/70 bg-card p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
+    <section className="rounded-3xl border border-border/70 bg-card/95 p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
       <SectionHeader
         title="Cerca tuyo"
         subtitle="Descubrí oportunidades y recomendaciones publicadas en tu zona"
-        action={<span className="text-xs font-medium text-muted-foreground">Actualizado hoy</span>}
+        action={<span className="text-xs font-semibold text-muted-foreground">Actualizado hoy</span>}
       />
 
       <div className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
