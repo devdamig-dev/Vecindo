@@ -9,6 +9,7 @@ type ModuleCardProps = {
   href: string
   icon: LucideIcon
   theme: "market" | "services" | "commercial" | "help"
+  chip: string
 }
 
 const themeStyles = {
@@ -34,23 +35,24 @@ const themeStyles = {
   },
 } as const
 
-export function ModuleCard({ label, description, href, icon: Icon, theme }: ModuleCardProps) {
+export function ModuleCard({ label, description, href, icon: Icon, theme, chip }: ModuleCardProps) {
   const styles = themeStyles[theme]
 
   return (
     <Link
       href={href}
       className={cn(
-        "group relative flex min-h-[170px] flex-col rounded-3xl border p-4 text-left shadow-[0_8px_28px_rgba(15,23,42,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(15,23,42,0.1)]",
+        "group relative flex min-h-[170px] flex-col overflow-hidden rounded-3xl border p-4 text-left shadow-[0_8px_28px_rgba(15,23,42,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(15,23,42,0.1)]",
         styles.card
       )}
     >
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/45 to-transparent" />
       <div className="flex items-start justify-between gap-3">
         <div className={cn("flex h-11 w-11 items-center justify-center rounded-2xl shadow-lg", styles.iconWrap)}>
           <Icon className="h-5 w-5" />
         </div>
         <span className={cn("rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide", styles.accent)}>
-          Módulo
+          {chip}
         </span>
       </div>
 

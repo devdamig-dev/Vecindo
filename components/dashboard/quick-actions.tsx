@@ -8,6 +8,7 @@ const actions = [
     icon: ShoppingBag,
     href: "/dashboard/marketplace",
     theme: "market" as const,
+    chip: "Comunidad",
   },
   {
     label: "Servicios",
@@ -15,6 +16,7 @@ const actions = [
     icon: Wrench,
     href: "/dashboard/services",
     theme: "services" as const,
+    chip: "Confiable",
   },
   {
     label: "Espacio comercial",
@@ -22,6 +24,7 @@ const actions = [
     icon: Store,
     href: "/dashboard/espacio-comercial",
     theme: "commercial" as const,
+    chip: "Local",
   },
   {
     label: "Ayuda vecinal",
@@ -29,12 +32,13 @@ const actions = [
     icon: Heart,
     href: "/dashboard/ayuda",
     theme: "help" as const,
+    chip: "Solidario",
   },
 ]
 
 export function QuickActions() {
   return (
-    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
+    <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4">
       {actions.map((action) => (
         <ModuleCard
           key={action.href}
@@ -43,6 +47,7 @@ export function QuickActions() {
           href={action.href}
           icon={action.icon}
           theme={action.theme}
+          chip={action.chip}
         />
       ))}
     </div>

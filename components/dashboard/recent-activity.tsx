@@ -1,5 +1,5 @@
-import { Badge } from "@/components/ui/badge"
 import { SectionHeader } from "@/components/dashboard/section-header"
+import { DiscoveryCard } from "@/components/dashboard/discovery-card"
 
 const activities = [
   {
@@ -42,39 +42,25 @@ const tagStyles: Record<string, string> = {
 
 export function RecentActivity() {
   return (
-    <section className="rounded-3xl border border-border/70 bg-card p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
+    <section className="rounded-3xl border border-border/70 bg-card/95 p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
       <SectionHeader
         title="Cerca tuyo"
         subtitle="Descubrí oportunidades y recomendaciones publicadas en tu zona"
+        action={<span className="text-xs font-semibold text-muted-foreground">Actualizado hoy</span>}
       />
 
       <div className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
         {activities.map((item) => (
-          <article
+          <DiscoveryCard
             key={`${item.type}-${item.title}`}
-            className="w-[270px] shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-background"
-          >
-            <div className="relative h-32 w-full overflow-hidden bg-muted">
-              <img
-                src={item.image}
-                alt={item.title}
-                className="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.03]"
-              />
-              <Badge className={`absolute left-2.5 top-2.5 border text-[10px] ${tagStyles[item.tag]}`}>
-                {item.tag}
-              </Badge>
-            </div>
-
-            <div className="space-y-2 p-3.5">
-              <p className="line-clamp-1 text-sm font-semibold text-foreground">{item.title}</p>
-              <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{item.subtitle}</p>
-
-              <div className="flex items-center justify-between border-t border-border/70 pt-2 text-[11px] text-muted-foreground">
-                <span>{item.user}</span>
-                <span>{item.distance}</span>
-              </div>
-            </div>
-          </article>
+            title={item.title}
+            subtitle={item.subtitle}
+            user={item.user}
+            distance={item.distance}
+            tag={item.tag}
+            image={item.image}
+            tagClassName={tagStyles[item.tag]}
+          />
         ))}
       </div>
     </section>

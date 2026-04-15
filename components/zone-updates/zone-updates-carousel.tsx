@@ -132,21 +132,21 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
         subtitle="Promos, turnos y novedades destacadas cerca tuyo"
         action={
           <div className="flex items-center gap-1.5">
-          <button
-            onClick={() => scroll("left")}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:text-foreground"
-            aria-label="Desplazar a la izquierda"
-          >
-            <ChevronLeft className="h-3.5 w-3.5" />
-          </button>
+            <button
+              onClick={() => scroll("left")}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+              aria-label="Desplazar a la izquierda"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </button>
 
-          <button
-            onClick={() => scroll("right")}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:text-foreground"
-            aria-label="Desplazar a la derecha"
-          >
-            <ChevronRight className="h-3.5 w-3.5" />
-          </button>
+            <button
+              onClick={() => scroll("right")}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:bg-muted/60 hover:text-foreground"
+              aria-label="Desplazar a la derecha"
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+            </button>
           </div>
         }
       />
