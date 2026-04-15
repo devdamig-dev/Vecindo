@@ -7,10 +7,10 @@ import { WeeklyActivity } from "@/components/dashboard/weekly-activity"
 
 export default function DashboardPage() {
   return (
-    <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Hudson – Berazategui</h1>
-        <p className="text-sm text-muted-foreground">Ver qué pasa en mi zona</p>
+    <div className="flex min-w-0 flex-col gap-7 overflow-x-hidden pb-2">
+      <div className="space-y-1">
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">Hudson – Berazategui</h1>
+        <p className="text-sm text-muted-foreground">Todo lo que pasa en tu comunidad, en un solo lugar.</p>
       </div>
 
       <ZoneUpdatesCarousel zoneId="berazategui" />

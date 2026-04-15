@@ -1,103 +1,82 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { MessageCircle, Star, ShoppingBag, PawPrint } from "lucide-react"
+import { SectionHeader } from "@/components/dashboard/section-header"
 
 const activities = [
   {
-    type: "question",
-    icon: MessageCircle,
+    type: "servicio",
+    title: "Electricista matriculado",
+    subtitle: "Disponible hoy en Hudson",
     user: "Ana M.",
-    initials: "AM",
-    action: "hizo una pregunta",
-    content: "¿Mejor electricista en Hudson para iluminación de piscina?",
-    time: "hace 12 min",
-    badge: "Pregunta",
+    distance: "a 8 min",
+    tag: "Servicios",
+    image:
+      "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=640&h=420&fit=crop",
   },
   {
-    type: "review",
-    icon: Star,
-    user: "Carlos R.",
-    initials: "CR",
-    action: "dejó una reseña",
-    content: "Calificó a Pinturas Express con 5 estrellas por pintura exterior",
-    time: "hace 1 h",
-    badge: "Reseña",
-  },
-  {
-    type: "listing",
-    icon: ShoppingBag,
+    type: "mercado",
+    title: "Parrilla Weber impecable",
+    subtitle: "Publicación nueva con retiro en barrio",
     user: "Sofía L.",
-    initials: "SL",
-    action: "publicó un anuncio",
-    content: "Parrilla Weber, excelente estado – $180",
-    time: "hace 2 h",
-    badge: "Mercado",
+    distance: "a 12 min",
+    tag: "Mercado",
+    image:
+      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=640&h=420&fit=crop",
   },
   {
-    type: "pet",
-    icon: PawPrint,
-    user: "Diego P.",
-    initials: "DP",
-    action: "publicó una alerta de mascota",
-    content: "Golden retriever perdido cerca de la entrada principal – ENCONTRADO",
-    time: "hace 3 h",
-    badge: "Mascota",
-  },
-  {
-    type: "review",
-    icon: Star,
-    user: "Laura T.",
-    initials: "LT",
-    action: "dejó una reseña",
-    content: "Calificó a Jardín Pro con 4 estrellas por mantenimiento de jardín",
-    time: "hace 5 h",
-    badge: "Reseña",
+    type: "comercial",
+    title: "Promo en panadería artesanal",
+    subtitle: "2x1 en facturas hasta las 18 h",
+    user: "Punto Trigo",
+    distance: "a 6 min",
+    tag: "Espacio comercial",
+    image:
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=640&h=420&fit=crop",
   },
 ]
 
+const tagStyles: Record<string, string> = {
+  Servicios: "bg-sky-500/10 text-sky-700 border-sky-200",
+  Mercado: "bg-emerald-500/10 text-emerald-700 border-emerald-200",
+  "Espacio comercial": "bg-violet-500/10 text-violet-700 border-violet-200",
+}
+
 export function RecentActivity() {
   return (
-    <div className="rounded-xl border border-border bg-card">
-      <div className="border-b border-border px-5 py-4">
-        <h2 className="font-semibold text-foreground">Actividad reciente</h2>
-        <p className="text-xs text-muted-foreground">Lo último en tu zona</p>
-      </div>
+    <section className="rounded-3xl border border-border/70 bg-card p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
+      <SectionHeader
+        title="Cerca tuyo"
+        subtitle="Descubrí oportunidades y recomendaciones publicadas en tu zona"
+      />
 
-      <div className="divide-y divide-border">
-        {activities.map((item, i) => (
-          <div key={i} className="flex items-start gap-3 px-4 py-4 sm:px-5">
-            <Avatar className="h-9 w-9 shrink-0">
-              <AvatarFallback className="bg-muted text-foreground text-xs">
-                {item.initials}
-              </AvatarFallback>
-            </Avatar>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm font-medium text-foreground">
-                  {item.user}
-                </span>
-
-                <span className="text-xs text-muted-foreground">
-                  {item.action}
-                </span>
-
-                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                  {item.badge}
-                </Badge>
-              </div>
-
-              <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground sm:truncate">
-                {item.content}
-              </p>
+      <div className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
+        {activities.map((item) => (
+          <article
+            key={`${item.type}-${item.title}`}
+            className="w-[270px] shrink-0 overflow-hidden rounded-2xl border border-border/70 bg-background"
+          >
+            <div className="relative h-32 w-full overflow-hidden bg-muted">
+              <img
+                src={item.image}
+                alt={item.title}
+                className="h-full w-full object-cover transition-transform duration-300 hover:scale-[1.03]"
+              />
+              <Badge className={`absolute left-2.5 top-2.5 border text-[10px] ${tagStyles[item.tag]}`}>
+                {item.tag}
+              </Badge>
             </div>
 
-            <span className="hidden shrink-0 whitespace-nowrap text-xs text-muted-foreground sm:block">
-              {item.time}
-            </span>
-          </div>
+            <div className="space-y-2 p-3.5">
+              <p className="line-clamp-1 text-sm font-semibold text-foreground">{item.title}</p>
+              <p className="line-clamp-2 text-xs leading-relaxed text-muted-foreground">{item.subtitle}</p>
+
+              <div className="flex items-center justify-between border-t border-border/70 pt-2 text-[11px] text-muted-foreground">
+                <span>{item.user}</span>
+                <span>{item.distance}</span>
+              </div>
+            </div>
+          </article>
         ))}
       </div>
-    </div>
+    </section>
   )
 }
