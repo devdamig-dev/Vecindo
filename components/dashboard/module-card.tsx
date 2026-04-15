@@ -9,6 +9,7 @@ type ModuleCardProps = {
   href: string
   icon: LucideIcon
   theme: "market" | "services" | "commercial" | "help"
+  chip: string
 }
 
 const themeStyles = {
@@ -34,7 +35,7 @@ const themeStyles = {
   },
 } as const
 
-export function ModuleCard({ label, description, href, icon: Icon, theme }: ModuleCardProps) {
+export function ModuleCard({ label, description, href, icon: Icon, theme, chip }: ModuleCardProps) {
   const styles = themeStyles[theme]
 
   return (
@@ -50,7 +51,7 @@ export function ModuleCard({ label, description, href, icon: Icon, theme }: Modu
           <Icon className="h-5 w-5" />
         </div>
         <span className={cn("rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide", styles.accent)}>
-          Módulo
+          {chip}
         </span>
       </div>
 
