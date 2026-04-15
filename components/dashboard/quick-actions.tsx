@@ -1,54 +1,54 @@
-import Link from "next/link"
 import { Wrench, ShoppingBag, Heart, Store } from "lucide-react"
+import { ModuleCard } from "@/components/dashboard/module-card"
 
 const actions = [
   {
     label: "Mercado",
-    description: "Compra y venta en tu zona entre vecinos.",
+    description: "Comprá y vendé en tu zona",
     icon: ShoppingBag,
     href: "/dashboard/marketplace",
-    cardClass: "border-emerald-200 bg-emerald-100/80 hover:bg-emerald-100 hover:border-emerald-300",
-    iconWrapClass: "bg-emerald-100 text-emerald-700",
+    theme: "market" as const,
+    chip: "Comunidad",
   },
   {
     label: "Servicios",
-    description: "Ofrecé o encontrá servicios, oficios y ayuda real.",
+    description: "Ofrecé o encontrá servicios",
     icon: Wrench,
     href: "/dashboard/services",
-    cardClass: "border-sky-200 bg-sky-100/80 hover:bg-sky-100 hover:border-sky-300",
-    iconWrapClass: "bg-sky-100 text-sky-700",
+    theme: "services" as const,
+    chip: "Confiable",
   },
   {
     label: "Espacio comercial",
-    description: "Comercios y emprendimientos para descubrir en la zona.",
+    description: "Negocios y emprendimientos",
     icon: Store,
     href: "/dashboard/espacio-comercial",
-    cardClass: "border-amber-200 bg-amber-100/80 hover:bg-amber-100 hover:border-amber-300",
-    iconWrapClass: "bg-amber-100 text-amber-700",
+    theme: "commercial" as const,
+    chip: "Local",
   },
   {
-    label: "Ayuda comunitaria",
-    description: "Mascotas, seguridad, colectas y pedidos puntuales.",
+    label: "Ayuda vecinal",
+    description: "Mascotas, seguridad, colectas y más",
     icon: Heart,
     href: "/dashboard/ayuda",
-    cardClass: "border-rose-200 bg-rose-100/80 hover:bg-rose-100 hover:border-rose-300",
-    iconWrapClass: "bg-rose-100 text-rose-700",
+    theme: "help" as const,
+    chip: "Solidario",
   },
 ]
 
 export function QuickActions() {
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
       {actions.map((action) => (
-        <Link key={action.href} href={action.href} className={`group flex min-h-[150px] flex-col items-start gap-4 rounded-[24px] border p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-sm ${action.cardClass}`}>
-          <div className={`flex h-12 w-12 items-center justify-center rounded-2xl transition-colors ${action.iconWrapClass}`}>
-            <action.icon className="h-5 w-5" />
-          </div>
-          <div className="space-y-1.5">
-            <p className="text-base font-semibold leading-tight text-foreground">{action.label}</p>
-            <p className="text-sm leading-relaxed text-muted-foreground">{action.description}</p>
-          </div>
-        </Link>
+        <ModuleCard
+          key={action.href}
+          label={action.label}
+          description={action.description}
+          href={action.href}
+          icon={action.icon}
+          theme={action.theme}
+          chip={action.chip}
+        />
       ))}
     </div>
   )

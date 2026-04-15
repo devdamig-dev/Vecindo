@@ -9,6 +9,7 @@ import { useZoneUpdates } from "@/hooks/use-zone-updates"
 import type { ZoneUpdate } from "@/hooks/use-zone-updates"
 import { ZoneUpdateViewerModal } from "./zone-update-viewer-modal"
 import { CreateZoneUpdateForm } from "./create-zone-update-form"
+import { SectionHeader } from "@/components/dashboard/section-header"
 
 const TYPE_COLORS: Record<string, string> = {
   service: "bg-primary/15 text-primary",
@@ -113,49 +114,46 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
 
   if (updates.length === 0) {
     return (
-      <section aria-label="Novedades de la zona">
-        <div className="mb-3">
-          <h2 className="text-sm font-semibold text-foreground">
-            Novedades de la zona
-          </h2>
-          <p className="text-xs text-muted-foreground">
-            Aún no hay novedades hoy
-          </p>
-        </div>
+      <section aria-label="Novedades de la zona" className="rounded-3xl border border-border/70 bg-card/70 p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
+        <SectionHeader
+          title="Novedades de la zona"
+          subtitle="Historias locales, promos y actividad reciente"
+          className="mb-1"
+        />
+        <p className="text-xs text-muted-foreground">Aún no hay novedades hoy</p>
       </section>
     )
   }
 
   return (
-    <section aria-label="Novedades de la zona">
-      <div className="mb-3 flex items-center justify-between">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground">Novedades de la zona</h2>
-          <p className="text-xs text-muted-foreground">Promos, turnos y novedades de hoy</p>
-        </div>
+    <section aria-label="Novedades de la zona" className="rounded-3xl border border-border/70 bg-card p-4 shadow-[0_10px_30px_rgba(15,23,42,0.04)]">
+      <SectionHeader
+        title="Novedades de la zona"
+        subtitle="Promos, turnos y novedades destacadas cerca tuyo"
+        action={
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => scroll("left")}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:text-foreground"
+              aria-label="Desplazar a la izquierda"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </button>
 
-        <div className="flex items-center gap-1">
-          <button
-            onClick={() => scroll("left")}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-foreground"
-            aria-label="Desplazar a la izquierda"
-          >
-            <ChevronLeft className="h-3.5 w-3.5" />
-          </button>
-
-          <button
-            onClick={() => scroll("right")}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-foreground"
-            aria-label="Desplazar a la derecha"
-          >
-            <ChevronRight className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
+            <button
+              onClick={() => scroll("right")}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:text-foreground"
+              aria-label="Desplazar a la derecha"
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        }
+      />
 
       <div
         ref={scrollRef}
-        className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto px-1 pb-1"
+        className="scrollbar-hide -mx-1 mt-4 flex gap-3 overflow-x-auto px-1 pb-1"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <button

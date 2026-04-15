@@ -1,103 +1,68 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { MessageCircle, Star, ShoppingBag, PawPrint } from "lucide-react"
+import { SectionHeader } from "@/components/dashboard/section-header"
+import { DiscoveryCard } from "@/components/dashboard/discovery-card"
 
 const activities = [
   {
-    type: "question",
-    icon: MessageCircle,
+    type: "servicio",
+    title: "Electricista matriculado",
+    subtitle: "Disponible hoy en Hudson",
     user: "Ana M.",
-    initials: "AM",
-    action: "hizo una pregunta",
-    content: "¿Mejor electricista en Hudson para iluminación de piscina?",
-    time: "hace 12 min",
-    badge: "Pregunta",
+    distance: "a 8 min",
+    tag: "Servicios",
+    image:
+      "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=640&h=420&fit=crop",
   },
   {
-    type: "review",
-    icon: Star,
-    user: "Carlos R.",
-    initials: "CR",
-    action: "dejó una reseña",
-    content: "Calificó a Pinturas Express con 5 estrellas por pintura exterior",
-    time: "hace 1 h",
-    badge: "Reseña",
-  },
-  {
-    type: "listing",
-    icon: ShoppingBag,
+    type: "mercado",
+    title: "Parrilla Weber impecable",
+    subtitle: "Publicación nueva con retiro en barrio",
     user: "Sofía L.",
-    initials: "SL",
-    action: "publicó un anuncio",
-    content: "Parrilla Weber, excelente estado – $180",
-    time: "hace 2 h",
-    badge: "Mercado",
+    distance: "a 12 min",
+    tag: "Mercado",
+    image:
+      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=640&h=420&fit=crop",
   },
   {
-    type: "pet",
-    icon: PawPrint,
-    user: "Diego P.",
-    initials: "DP",
-    action: "publicó una alerta de mascota",
-    content: "Golden retriever perdido cerca de la entrada principal – ENCONTRADO",
-    time: "hace 3 h",
-    badge: "Mascota",
-  },
-  {
-    type: "review",
-    icon: Star,
-    user: "Laura T.",
-    initials: "LT",
-    action: "dejó una reseña",
-    content: "Calificó a Jardín Pro con 4 estrellas por mantenimiento de jardín",
-    time: "hace 5 h",
-    badge: "Reseña",
+    type: "comercial",
+    title: "Promo en panadería artesanal",
+    subtitle: "2x1 en facturas hasta las 18 h",
+    user: "Punto Trigo",
+    distance: "a 6 min",
+    tag: "Espacio comercial",
+    image:
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=640&h=420&fit=crop",
   },
 ]
 
+const tagStyles: Record<string, string> = {
+  Servicios: "bg-sky-500/10 text-sky-700 border-sky-200",
+  Mercado: "bg-emerald-500/10 text-emerald-700 border-emerald-200",
+  "Espacio comercial": "bg-violet-500/10 text-violet-700 border-violet-200",
+}
+
 export function RecentActivity() {
   return (
-    <div className="rounded-xl border border-border bg-card">
-      <div className="border-b border-border px-5 py-4">
-        <h2 className="font-semibold text-foreground">Actividad reciente</h2>
-        <p className="text-xs text-muted-foreground">Lo último en tu zona</p>
-      </div>
+    <section className="rounded-3xl border border-border/70 bg-card p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
+      <SectionHeader
+        title="Cerca tuyo"
+        subtitle="Descubrí oportunidades y recomendaciones publicadas en tu zona"
+        action={<span className="text-xs font-medium text-muted-foreground">Actualizado hoy</span>}
+      />
 
-      <div className="divide-y divide-border">
-        {activities.map((item, i) => (
-          <div key={i} className="flex items-start gap-3 px-4 py-4 sm:px-5">
-            <Avatar className="h-9 w-9 shrink-0">
-              <AvatarFallback className="bg-muted text-foreground text-xs">
-                {item.initials}
-              </AvatarFallback>
-            </Avatar>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm font-medium text-foreground">
-                  {item.user}
-                </span>
-
-                <span className="text-xs text-muted-foreground">
-                  {item.action}
-                </span>
-
-                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                  {item.badge}
-                </Badge>
-              </div>
-
-              <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground sm:truncate">
-                {item.content}
-              </p>
-            </div>
-
-            <span className="hidden shrink-0 whitespace-nowrap text-xs text-muted-foreground sm:block">
-              {item.time}
-            </span>
-          </div>
+      <div className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
+        {activities.map((item) => (
+          <DiscoveryCard
+            key={`${item.type}-${item.title}`}
+            title={item.title}
+            subtitle={item.subtitle}
+            user={item.user}
+            distance={item.distance}
+            tag={item.tag}
+            image={item.image}
+            tagClassName={tagStyles[item.tag]}
+          />
         ))}
       </div>
-    </div>
+    </section>
   )
 }
