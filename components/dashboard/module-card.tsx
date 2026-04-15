@@ -29,9 +29,9 @@ const themeStyles = {
     accent: "bg-violet-500/10 text-violet-700",
   },
   help: {
-    card: "border-orange-200/70 bg-gradient-to-br from-orange-50 via-white to-orange-100/40",
-    iconWrap: "bg-orange-500 text-white shadow-orange-400/35",
-    accent: "bg-orange-500/10 text-orange-700",
+    card: "border-rose-200/70 bg-gradient-to-br from-rose-50 via-white to-rose-100/40",
+    iconWrap: "bg-rose-500 text-white shadow-rose-400/35",
+    accent: "bg-rose-500/10 text-rose-700",
   },
 } as const
 
@@ -42,7 +42,7 @@ export function ModuleCard({ label, description, href, icon: Icon, theme, chip }
     <Link
       href={href}
       className={cn(
-        "group relative flex min-h-[170px] flex-col overflow-hidden rounded-3xl border p-4 text-left shadow-[0_8px_28px_rgba(15,23,42,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(15,23,42,0.1)]",
+        "group relative flex min-h-[158px] flex-col overflow-hidden rounded-3xl border p-4 text-left shadow-[0_8px_24px_rgba(15,23,42,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_rgba(15,23,42,0.1)]",
         styles.card
       )}
     >
@@ -56,12 +56,12 @@ export function ModuleCard({ label, description, href, icon: Icon, theme, chip }
         </span>
       </div>
 
-      <div className="mt-5 space-y-2">
-        <p className="text-base font-semibold leading-tight text-foreground">{label}</p>
-        <p className="text-sm leading-relaxed text-muted-foreground">{description}</p>
+      <div className="mt-4 space-y-1.5">
+        <p className="text-sm font-semibold leading-tight text-foreground sm:text-base">{label}</p>
+        <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">{description}</p>
       </div>
 
-      <div className="mt-auto flex items-center gap-1 pt-4 text-sm font-medium text-foreground/80 transition-colors group-hover:text-foreground">
+      <div className="mt-auto flex items-center gap-1 pt-3 text-xs font-semibold text-foreground/80 transition-colors group-hover:text-foreground sm:text-sm">
         Explorar
         <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
       </div>
