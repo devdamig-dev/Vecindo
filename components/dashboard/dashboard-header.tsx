@@ -26,11 +26,15 @@ export function DashboardHeader() {
 
           <div className="flex items-center justify-end gap-1">
             <button
+              type="button"
               className="relative rounded-xl p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               aria-label="Notificaciones"
             >
               <Bell className="h-5 w-5" />
-              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive" />
+              <span
+                aria-hidden="true"
+                className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive"
+              />
             </button>
             <MobileHeaderMenu />
           </div>
