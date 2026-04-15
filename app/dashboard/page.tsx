@@ -7,7 +7,7 @@ import { WeeklyActivity } from "@/components/dashboard/weekly-activity"
 
 export default function DashboardPage() {
   return (
-    <div className="flex min-w-0 flex-col gap-7 overflow-x-hidden pb-2">
+    <div className="flex min-w-0 flex-col gap-7 overflow-x-hidden pb-3">
       <div className="space-y-2">
         <span className="inline-flex w-fit rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
           Inicio
