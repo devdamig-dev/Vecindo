@@ -210,7 +210,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {listings.map((listing) => {
         const whatsappUrl = `https://wa.me/${listing.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-          `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VECINDO.`
+          `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VEZI.`
         )}`
 
         const detailHref = `/dashboard/marketplace/${listing.id}`
