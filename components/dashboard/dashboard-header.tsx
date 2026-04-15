@@ -8,6 +8,7 @@ import { MobileHeaderMenu } from "@/components/dashboard/mobile-header-menu"
 
 export function DashboardHeader() {
   const { auth } = useAuth()
+  const currentZone = auth.profile.zone || "Hudson, Berazategui"
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background shadow-[0_6px_18px_rgba(15,23,42,0.06)]">
@@ -21,7 +22,7 @@ export function DashboardHeader() {
 
           <div className="text-center">
             <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Tu zona actual</p>
-            <p className="truncate text-sm font-semibold text-foreground">{auth.profile.zone || "Hudson, Berazategui"}</p>
+            <p className="truncate text-sm font-semibold text-foreground">{currentZone}</p>
           </div>
 
           <div className="flex items-center justify-end gap-1">
