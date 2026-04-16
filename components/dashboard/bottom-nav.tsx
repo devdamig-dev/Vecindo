@@ -30,6 +30,7 @@ export function BottomNav({ homeHref }: Props) {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium text-muted-foreground transition-all duration-200",
                   isActive && item.activeClass
@@ -52,6 +53,7 @@ export function BottomNav({ homeHref }: Props) {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium text-muted-foreground transition-all duration-200",
                   isActive && item.activeClass

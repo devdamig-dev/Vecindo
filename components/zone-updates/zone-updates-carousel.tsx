@@ -126,7 +126,7 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
   }
 
   return (
-    <section aria-label="Novedades de la zona" className="relative overflow-hidden rounded-[28px] border border-violet-200/70 bg-gradient-to-br from-violet-50 via-background to-sky-50 p-4 shadow-[0_14px_35px_rgba(76,29,149,0.1)]">
+    <section aria-label="Novedades de la zona" className="relative overflow-hidden rounded-[28px] border border-violet-200/70 bg-gradient-to-br from-violet-50 via-background to-sky-50 p-4 shadow-[0_16px_38px_rgba(76,29,149,0.12)]">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-white/70 to-transparent" />
       <SectionHeader
         title="Novedades de la zona"
