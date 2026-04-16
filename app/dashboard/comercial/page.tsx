@@ -144,7 +144,6 @@ export default function ComercialPage() {
 
   const profileBadge = getProfileTypeBadge(commercialProfile.type)
   const ProfileIcon = profileBadge.icon
-  const publicProfileHref = commercialProfile.type === "business" ? "/dashboard/comercios/3" : "/dashboard/comercios/4?tipo=emprendimientos"
 
   const activity = auth?.commercialActivity
   const stats = [
@@ -325,25 +324,6 @@ export default function ComercialPage() {
             </div>
 
             <div className="space-y-4">
-              <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-5">
-                <h2 className="font-semibold text-foreground">Tu presencia pública en VEZI</h2>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Tu perfil público muestra catálogo, permite pedidos por WhatsApp y se puede compartir fuera de la app.
-                </p>
-                <div className="mt-4 grid gap-2">
-                  <Button asChild variant="outline" className="justify-between">
-                    <Link href={publicProfileHref}>
-                      Ver perfil público
-                      <ChevronRight className="h-4 w-4" />
-                    </Link>
-                  </Button>
-                  <Button variant="outline" className="justify-between" disabled>
-                    Gestionar catálogo (próximamente)
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-
               <div className="rounded-2xl border border-border bg-card p-5">
                 <h2 className="font-semibold text-foreground">Accesos rápidos</h2>
                 <div className="mt-4 grid gap-2">

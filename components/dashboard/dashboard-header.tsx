@@ -21,9 +21,7 @@ export function DashboardHeader() {
           </Avatar>
 
           <div className="text-center">
-            <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">
-              Tu zona actual
-            </p>
+            <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Tu zona actual</p>
             <p className="truncate text-sm font-semibold text-foreground">{currentZone}</p>
           </div>
 
@@ -39,7 +37,6 @@ export function DashboardHeader() {
                 className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive"
               />
             </button>
-
             <MobileHeaderMenu />
           </div>
         </div>
