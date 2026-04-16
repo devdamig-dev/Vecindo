@@ -47,8 +47,8 @@ export function ModuleCard({ label, description, href, icon: Icon, theme, chip }
       )}
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/45 to-transparent" />
-      <div className="flex items-start justify-between gap-3">
-        <div className={cn("flex h-11 w-11 items-center justify-center rounded-2xl shadow-lg", styles.iconWrap)}>
+      <div className="flex items-start justify-between gap-2.5">
+        <div className={cn("flex h-10 w-10 items-center justify-center rounded-xl shadow-lg", styles.iconWrap)}>
           <Icon className="h-5 w-5" />
         </div>
         <span className={cn("rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide", styles.accent)}>
