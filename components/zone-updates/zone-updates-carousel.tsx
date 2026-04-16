@@ -154,7 +154,7 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
 
       <div
         ref={scrollRef}
-        className="scrollbar-hide -mx-1 mt-4 flex gap-3 overflow-x-auto px-1 pb-1"
+        className="scrollbar-hide -mx-1 mt-4 flex gap-3 overflow-x-auto rounded-2xl bg-white/55 px-2 py-2"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <button

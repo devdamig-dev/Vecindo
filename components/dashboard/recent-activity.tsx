@@ -49,7 +49,7 @@ export function RecentActivity() {
         action={<span className="text-xs font-semibold text-violet-700">Perfiles promocionados</span>}
       />
 
-      <div className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
+      <div className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto rounded-2xl bg-violet-50/50 px-2 py-2">
         {activities.map((item) => (
           <DiscoveryCard
             key={`${item.type}-${item.title}`}

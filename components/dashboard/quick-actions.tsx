@@ -38,7 +38,7 @@ const actions = [
 
 export function QuickActions() {
   return (
-    <div className="grid grid-cols-2 gap-3.5 sm:gap-4">
+    <div className="grid grid-cols-2 gap-3.5 md:gap-4">
       {actions.map((action) => (
         <ModuleCard
           key={action.href}
