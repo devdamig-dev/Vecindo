@@ -75,10 +75,10 @@ export default function ServicesPage() {
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-200 text-sky-700"><Briefcase className="h-5 w-5" /></div>
             <div>
               <p className="text-sm font-semibold text-foreground">¿Ofrecés un servicio en la zona?</p>
-              <p className="mt-1 text-sm text-muted-foreground">Activá tu perfil profesional y empezá a recibir consultas de vecinos de tu comunidad.</p>
+              <p className="mt-1 text-sm text-muted-foreground">Creá tu perfil y empezá a recibir consultas de vecinos de tu comunidad.</p>
             </div>
           </div>
-          <Button asChild className="bg-sky-600 text-white hover:bg-sky-700"><Link href="/dashboard/suscripciones"><Plus className="mr-2 h-4 w-4" />Activar perfil</Link></Button>
+          <Button asChild className="bg-sky-600 text-white hover:bg-sky-700"><Link href="/dashboard/services/publicar"><Plus className="mr-2 h-4 w-4" />Ofrecer servicio</Link></Button>
         </div>
       )}
 
