@@ -195,7 +195,7 @@ export default function ComerciosPageContent({
           </div>
 
           {showMyBusiness ? (
-            <Button asChild>
+            <Button asChild className="shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-[1.01]">
               <Link href="/dashboard/comercial">Ir a Mi negocio</Link>
             </Button>
           ) : (

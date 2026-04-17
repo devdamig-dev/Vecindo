@@ -42,7 +42,7 @@ export function ModuleCard({ label, description, href, icon: Icon, theme, chip }
     <Link
       href={href}
       className={cn(
-        "group relative flex min-h-[158px] flex-col overflow-hidden rounded-3xl border p-4 text-left shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(15,23,42,0.08)] hover:ring-1 hover:ring-white/70",
+        "group relative flex min-h-[158px] flex-col overflow-hidden rounded-3xl border px-4 pb-4 pt-5 text-left shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(15,23,42,0.08)] hover:ring-1 hover:ring-white/70",
         styles.card
       )}
     >
@@ -63,7 +63,7 @@ export function ModuleCard({ label, description, href, icon: Icon, theme, chip }
 
       <div className="mt-auto flex items-center gap-1 pt-3 text-[13px] font-semibold text-foreground/80 transition-colors group-hover:text-foreground">
         Explorar
-        <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
       </div>
     </Link>
   )

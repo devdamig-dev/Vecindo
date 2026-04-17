@@ -61,7 +61,7 @@ export default function EspacioComercialPage() {
                 <div className="flex items-center gap-2 text-violet-700"><MapPin className="h-4 w-4" /><span className="font-medium">Comercios</span></div>
                 <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Negocios y locales con dirección visible, horarios y ficha más institucional dentro de la zona.</p>
               </div>
-              <Button asChild className="bg-violet-600 text-white hover:bg-violet-700"><Link href="/dashboard/comercios">Explorar comercios</Link></Button>
+              <Button asChild className="bg-violet-600 text-white shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-[1.01] hover:bg-violet-700"><Link href="/dashboard/comercios">Explorar comercios</Link></Button>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">{commerceItems.map((item) => <CommercialPreviewCard key={item.title} {...item} type="commerce" />)}</div>
@@ -74,7 +74,7 @@ export default function EspacioComercialPage() {
                 <div className="flex items-center gap-2 text-violet-700"><Sparkles className="h-4 w-4" /><span className="font-medium">Emprendimientos locales</span></div>
                 <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Proyectos y marcas de vecinos que venden productos o servicios sin necesidad de un local físico.</p>
               </div>
-              <Button asChild className="bg-violet-600 text-white hover:bg-violet-700"><Link href="/dashboard/comercios?tipo=emprendimientos">Explorar emprendimientos</Link></Button>
+              <Button asChild className="bg-violet-600 text-white shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-[1.01] hover:bg-violet-700"><Link href="/dashboard/comercios?tipo=emprendimientos">Explorar emprendimientos</Link></Button>
             </div>
           </div>
           <div className="grid gap-4 md:grid-cols-2">{entrepreneurItems.map((item) => <CommercialPreviewCard key={item.title} {...item} type="entrepreneur" />)}</div>
@@ -92,7 +92,7 @@ export default function EspacioComercialPage() {
           ) : (
             <div className="flex flex-wrap gap-2">
               <Button asChild variant="outline"><Link href="/dashboard/marketplace"><Package className="mr-2 h-4 w-4" />Publicar producto</Link></Button>
-              <Button asChild className="bg-violet-600 text-white hover:bg-violet-700"><Link href="/dashboard/services/new"><Search className="mr-2 h-4 w-4" />Ofrecer servicio</Link></Button>
+              <Button asChild className="bg-violet-600 text-white shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-[1.01] hover:bg-violet-700"><Link href="/dashboard/services/new"><Search className="mr-2 h-4 w-4" />Ofrecer servicio</Link></Button>
             </div>
           )}
         </div>
