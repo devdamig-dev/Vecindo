@@ -9,6 +9,14 @@ export type CommerceReview = {
   verified?: boolean
 }
 
+export type CommerceProduct = {
+  id: string
+  name: string
+  shortDescription: string
+  price: number
+  imageUrl: string
+}
+
 export type CommerceItem = {
   id: string
   type: CommerceType
@@ -29,6 +37,7 @@ export type CommerceItem = {
   bannerUrl: string
   rating: number
   reviews: CommerceReview[]
+  products: CommerceProduct[]
 }
 
 export const commerces: CommerceItem[] = [
@@ -69,6 +78,29 @@ export const commerces: CommerceItem[] = [
         date: "hace 1 mes",
       },
     ],
+    products: [
+      {
+        id: "farmacia-1",
+        name: "Kit Dermocuidado Diario",
+        shortDescription: "Limpieza + hidratación para uso diario.",
+        price: 18500,
+        imageUrl: "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "farmacia-2",
+        name: "Combo Bienestar Invierno",
+        shortDescription: "Vitaminas + pastillas de miel + spray nasal.",
+        price: 12900,
+        imageUrl: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "farmacia-3",
+        name: "Protector Solar FPS 50",
+        shortDescription: "Protección alta para uso urbano y outdoor.",
+        price: 9800,
+        imageUrl: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=80",
+      },
+    ],
   },
   {
     id: "2",
@@ -100,6 +132,29 @@ export const commerces: CommerceItem[] = [
         verified: true,
       },
     ],
+    products: [
+      {
+        id: "cafe-1",
+        name: "Combo Desayuno Vecinal",
+        shortDescription: "Café + medialuna + jugo exprimido.",
+        price: 6900,
+        imageUrl: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "cafe-2",
+        name: "Box Merienda para 2",
+        shortDescription: "2 cafés + 2 porciones de torta artesanal.",
+        price: 12400,
+        imageUrl: "https://images.unsplash.com/photo-1464306076886-da185f6a9d05?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "cafe-3",
+        name: "Tostado Premium",
+        shortDescription: "Pan de masa madre, jamón, queso y rúcula.",
+        price: 5400,
+        imageUrl: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=900&q=80",
+      },
+    ],
   },
   {
     id: "3",
@@ -128,6 +183,29 @@ export const commerces: CommerceItem[] = [
         rating: 5,
         text: "Muy buenos productos y excelente atención en showroom.",
         date: "hace 2 meses",
+      },
+    ],
+    products: [
+      {
+        id: "muebleria-1",
+        name: "Mesa Nórdica 1.60m",
+        shortDescription: "Tapa laqueada y estructura de madera maciza.",
+        price: 320000,
+        imageUrl: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "muebleria-2",
+        name: "Rack TV Minimal",
+        shortDescription: "Diseño limpio con doble cajón y estante abierto.",
+        price: 198000,
+        imageUrl: "https://images.unsplash.com/photo-1484101403633-562f891dc89a?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "muebleria-3",
+        name: "Biblioteca Modular",
+        shortDescription: "Sistema adaptable para living o estudio.",
+        price: 255000,
+        imageUrl: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=900&q=80",
       },
     ],
   },
@@ -161,6 +239,29 @@ export const commerces: CommerceItem[] = [
         verified: true,
       },
     ],
+    products: [
+      {
+        id: "mikage-1",
+        name: "Mesa Ratona Industrial",
+        shortDescription: "Hierro + madera, terminación mate.",
+        price: 98000,
+        imageUrl: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "mikage-2",
+        name: "Rack Flotante a Medida",
+        shortDescription: "Ideal para living compacto, hecho por encargo.",
+        price: 87000,
+        imageUrl: "https://images.unsplash.com/photo-1556909114-44e3e9699e00?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "mikage-3",
+        name: "Estantería Open Frame",
+        shortDescription: "Módulo liviano para deco y guardado.",
+        price: 76000,
+        imageUrl: "https://images.unsplash.com/photo-1549187774-b4e9b0445b41?auto=format&fit=crop&w=900&q=80",
+      },
+    ],
   },
   {
     id: "5",
@@ -183,6 +284,29 @@ export const commerces: CommerceItem[] = [
     bannerUrl: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?auto=format&fit=crop&w=1200&q=80",
     rating: 4.6,
     reviews: [],
+    products: [
+      {
+        id: "luna-1",
+        name: "Set de Tazas Artesanales x2",
+        shortDescription: "Cerámica esmaltada, piezas únicas.",
+        price: 28500,
+        imageUrl: "https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "luna-2",
+        name: "Florero Texturado",
+        shortDescription: "Florero decorativo hecho a mano.",
+        price: 21900,
+        imageUrl: "https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "luna-3",
+        name: "Platos de Sitio x4",
+        shortDescription: "Set artesanal para mesa diaria o evento.",
+        price: 36400,
+        imageUrl: "https://images.unsplash.com/photo-1603190287605-e6ade32fa852?auto=format&fit=crop&w=900&q=80",
+      },
+    ],
   },
   {
     id: "6",
@@ -205,5 +329,28 @@ export const commerces: CommerceItem[] = [
     bannerUrl: "https://images.unsplash.com/photo-1559622214-f8a9850965bb?auto=format&fit=crop&w=1200&q=80",
     rating: 4.9,
     reviews: [],
+    products: [
+      {
+        id: "dulcesur-1",
+        name: "Torta Clásica 15 porciones",
+        shortDescription: "Bizcochuelo húmedo + relleno a elección.",
+        price: 42000,
+        imageUrl: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "dulcesur-2",
+        name: "Box Mini Pastelería",
+        shortDescription: "Selección de mini tartas y cookies.",
+        price: 23800,
+        imageUrl: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80",
+      },
+      {
+        id: "dulcesur-3",
+        name: "Mesa Dulce Evento",
+        shortDescription: "Servicio integral para 20 personas.",
+        price: 115000,
+        imageUrl: "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=900&q=80",
+      },
+    ],
   },
 ]
