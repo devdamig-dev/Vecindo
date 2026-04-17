@@ -5,51 +5,51 @@ const activities = [
   {
     type: "servicio",
     title: "Electricista matriculado",
-    subtitle: "Disponible hoy en Hudson",
+    subtitle: "Perfil destacado con respuesta rápida y valoraciones recientes.",
     user: "Ana M.",
     distance: "a 8 min",
-    tag: "Servicios",
+    tag: "Servicio destacado",
     image:
       "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=640&h=420&fit=crop",
   },
   {
-    type: "mercado",
-    title: "Parrilla Weber impecable",
-    subtitle: "Publicación nueva con retiro en barrio",
-    user: "Sofía L.",
-    distance: "a 12 min",
-    tag: "Mercado",
-    image:
-      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=640&h=420&fit=crop",
-  },
-  {
     type: "comercial",
     title: "Promo en panadería artesanal",
-    subtitle: "2x1 en facturas hasta las 18 h",
+    subtitle: "Comercio destacado con catálogo activo y pedido por WhatsApp.",
     user: "Punto Trigo",
     distance: "a 6 min",
-    tag: "Espacio comercial",
+    tag: "Comercio destacado",
     image:
       "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=640&h=420&fit=crop",
+  },
+  {
+    type: "emprendimiento",
+    title: "Luna Cerámica",
+    subtitle: "Emprendimiento local promocionado para ganar visibilidad en la zona.",
+    user: "Emprendimiento local",
+    distance: "a 10 min",
+    tag: "Emprendimiento destacado",
+    image:
+      "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=640&h=420&fit=crop",
   },
 ]
 
 const tagStyles: Record<string, string> = {
-  Servicios: "bg-sky-500/10 text-sky-700 border-sky-200",
-  Mercado: "bg-emerald-500/10 text-emerald-700 border-emerald-200",
-  "Espacio comercial": "bg-violet-500/10 text-violet-700 border-violet-200",
+  "Servicio destacado": "bg-sky-500/10 text-sky-700 border-sky-200",
+  "Comercio destacado": "bg-violet-500/10 text-violet-700 border-violet-200",
+  "Emprendimiento destacado": "bg-fuchsia-500/10 text-fuchsia-700 border-fuchsia-200",
 }
 
 export function RecentActivity() {
   return (
-    <section className="rounded-3xl border border-border/70 bg-card/95 p-4 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
+    <section className="rounded-3xl border border-violet-200/50 bg-card/95 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.05)]">
       <SectionHeader
         title="Cerca tuyo"
-        subtitle="Descubrí oportunidades y recomendaciones publicadas en tu zona"
-        action={<span className="text-xs font-semibold text-muted-foreground">Actualizado hoy</span>}
+        subtitle="Perfiles destacados de servicios, comercios y emprendimientos con mayor visibilidad."
+        action={<span className="text-xs font-semibold text-violet-700">Perfiles promocionados</span>}
       />
 
-      <div className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto px-1 pb-1">
+      <div className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto rounded-2xl bg-violet-50/50 px-2 py-2">
         {activities.map((item) => (
           <DiscoveryCard
             key={`${item.type}-${item.title}`}

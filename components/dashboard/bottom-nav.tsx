@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { BriefcaseBusiness, Heart, Search, ShoppingBag } from "lucide-react"
+import { Store, HeartHandshake, Wrench, ShoppingBag } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { FloatingCenterButton } from "@/components/dashboard/floating-center-button"
 
@@ -11,10 +11,10 @@ type Props = {
 }
 
 const navItems = [
-  { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag },
-  { label: "Servicios", href: "/dashboard/services", icon: Search },
-  { label: "Comercial", href: "/dashboard/espacio-comercial", icon: BriefcaseBusiness },
-  { label: "Ayuda", href: "/dashboard/ayuda", icon: Heart },
+  { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, activeClass: "bg-emerald-500/10 text-emerald-700" },
+  { label: "Servicios", href: "/dashboard/services", icon: Wrench, activeClass: "bg-sky-500/10 text-sky-700" },
+  { label: "Comercial", href: "/dashboard/espacio-comercial", icon: Store, activeClass: "bg-violet-500/10 text-violet-700" },
+  { label: "Ayuda", href: "/dashboard/ayuda", icon: HeartHandshake, activeClass: "bg-rose-500/10 text-rose-700" },
 ]
 
 export function BottomNav({ homeHref }: Props) {
@@ -30,9 +30,10 @@ export function BottomNav({ homeHref }: Props) {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium text-muted-foreground transition-all duration-200",
-                  isActive && "bg-primary/10 text-primary"
+                  isActive && item.activeClass
                 )}
               >
                 <item.icon className="h-4 w-4" />
@@ -52,9 +53,10 @@ export function BottomNav({ homeHref }: Props) {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium text-muted-foreground transition-all duration-200",
-                  isActive && "bg-primary/10 text-primary"
+                  isActive && item.activeClass
                 )}
               >
                 <item.icon className="h-4 w-4" />
