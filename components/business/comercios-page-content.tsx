@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context"
 import { hasCommercialActivity } from "@/lib/commercial"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Package, Store, Sparkles, MapPin } from "lucide-react"
+import { Package, Store, Sparkles, MapPin, MessageSquare } from "lucide-react"
 import ComerciosZoneMap from "@/components/business/comercios-zone-map"
 import type { CommerceItem } from "@/lib/commerces-data"
 
@@ -76,6 +76,24 @@ function CommercialListCard({
                 {firstBadge}
               </Badge>
             )}
+
+            <Badge
+              className={
+                isCommerce
+                  ? "bg-sky-100 text-sky-700 hover:bg-sky-100"
+                  : "bg-amber-100 text-amber-700 hover:bg-amber-100"
+              }
+            >
+              {isCommerce ? "Catálogo activo" : "Catálogo activo"}
+            </Badge>
+
+            <Badge
+              variant="outline"
+              className="gap-1 border-emerald-200 text-emerald-700"
+            >
+              <MessageSquare className="h-3 w-3" />
+              Pedido por WhatsApp
+            </Badge>
           </div>
 
           <p className="line-clamp-2 text-sm text-slate-600">
@@ -92,7 +110,7 @@ function CommercialListCard({
         </div>
 
         <Button asChild variant="link" className="h-auto p-0 text-slate-950">
-          <Link href={detailHref}>Ver perfil</Link>
+          <Link href={detailHref}>Ver perfil y catálogo</Link>
         </Button>
       </div>
     </article>
@@ -135,8 +153,8 @@ export default function ComerciosPageContent({
             </h2>
             <p className="max-w-3xl text-sm text-slate-600">
               {isCommerceTab
-                ? "Negocios, marcas y locales de la zona con ficha más institucional, ubicación visible y beneficios para vecinos."
-                : "Marcas y proyectos de vecinos que venden productos o servicios en la zona, sin necesidad de un local físico."}
+                ? "Negocios, marcas y locales de la zona con catálogo activo, ubicación visible y pedido simple por WhatsApp."
+                : "Marcas y proyectos de vecinos con catálogo público, atención directa y pedidos coordinados sin necesidad de local físico."}
             </p>
           </div>
         </div>
