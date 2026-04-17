@@ -50,7 +50,7 @@ const businessData: Record<string, {
 
 export function BusinessProfilePublic({ id }: { id: string }) {
   const biz = businessData[id] || businessData["1"]
-  const whatsappUrl = `https://wa.me/${biz.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola, te contacto desde VECINDO por tu negocio "${biz.businessName}".`)}`
+  const whatsappUrl = `https://wa.me/${biz.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola, te contacto desde VEZI por tu negocio "${biz.businessName}".`)}`
 
   return (
     <div className="flex flex-col gap-6">
@@ -104,7 +104,7 @@ export function BusinessProfilePublic({ id }: { id: string }) {
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {biz.products.map((product) => {
-            const productWhatsappUrl = `https://wa.me/${biz.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola, me interesa "${product.title}" de ${biz.businessName} (${product.price}) - via VECINDO.`)}`
+            const productWhatsappUrl = `https://wa.me/${biz.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola, me interesa "${product.title}" de ${biz.businessName} (${product.price}) - via VEZI.`)}`
             return (
               <div
                 key={product.id}
