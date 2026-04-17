@@ -9,6 +9,7 @@ import { useZoneUpdates } from "@/hooks/use-zone-updates"
 import type { ZoneUpdate } from "@/hooks/use-zone-updates"
 import { ZoneUpdateViewerModal } from "./zone-update-viewer-modal"
 import { CreateZoneUpdateForm } from "./create-zone-update-form"
+import { SectionHeader } from "@/components/dashboard/section-header"
 
 const TYPE_COLORS: Record<string, string> = {
   service: "bg-primary/15 text-primary",
@@ -113,49 +114,48 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
 
   if (updates.length === 0) {
     return (
-      <section aria-label="Novedades de la zona">
-        <div className="mb-3">
-          <h2 className="text-sm font-semibold text-foreground">
-            Novedades de la zona
-          </h2>
-          <p className="text-xs text-muted-foreground">
-            Aún no hay novedades hoy
-          </p>
-        </div>
+      <section aria-label="Novedades de la zona" className="rounded-[28px] border border-violet-200/40 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-4 shadow-[0_12px_30px_rgba(76,29,149,0.08)]">
+        <SectionHeader
+          title="Novedades de la zona"
+          subtitle="Bloque destacado de historias, promos y actividad local"
+          className="mb-1"
+        />
+        <p className="text-[13px] text-muted-foreground">Aún no hay novedades hoy</p>
       </section>
     )
   }
 
   return (
-    <section aria-label="Novedades de la zona">
-      <div className="mb-3 flex items-center justify-between">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground">Novedades de la zona</h2>
-          <p className="text-xs text-muted-foreground">Promos, turnos y novedades de hoy</p>
-        </div>
+    <section aria-label="Novedades de la zona" className="relative overflow-hidden rounded-[28px] border border-violet-200/40 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-4 shadow-[0_16px_38px_rgba(76,29,149,0.12)]">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-white/70 to-transparent" />
+      <SectionHeader
+        title="Novedades de la zona"
+        subtitle="Historias destacadas para mantenerte al día en tu comunidad"
+        titleClassName="text-[17px]"
+        action={
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => scroll("left")}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-violet-200 bg-violet-100/70 text-violet-700 transition-all duration-200 hover:scale-105 hover:bg-violet-200/80 hover:text-violet-800"
+              aria-label="Desplazar a la izquierda"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </button>
 
-        <div className="flex items-center gap-1">
-          <button
-            onClick={() => scroll("left")}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-foreground"
-            aria-label="Desplazar a la izquierda"
-          >
-            <ChevronLeft className="h-3.5 w-3.5" />
-          </button>
-
-          <button
-            onClick={() => scroll("right")}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:text-foreground"
-            aria-label="Desplazar a la derecha"
-          >
-            <ChevronRight className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
+            <button
+              onClick={() => scroll("right")}
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-violet-200 bg-violet-100/70 text-violet-700 transition-all duration-200 hover:scale-105 hover:bg-violet-200/80 hover:text-violet-800"
+              aria-label="Desplazar a la derecha"
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        }
+      />
 
       <div
         ref={scrollRef}
-        className="scrollbar-hide -mx-1 flex gap-3 overflow-x-auto px-1 pb-1"
+        className="scrollbar-hide -mx-1 mt-4 flex gap-3 overflow-x-auto rounded-2xl bg-white/55 px-2 py-2"
         style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <button
@@ -166,7 +166,7 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
           <div className="relative flex h-[72px] w-[72px] items-center justify-center rounded-full border-2 border-dashed border-primary/40 bg-primary/5 transition-all group-hover:border-primary group-hover:bg-primary/10">
             <Plus className="h-5 w-5 text-primary" />
           </div>
-          <span className="w-[76px] truncate text-center text-[11px] font-medium leading-tight text-primary">
+          <span className="w-[76px] truncate text-center text-[12px] font-medium leading-tight text-primary">
             + Publicar
           </span>
         </button>
@@ -219,10 +219,10 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
               </div>
 
               <div className="w-[76px] text-center">
-                <p className="truncate text-[11px] font-medium leading-tight text-foreground">
+                <p className="truncate text-[12px] font-medium leading-tight text-foreground">
                   {update.author.name}
                 </p>
-                <p className="text-[10px] leading-tight text-muted-foreground">
+                <p className="text-[12px] leading-tight text-muted-foreground">
                   {timeAgo(update.createdAt)}
                 </p>
               </div>
