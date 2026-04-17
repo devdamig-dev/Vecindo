@@ -114,7 +114,7 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
 
   if (updates.length === 0) {
     return (
-      <section aria-label="Novedades de la zona" className="rounded-[28px] border border-violet-200/70 bg-gradient-to-br from-violet-50 via-background to-sky-50 p-4 shadow-[0_12px_30px_rgba(76,29,149,0.08)]">
+      <section aria-label="Novedades de la zona" className="rounded-[28px] border border-violet-200/60 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-4 shadow-[0_12px_30px_rgba(76,29,149,0.08)]">
         <SectionHeader
           title="Novedades de la zona"
           subtitle="Bloque destacado de historias, promos y actividad local"
@@ -126,7 +126,7 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
   }
 
   return (
-    <section aria-label="Novedades de la zona" className="relative overflow-hidden rounded-[28px] border border-violet-200/70 bg-gradient-to-br from-violet-50 via-background to-sky-50 p-4 shadow-[0_16px_38px_rgba(76,29,149,0.12)]">
+    <section aria-label="Novedades de la zona" className="relative overflow-hidden rounded-[28px] border border-violet-200/60 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-4 shadow-[0_16px_38px_rgba(76,29,149,0.12)]">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-white/70 to-transparent" />
       <SectionHeader
         title="Novedades de la zona"
@@ -135,7 +135,7 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => scroll("left")}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-violet-200 bg-background/90 text-violet-700 transition-colors hover:bg-violet-100 hover:text-violet-800"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-violet-200 bg-violet-100/70 text-violet-700 transition-all duration-200 hover:scale-105 hover:bg-violet-200/80 hover:text-violet-800"
               aria-label="Desplazar a la izquierda"
             >
               <ChevronLeft className="h-3.5 w-3.5" />
@@ -143,7 +143,7 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
 
             <button
               onClick={() => scroll("right")}
-              className="flex h-8 w-8 items-center justify-center rounded-full border border-violet-200 bg-background/90 text-violet-700 transition-colors hover:bg-violet-100 hover:text-violet-800"
+              className="flex h-8 w-8 items-center justify-center rounded-full border border-violet-200 bg-violet-100/70 text-violet-700 transition-all duration-200 hover:scale-105 hover:bg-violet-200/80 hover:text-violet-800"
               aria-label="Desplazar a la derecha"
             >
               <ChevronRight className="h-3.5 w-3.5" />
