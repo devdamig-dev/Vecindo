@@ -32,8 +32,8 @@ export function BottomNav({ homeHref }: Props) {
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium text-muted-foreground transition-all duration-200",
-                  isActive && item.activeClass
+                  "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[12px] font-medium text-slate-500 transition-all duration-200",
+                  isActive && cn(item.activeClass, "scale-[1.05] font-semibold")
                 )}
               >
                 <item.icon className="h-4 w-4" />
@@ -55,8 +55,8 @@ export function BottomNav({ homeHref }: Props) {
                 href={item.href}
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[11px] font-medium text-muted-foreground transition-all duration-200",
-                  isActive && item.activeClass
+                  "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[12px] font-medium text-slate-500 transition-all duration-200",
+                  isActive && cn(item.activeClass, "scale-[1.05] font-semibold")
                 )}
               >
                 <item.icon className="h-4 w-4" />

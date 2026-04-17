@@ -51,17 +51,17 @@ export function ModuleCard({ label, description, href, icon: Icon, theme, chip }
         <div className={cn("flex h-10 w-10 items-center justify-center rounded-xl shadow-lg", styles.iconWrap)}>
           <Icon className="h-5 w-5" />
         </div>
-        <span className={cn("rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide", styles.accent)}>
+        <span className={cn("rounded-full px-2.5 py-1 text-[12px] font-semibold leading-none tracking-wide", styles.accent)}>
           {chip}
         </span>
       </div>
 
-      <div className="mt-4 space-y-1.5">
-        <p className="text-sm font-semibold leading-tight text-foreground sm:text-base">{label}</p>
-        <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">{description}</p>
+      <div className="mt-4 space-y-2">
+        <p className="text-[15px] font-semibold leading-tight text-foreground">{label}</p>
+        <p className="text-[13px] leading-relaxed text-muted-foreground">{description}</p>
       </div>
 
-      <div className="mt-auto flex items-center gap-1 pt-3 text-xs font-semibold text-foreground/80 transition-colors group-hover:text-foreground sm:text-sm">
+      <div className="mt-auto flex items-center gap-1 pt-3 text-[13px] font-semibold text-foreground/80 transition-colors group-hover:text-foreground">
         Explorar
         <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
       </div>
