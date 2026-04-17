@@ -35,9 +35,9 @@ const activities = [
 ]
 
 const tagStyles: Record<string, string> = {
-  "Servicio destacado": "bg-sky-500/10 text-sky-700 border-sky-200",
-  "Comercio destacado": "bg-violet-500/10 text-violet-700 border-violet-200",
-  "Emprendimiento destacado": "bg-fuchsia-500/10 text-fuchsia-700 border-fuchsia-200",
+  "Servicio destacado": "bg-sky-500/15 text-sky-800 border-sky-300",
+  "Comercio destacado": "bg-violet-500/15 text-violet-800 border-violet-300",
+  "Emprendimiento destacado": "bg-fuchsia-500/15 text-fuchsia-800 border-fuchsia-300",
 }
 
 export function RecentActivity() {

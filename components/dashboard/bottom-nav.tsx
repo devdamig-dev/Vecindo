@@ -11,10 +11,10 @@ type Props = {
 }
 
 const navItems = [
-  { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, activeClass: "bg-emerald-500/10 text-emerald-700" },
-  { label: "Servicios", href: "/dashboard/services", icon: Wrench, activeClass: "bg-sky-500/10 text-sky-700" },
-  { label: "Comercial", href: "/dashboard/espacio-comercial", icon: Store, activeClass: "bg-violet-500/10 text-violet-700" },
-  { label: "Ayuda", href: "/dashboard/ayuda", icon: HeartHandshake, activeClass: "bg-rose-500/10 text-rose-700" },
+  { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, activeClass: "bg-emerald-500/10 text-emerald-700", glowClass: "drop-shadow-[0_4px_10px_rgba(16,185,129,0.25)]" },
+  { label: "Servicios", href: "/dashboard/services", icon: Wrench, activeClass: "bg-sky-500/10 text-sky-700", glowClass: "drop-shadow-[0_4px_10px_rgba(14,165,233,0.24)]" },
+  { label: "Comercial", href: "/dashboard/espacio-comercial", icon: Store, activeClass: "bg-violet-500/10 text-violet-700", glowClass: "drop-shadow-[0_4px_10px_rgba(139,92,246,0.25)]" },
+  { label: "Ayuda", href: "/dashboard/ayuda", icon: HeartHandshake, activeClass: "bg-rose-500/10 text-rose-700", glowClass: "drop-shadow-[0_4px_10px_rgba(244,63,94,0.24)]" },
 ]
 
 export function BottomNav({ homeHref }: Props) {
@@ -33,7 +33,7 @@ export function BottomNav({ homeHref }: Props) {
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[12px] font-medium text-slate-500 transition-all duration-200",
-                  isActive && cn(item.activeClass, "scale-[1.05] font-semibold")
+                  isActive && cn(item.activeClass, item.glowClass, "scale-[1.08] -translate-y-[1px] font-semibold")
                 )}
               >
                 <item.icon className="h-4 w-4" />
@@ -56,7 +56,7 @@ export function BottomNav({ homeHref }: Props) {
                 aria-current={isActive ? "page" : undefined}
                 className={cn(
                   "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[12px] font-medium text-slate-500 transition-all duration-200",
-                  isActive && cn(item.activeClass, "scale-[1.05] font-semibold")
+                  isActive && cn(item.activeClass, item.glowClass, "scale-[1.08] -translate-y-[1px] font-semibold")
                 )}
               >
                 <item.icon className="h-4 w-4" />

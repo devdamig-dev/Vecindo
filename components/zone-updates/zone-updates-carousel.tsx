@@ -114,7 +114,7 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
 
   if (updates.length === 0) {
     return (
-      <section aria-label="Novedades de la zona" className="rounded-[28px] border border-violet-200/40 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-4 shadow-[0_12px_30px_rgba(76,29,149,0.08)]">
+      <section aria-label="Novedades de la zona" className="rounded-[28px] border border-violet-300/60 bg-gradient-to-br from-violet-100 via-white to-sky-100 p-5 shadow-[0_12px_30px_rgba(76,29,149,0.08)]">
         <SectionHeader
           title="Novedades de la zona"
           subtitle="Bloque destacado de historias, promos y actividad local"
@@ -126,12 +126,12 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
   }
 
   return (
-    <section aria-label="Novedades de la zona" className="relative overflow-hidden rounded-[28px] border border-violet-200/40 bg-gradient-to-br from-violet-50 via-white to-sky-50 p-4 shadow-[0_16px_38px_rgba(76,29,149,0.12)]">
+    <section aria-label="Novedades de la zona" className="relative overflow-hidden rounded-[28px] border border-violet-300/60 bg-gradient-to-br from-violet-100 via-white to-sky-100 p-5 shadow-[0_16px_38px_rgba(76,29,149,0.12)]">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-white/70 to-transparent" />
       <SectionHeader
         title="Novedades de la zona"
         subtitle="Historias destacadas para mantenerte al día en tu comunidad"
-        titleClassName="text-[17px]"
+        titleClassName="text-[18px] font-semibold"
         action={
           <div className="flex items-center gap-1.5">
             <button
@@ -183,7 +183,7 @@ export function ZoneUpdatesCarousel({ zoneId = "berazategui" }: { zoneId?: strin
               <div className="relative">
                 <div
                   className={cn(
-                    "h-[72px] w-[72px] rounded-full p-[3px]",
+                    "h-[72px] w-[72px] rounded-full border-2 border-white p-[3px] shadow-sm",
                     update.type === "service"
                       ? "bg-gradient-to-br from-primary to-primary/60"
                       : update.type === "business"
