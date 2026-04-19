@@ -82,14 +82,14 @@ function getProfileTypeBadge(type: "entrepreneur" | "business") {
   if (type === "entrepreneur") {
     return {
       label: "Emprendimiento local",
-      className: "bg-amber-100 text-amber-700 hover:bg-amber-100",
+      className: "bg-violet-100 text-violet-700 hover:bg-violet-100",
       icon: Sparkles,
     }
   }
 
   return {
     label: "Comercio",
-    className: "bg-sky-100 text-sky-700 hover:bg-sky-100",
+    className: "bg-violet-100 text-violet-700 hover:bg-violet-100",
     icon: Store,
   }
 }
@@ -208,7 +208,7 @@ export default function ComercialPage() {
               <Link href="/dashboard/marketplace">Publicar en Mercado</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/dashboard/services">Ofrecer servicios</Link>
+              <Link href="/dashboard/services/new">Ofrecer servicios</Link>
             </Button>
             <Button asChild variant="outline">
               <Link href="/dashboard/espacio-comercial">Ir a Espacio comercial</Link>

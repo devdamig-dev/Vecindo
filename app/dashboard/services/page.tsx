@@ -78,7 +78,7 @@ export default function ServicesPage() {
               <p className="mt-1 text-sm text-muted-foreground">Creá tu perfil y empezá a recibir consultas de vecinos de tu comunidad.</p>
             </div>
           </div>
-          <Button asChild className="bg-sky-600 text-white hover:bg-sky-700"><Link href="/dashboard/services/publicar"><Plus className="mr-2 h-4 w-4" />Ofrecer servicio</Link></Button>
+          <Button asChild className="bg-sky-600 text-white hover:bg-sky-700"><Link href="/dashboard/services/new"><Plus className="mr-2 h-4 w-4" />Ofrecer servicio</Link></Button>
         </div>
       )}
 
