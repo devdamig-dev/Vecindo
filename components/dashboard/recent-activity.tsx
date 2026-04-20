@@ -11,6 +11,7 @@ const activities = [
     tag: "Servicio destacado",
     image:
       "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=640&h=420&fit=crop",
+    href: "/dashboard/services",
   },
   {
     type: "comercial",
@@ -21,6 +22,7 @@ const activities = [
     tag: "Comercio destacado",
     image:
       "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=640&h=420&fit=crop",
+    href: "/dashboard/comercios/3",
   },
   {
     type: "emprendimiento",
@@ -31,6 +33,7 @@ const activities = [
     tag: "Emprendimiento destacado",
     image:
       "https://images.unsplash.com/photo-1610701596007-11502861dcfa?w=640&h=420&fit=crop",
+    href: "/dashboard/comercios/5?tipo=emprendimientos",
   },
 ]
 
@@ -60,6 +63,7 @@ export function RecentActivity() {
             tag={item.tag}
             image={item.image}
             tagClassName={tagStyles[item.tag]}
+            href={item.href}
           />
         ))}
       </div>
