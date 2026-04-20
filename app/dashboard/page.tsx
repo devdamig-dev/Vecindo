@@ -5,7 +5,7 @@ import { RecentAyudaWidget } from "@/components/ayuda/recent-ayuda-widget"
 
 export default function DashboardPage() {
   return (
-    <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden bg-gradient-to-b from-green-50/60 via-white to-white pb-4">
+    <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden pb-4">
       <section className="space-y-2.5">
         <span className="inline-flex w-fit rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-primary">
           Inicio
