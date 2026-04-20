@@ -29,6 +29,12 @@ const TYPE_BADGE_COLORS: Record<string, string> = {
   marketplace: "bg-muted text-muted-foreground",
 }
 
+const TYPE_FALLBACK_ROUTES: Record<string, string> = {
+  service: "/dashboard/services",
+  business: "/dashboard/espacio-comercial",
+  marketplace: "/dashboard/marketplace",
+}
+
 function getInitials(name: string) {
   return name
     .split(" ")
@@ -63,6 +69,8 @@ export function ZoneUpdateViewerModal({
   currentIndex,
   totalCount,
 }: ZoneUpdateViewerModalProps) {
+  const fallbackRoute = TYPE_FALLBACK_ROUTES[update?.type ?? ""] ?? "/dashboard/services"
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose()
@@ -83,6 +91,19 @@ export function ZoneUpdateViewerModal({
   }, [update, handleKeyDown])
 
   if (!update) return null
+
+  const updateMediaUrl =
+    (update as any).mediaUrl ||
+    (update as any).image ||
+    (Array.isArray((update as any).images) ? (update as any).images[0] : undefined) ||
+    "https://images.unsplash.com/photo-1487014679447-9f8336841d58?w=900&h=1400&fit=crop"
+
+  const updateCaption = (update as any).caption || update.description
+  const updateCtas =
+    Array.isArray((update as any).ctas) && (update as any).ctas.length > 0
+      ? (update as any).ctas
+      : [{ href: fallbackRoute, label: "Ver más" }]
+  const whatsappLink = (update as any).whatsappLink
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/90 backdrop-blur-sm">
@@ -133,7 +154,7 @@ export function ZoneUpdateViewerModal({
         {/* Image area */}
         <div className="relative flex-1 bg-muted overflow-hidden">
           <img
-            src={update.mediaUrl}
+            src={updateMediaUrl}
             alt={update.title}
             className="h-full w-full object-cover"
             crossOrigin="anonymous"
@@ -159,7 +180,7 @@ export function ZoneUpdateViewerModal({
 
           {/* Caption over image bottom */}
           <div className="absolute inset-x-0 bottom-0 px-4 pb-4">
-            <p className="text-sm leading-relaxed text-card">{update.caption}</p>
+            <p className="text-sm leading-relaxed text-card">{updateCaption}</p>
           </div>
         </div>
 
@@ -167,9 +188,9 @@ export function ZoneUpdateViewerModal({
         <div className="flex flex-col gap-3 border-t border-border bg-card px-4 py-4">
           {/* Primary CTA */}
           <div className="flex gap-2">
-            {update.ctas.map((cta) => (
+            {updateCtas.map((cta: { href: string; label: string }) => (
               <Button key={cta.href} asChild className="flex-1 gap-2">
-                <Link href={cta.href}>
+                <Link href={cta.href || fallbackRoute}>
                   <ExternalLink className="h-4 w-4" />
                   {cta.label}
                 </Link>
@@ -180,9 +201,9 @@ export function ZoneUpdateViewerModal({
           {/* Secondary actions */}
           <div className="flex items-center justify-between">
             <div className="flex gap-1">
-              {update.whatsappLink && (
+              {whatsappLink && (
                 <Button variant="outline" size="sm" asChild className="gap-1.5 text-xs">
-                  <a href={update.whatsappLink} target="_blank" rel="noopener noreferrer">
+                  <a href={whatsappLink} target="_blank" rel="noopener noreferrer">
                     <MessageCircle className="h-3.5 w-3.5" />
                     Contactar
                   </a>
