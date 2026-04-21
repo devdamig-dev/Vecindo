@@ -174,14 +174,14 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
         <div className="relative px-4 pb-6 pt-0 sm:px-6 md:px-8">
           <div className="-mt-10 grid gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
             <div className="min-w-0">
-              <div className="flex items-start gap-4">
-                <Avatar className="h-16 w-16 shrink-0 border-4 border-card md:h-20 md:w-20">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4">
+                <Avatar className="h-16 w-16 border-4 border-card md:h-20 md:w-20">
                   <AvatarFallback className={isCommerce ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"}>
                     <span className="text-xl font-bold">{commerce.logo}</span>
                   </AvatarFallback>
                 </Avatar>
 
-                <div className="min-w-0 pt-2 sm:pt-3">
+                <div className="min-w-0 pt-0 sm:pt-3">
                   <div className="mb-2 flex flex-wrap items-center gap-2">
                     <Badge className={isCommerce ? "bg-sky-100 text-sky-700 hover:bg-sky-100" : "bg-amber-100 text-amber-700 hover:bg-amber-100"}>
                       {isCommerce ? (
