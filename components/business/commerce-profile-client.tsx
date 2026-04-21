@@ -68,6 +68,46 @@ const CATALOG_BY_COMMERCE: Record<string, CatalogProduct[]> = {
   ],
 }
 
+type CatalogProduct = {
+  id: string
+  title: string
+  price: string
+  description: string
+}
+
+const CATALOG_BY_COMMERCE: Record<string, CatalogProduct[]> = {
+  "1": [
+    { id: "f-ibuprofeno", title: "Ibuprofeno 400mg", price: "$4.200", description: "Caja x20 comprimidos para alivio sintomático." },
+    { id: "f-vitamina-c", title: "Vitamina C + Zinc", price: "$6.800", description: "Suplemento diario para reforzar defensas." },
+    { id: "f-dermocrema", title: "Crema dermoprotectora", price: "$9.300", description: "Hidratación intensiva para uso diario." },
+  ],
+  "2": [
+    { id: "pc-cafe", title: "Combo café + medialuna", price: "$3.500", description: "Ideal para desayuno o merienda en local." },
+    { id: "pc-torta", title: "Porción de torta del día", price: "$4.100", description: "Sabores rotativos según producción diaria." },
+    { id: "pc-pack", title: "Pack brunch para 2", price: "$13.800", description: "Incluye cafetería, bakery y opción salada." },
+  ],
+  "3": [
+    { id: "mn-mesa", title: "Mesa comedor nórdica", price: "$389.000", description: "Madera maciza con terminación natural mate." },
+    { id: "mn-rack", title: "Rack TV minimalista", price: "$215.000", description: "Con puertas corredizas y módulo de guardado." },
+    { id: "mn-sillon", title: "Sillón 2 cuerpos", price: "$492.000", description: "Tapizado premium, fabricación local." },
+  ],
+  "4": [
+    { id: "md-mesa", title: "Mesa ratona artesanal", price: "$148.000", description: "Fabricación a pedido con medidas personalizadas." },
+    { id: "md-escritorio", title: "Escritorio compacto", price: "$179.000", description: "Diseño funcional para home office." },
+    { id: "md-estanteria", title: "Estantería modular", price: "$126.000", description: "Terminaciones a elección y entrega coordinada." },
+  ],
+  "5": [
+    { id: "lc-set", title: "Set desayuno cerámica", price: "$58.000", description: "Taza + plato + bowl hechos a mano." },
+    { id: "lc-jarron", title: "Jarrón decorativo", price: "$34.000", description: "Pieza artesanal esmaltada, edición limitada." },
+    { id: "lc-plato", title: "Plato de autor", price: "$19.000", description: "Modelado manual para vajilla de diseño." },
+  ],
+  "6": [
+    { id: "ds-torta", title: "Torta personalizada", price: "$72.000", description: "Diseño por encargo para eventos especiales." },
+    { id: "ds-box", title: "Box mini pastelería", price: "$29.500", description: "Selección de mini piezas para compartir." },
+    { id: "ds-mesa", title: "Mesa dulce premium", price: "$185.000", description: "Propuesta integral para cumpleaños/eventos." },
+  ],
+}
+
 function ratingStars(value: number) {
   return Array.from({ length: 5 }).map((_, i) => i < Math.floor(value))
 }
@@ -190,12 +230,14 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
         { label: "Presencia física", value: "Sí, dirección visible para vecinos" },
         { label: "Modalidad de entrega", value: "Retiro en local y coordinación por WhatsApp" },
         { label: "Canal principal", value: "Atención presencial + contacto directo" },
+        { label: "Metadata de confianza", value: commerce.meta },
       ]
     : [
         { label: "Tipo de negocio", value: "Emprendimiento local independiente" },
         { label: "Presencia física", value: "Sin local físico, atención directa" },
         { label: "Modalidad de entrega", value: "Entrega o retiro coordinado según pedido" },
         { label: "Canal principal", value: "Atención por WhatsApp y encargos a medida" },
+        { label: "Metadata de confianza", value: commerce.meta },
       ]
 
   const handleAddToCart = (productId: string) => {
@@ -228,6 +270,27 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           </div>
         </div>
 
+        <div className="relative px-4 pb-6 pt-0 sm:px-6 md:px-8">
+          <div className="-mt-10 grid gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
+            <div className="min-w-0">
+              <div className="flex items-start gap-4">
+                <Avatar className="h-16 w-16 shrink-0 border-4 border-card md:h-20 md:w-20">
+                  <AvatarFallback className={isCommerce ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"}>
+                    <span className="text-xl font-bold">{commerce.logo}</span>
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="min-w-0 pt-4 sm:pt-5">
+                  <div className="mb-2 flex flex-wrap items-center gap-2">
+                    <Badge className={isCommerce ? "bg-sky-100 text-sky-700 hover:bg-sky-100" : "bg-amber-100 text-amber-700 hover:bg-amber-100"}>
+                      {isCommerce ? (
+                        <><Store className="mr-1 h-3.5 w-3.5" /> Comercio</>
+                      ) : (
+                        <><Sparkles className="mr-1 h-3.5 w-3.5" /> Emprendimiento local</>
+                      )}
+                    </Badge>
+                    <Badge variant="secondary">{commerce.category}</Badge>
+                  </div>
         {/* CATÁLOGO */}
         <div className="grid gap-4 sm:grid-cols-2">
           {commerce.products.map((product) => {
@@ -260,6 +323,11 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     <button onClick={() => adjustCart(product, 1)}>
                       <Plus className="h-4 w-4 px-2" />
                     </button>
+                  </div>
+                  <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                    <span>{commerce.hours}</span>
+                    <span>•</span>
+                    <span>{isCommerce ? commerce.address : "Sin local físico · entrega/retiro coordinado"}</span>
                   </div>
                 </div>
               </div>
@@ -504,6 +572,25 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
               <span>Total</span>
               <span>{formatARS(total)}</span>
             </div>
+
+          <div className="rounded-3xl border border-border bg-card p-6">
+            <h2 className="text-base font-semibold text-foreground">Pedido rápido</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {cartCount > 0
+                ? `${cartCount} producto(s) agregado(s). Enviá tu pedido directo al comercio.`
+                : "Agregá productos del catálogo para armar un pedido rápido."}
+            </p>
+            <Button
+              asChild
+              className="mt-4 w-full gap-2 bg-emerald-700 text-white hover:bg-emerald-800"
+              disabled={cartCount === 0}
+            >
+              <a href={cartWhatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick(commerce.id)}>
+                <MessageSquare className="h-4 w-4" />
+                Enviar pedido por WhatsApp
+              </a>
+            </Button>
+          </div>
 
           <div className="rounded-3xl border border-border bg-card p-6">
             <h2 className="text-base font-semibold text-foreground">Pedido rápido</h2>
