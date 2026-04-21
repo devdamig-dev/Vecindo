@@ -52,7 +52,7 @@ export function LoginForm() {
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
             <Shield className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold tracking-tight text-foreground">VECINDO</span>
+            <span className="text-2xl font-bold tracking-tight text-foreground">VEZI</span>
           </Link>
           <h1 className="text-2xl font-bold text-foreground text-balance">{"\u00bfC\u00f3mo quer\u00e9s ingresar?"}</h1>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -150,7 +150,7 @@ export function LoginForm() {
         <div className="mb-8 text-center">
           <Link href="/" className="inline-flex items-center gap-2 mb-6">
             <Shield className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold tracking-tight text-foreground">VECINDO</span>
+            <span className="text-2xl font-bold tracking-tight text-foreground">VEZI</span>
           </Link>
           <h1 className="text-2xl font-bold text-foreground">Bienvenido de nuevo</h1>
           <p className="mt-2 text-sm text-muted-foreground">
@@ -202,7 +202,7 @@ export function LoginForm() {
       <div className="mb-8 text-center">
         <Link href="/" className="inline-flex items-center gap-2 mb-6">
           <Shield className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-bold tracking-tight text-foreground">VECINDO</span>
+          <span className="text-2xl font-bold tracking-tight text-foreground">VEZI</span>
         </Link>
         <h1 className="text-2xl font-bold text-foreground">
           {isResident ? "Registro de Residente" : "Registro de Prestador"}
