@@ -1,9 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
-import Link from "next/link"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -29,7 +26,46 @@ import type { CommerceItem, CommerceReview } from "@/lib/commerces-data"
 
 type Props = {
   commerce: CommerceItem
-  activeTab?: "comercios" | "emprendimientos"
+}
+
+type CatalogProduct = {
+  id: string
+  title: string
+  price: string
+  description: string
+}
+
+const CATALOG_BY_COMMERCE: Record<string, CatalogProduct[]> = {
+  "1": [
+    { id: "f-ibuprofeno", title: "Ibuprofeno 400mg", price: "$4.200", description: "Caja x20 comprimidos para alivio sintomático." },
+    { id: "f-vitamina-c", title: "Vitamina C + Zinc", price: "$6.800", description: "Suplemento diario para reforzar defensas." },
+    { id: "f-dermocrema", title: "Crema dermoprotectora", price: "$9.300", description: "Hidratación intensiva para uso diario." },
+  ],
+  "2": [
+    { id: "pc-cafe", title: "Combo café + medialuna", price: "$3.500", description: "Ideal para desayuno o merienda en local." },
+    { id: "pc-torta", title: "Porción de torta del día", price: "$4.100", description: "Sabores rotativos según producción diaria." },
+    { id: "pc-pack", title: "Pack brunch para 2", price: "$13.800", description: "Incluye cafetería, bakery y opción salada." },
+  ],
+  "3": [
+    { id: "mn-mesa", title: "Mesa comedor nórdica", price: "$389.000", description: "Madera maciza con terminación natural mate." },
+    { id: "mn-rack", title: "Rack TV minimalista", price: "$215.000", description: "Con puertas corredizas y módulo de guardado." },
+    { id: "mn-sillon", title: "Sillón 2 cuerpos", price: "$492.000", description: "Tapizado premium, fabricación local." },
+  ],
+  "4": [
+    { id: "md-mesa", title: "Mesa ratona artesanal", price: "$148.000", description: "Fabricación a pedido con medidas personalizadas." },
+    { id: "md-escritorio", title: "Escritorio compacto", price: "$179.000", description: "Diseño funcional para home office." },
+    { id: "md-estanteria", title: "Estantería modular", price: "$126.000", description: "Terminaciones a elección y entrega coordinada." },
+  ],
+  "5": [
+    { id: "lc-set", title: "Set desayuno cerámica", price: "$58.000", description: "Taza + plato + bowl hechos a mano." },
+    { id: "lc-jarron", title: "Jarrón decorativo", price: "$34.000", description: "Pieza artesanal esmaltada, edición limitada." },
+    { id: "lc-plato", title: "Plato de autor", price: "$19.000", description: "Modelado manual para vajilla de diseño." },
+  ],
+  "6": [
+    { id: "ds-torta", title: "Torta personalizada", price: "$72.000", description: "Diseño por encargo para eventos especiales." },
+    { id: "ds-box", title: "Box mini pastelería", price: "$29.500", description: "Selección de mini piezas para compartir." },
+    { id: "ds-mesa", title: "Mesa dulce premium", price: "$185.000", description: "Propuesta integral para cumpleaños/eventos." },
+  ],
 }
 
 type CatalogProduct = {
@@ -115,22 +151,54 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
     `Hola ${commerce.name}, quiero pedir:\n${cartSummary}\n\nGracias.`
   )}`
 
-  const handleSubmitReview = () => {
-    if (reviewRating === 0 || reviewText.trim() === "") return
+  const cartItems = useMemo(() => {
+    return commerce.products
+      .filter((p) => cart[p.id] > 0)
+      .map((p) => ({
+        product: p,
+        quantity: cart[p.id],
+        total: p.price * cart[p.id],
+      }))
+  }, [cart, commerce.products])
 
-    const newReview: CommerceReview = {
-      user: auth.profile.name,
-      initials: auth.profile.avatarInitials,
-      rating: reviewRating,
-      text: reviewText,
-      date: "ahora",
-      verified: true,
+  const total = useMemo(
+    () => cartItems.reduce((acc, item) => acc + item.total, 0),
+    [cartItems]
+  )
+
+  const whatsappUrl = useMemo(() => {
+    if (cartItems.length === 0) return null
+
+    const lines = cartItems
+      .map((item) => `- ${item.quantity}x ${item.product.name} (${formatARS(item.total)})`)
+      .join("\n")
+
+    const text = `Hola ${commerce.name}, quiero hacer este pedido:\n\n${lines}\n\nTotal estimado: ${formatARS(
+      total
+    )}`
+
+    return `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+      text
+    )}`
+  }, [cartItems, total, commerce])
+
+  const share = async () => {
+    const url = window.location.href
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: commerce.name,
+          text: "Mirá este catálogo en VEZI",
+          url,
+        })
+        return
+      } catch {}
     }
 
-    setReviews([newReview, ...reviews])
-    setReviewSubmitted(true)
-    setReviewRating(0)
-    setReviewText("")
+    await navigator.clipboard.writeText(url)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
 
   const handleSave = () => {
@@ -180,16 +248,26 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   }
 
   return (
-    <div className="flex max-w-6xl flex-col gap-5 md:gap-6">
-      <Link href={backHref} className="flex w-fit items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-        <ArrowLeft className="h-4 w-4" />
-        {backLabel}
-      </Link>
+    <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
+      {/* COLUMNA PRINCIPAL */}
+      <div className="space-y-6">
+        {/* BLOQUE DESTACADO */}
+        <div className="rounded-2xl border p-4 bg-amber-50 border-amber-200">
+          <p className="font-semibold">Este perfil tiene catálogo activo</p>
+          <p className="text-sm text-muted-foreground mt-1">
+            Podés explorar productos y enviar el pedido por WhatsApp en segundos.
+          </p>
 
-      <div className="overflow-hidden rounded-3xl border border-border bg-card">
-        <div className="relative h-52 overflow-hidden md:h-64">
-          <img src={commerce.bannerUrl} alt={commerce.name} className="h-full w-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
+          <div className="flex gap-2 mt-3">
+            <Button size="sm" variant="outline">
+              Ver catálogo
+            </Button>
+
+            <Button size="sm" onClick={share}>
+              <Share2 className="h-4 w-4 mr-1" />
+              {copied ? "Copiado" : "Compartir"}
+            </Button>
+          </div>
         </div>
 
         <div className="relative px-4 pb-6 pt-0 sm:px-6 md:px-8">
@@ -213,30 +291,38 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     </Badge>
                     <Badge variant="secondary">{commerce.category}</Badge>
                   </div>
+        {/* CATÁLOGO */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          {commerce.products.map((product) => {
+            const qty = cart[product.id] ?? 0
 
-                  <h1 className="max-w-3xl pr-2 text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-                    {commerce.name}
-                  </h1>
+            return (
+              <div key={product.id} className="border rounded-xl p-4">
+                <img
+                  src={product.imageUrl}
+                  className="h-32 w-full object-cover rounded-md"
+                />
 
-                  <p className="mt-2 max-w-3xl text-base leading-relaxed text-muted-foreground">
-                    {commerce.longDescription}
-                  </p>
+                <div className="mt-3 flex justify-between">
+                  <p className="font-medium">{product.name}</p>
+                  <p className="font-semibold">{formatARS(product.price)}</p>
+                </div>
 
-                  <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1.5">
-                      <div className="flex items-center gap-1">
-                        {ratingStars(commerce.rating).map((filled, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${filled ? "fill-amber-400 text-amber-400" : "text-muted-foreground/30"}`}
-                          />
-                        ))}
-                      </div>
-                      <span className="font-semibold text-foreground">{commerce.rating}</span>
-                      <span>({reviews.length} reseñas)</span>
-                    </div>
-                    <span>•</span>
-                    <span>{commerce.location}</span>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {product.shortDescription}
+                </p>
+
+                <div className="flex justify-between items-center mt-3">
+                  <div className="flex items-center border rounded-md">
+                    <button onClick={() => adjustCart(product, -1)}>
+                      <Minus className="h-4 w-4 px-2" />
+                    </button>
+
+                    <span className="px-2">{qty}</span>
+
+                    <button onClick={() => adjustCart(product, 1)}>
+                      <Plus className="h-4 w-4 px-2" />
+                    </button>
                   </div>
                   <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
                     <span>{commerce.hours}</span>
@@ -269,20 +355,10 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                 </a>
               </Button>
 
-              <Button variant="outline" className="gap-2" onClick={handleSave}>
-                <Bookmark className={`h-4 w-4 ${saved ? "fill-current" : ""}`} />
-                {saved ? "Guardado" : "Guardar"}
-              </Button>
-            </div>
-          </div>
-
-          <div className="mt-6 grid gap-4 md:grid-cols-3">
-            {trustBullets.map((text, index) => (
-              <div key={index} className="rounded-2xl border border-border bg-background p-4">
-                <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-2xl ${isCommerce ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"}`}>
-                  {index === 0 ? <MapPin className="h-5 w-5" /> : index === 1 ? <Clock className="h-5 w-5" /> : <ShieldCheck className="h-5 w-5" />}
+                  <Button size="sm" onClick={() => adjustCart(product, 1)}>
+                    Agregar
+                  </Button>
                 </div>
-                <p className="font-medium text-foreground">{text}</p>
               </div>
             ))}
           </div>
@@ -301,14 +377,20 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        <div className="space-y-6">
-          {isCommerce ? (
-            <>
-              <div className="rounded-3xl border border-sky-200 bg-sky-50/70 p-6">
-                <div className="mb-4 flex items-center gap-2 text-sky-700">
-                  <MapPinned className="h-5 w-5" />
-                  <h2 className="text-lg font-semibold">Ubicación y atención presencial</h2>
+      {/* CARRITO */}
+      <div className="border rounded-xl p-4 h-fit sticky top-20">
+        <h3 className="font-semibold mb-3">Tu carrito</h3>
+
+        {cartItems.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            Agregá productos para armar tu pedido.
+          </p>
+        ) : (
+          <>
+            <div className="space-y-2">
+              {cartItems.map((item) => (
+                <div key={item.product.id} className="text-sm">
+                  {item.quantity}x {item.product.name}
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="rounded-2xl border border-sky-200 bg-white p-4">
@@ -485,30 +567,29 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                 </div>
               )}
             </div>
-          </div>
-        </div>
 
-        <aside className="space-y-6">
-          <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-base font-semibold text-foreground">Datos clave</h2>
-            <div className="mt-4 space-y-4 text-sm">
-              <div>
-                <p className="font-medium text-foreground">Zona</p>
-                <p className="mt-1 text-muted-foreground">{commerce.location}</p>
-              </div>
-              <div>
-                <p className="font-medium text-foreground">Categoría</p>
-                <p className="mt-1 text-muted-foreground">{commerce.category}</p>
-              </div>
-              <div>
-                <p className="font-medium text-foreground">Atención</p>
-                <p className="mt-1 text-muted-foreground">{commerce.hours}</p>
-              </div>
-              <div>
-                <p className="font-medium text-foreground">Dirección / modalidad</p>
-                <p className="mt-1 text-muted-foreground">{isCommerce ? commerce.address : "Coordinación directa según pedido o entrega."}</p>
-              </div>
+            <div className="flex justify-between mt-4 font-semibold">
+              <span>Total</span>
+              <span>{formatARS(total)}</span>
             </div>
+
+          <div className="rounded-3xl border border-border bg-card p-6">
+            <h2 className="text-base font-semibold text-foreground">Pedido rápido</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {cartCount > 0
+                ? `${cartCount} producto(s) agregado(s). Enviá tu pedido directo al comercio.`
+                : "Agregá productos del catálogo para armar un pedido rápido."}
+            </p>
+            <Button
+              asChild
+              className="mt-4 w-full gap-2 bg-emerald-700 text-white hover:bg-emerald-800"
+              disabled={cartCount === 0}
+            >
+              <a href={cartWhatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick(commerce.id)}>
+                <MessageSquare className="h-4 w-4" />
+                Enviar pedido por WhatsApp
+              </a>
+            </Button>
           </div>
 
           <div className="rounded-3xl border border-border bg-card p-6">
