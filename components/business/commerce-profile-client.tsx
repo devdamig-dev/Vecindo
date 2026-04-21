@@ -21,6 +21,7 @@ import {
   Package,
   Truck,
   MapPinned,
+  ShoppingCart,
 } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 import { useCommerceAnalytics } from "@/hooks/use-commerce-analytics"
@@ -29,6 +30,46 @@ import type { CommerceItem, CommerceReview } from "@/lib/commerces-data"
 type Props = {
   commerce: CommerceItem
   activeTab?: "comercios" | "emprendimientos"
+}
+
+type CatalogProduct = {
+  id: string
+  title: string
+  price: string
+  description: string
+}
+
+const CATALOG_BY_COMMERCE: Record<string, CatalogProduct[]> = {
+  "1": [
+    { id: "f-ibuprofeno", title: "Ibuprofeno 400mg", price: "$4.200", description: "Caja x20 comprimidos para alivio sintomático." },
+    { id: "f-vitamina-c", title: "Vitamina C + Zinc", price: "$6.800", description: "Suplemento diario para reforzar defensas." },
+    { id: "f-dermocrema", title: "Crema dermoprotectora", price: "$9.300", description: "Hidratación intensiva para uso diario." },
+  ],
+  "2": [
+    { id: "pc-cafe", title: "Combo café + medialuna", price: "$3.500", description: "Ideal para desayuno o merienda en local." },
+    { id: "pc-torta", title: "Porción de torta del día", price: "$4.100", description: "Sabores rotativos según producción diaria." },
+    { id: "pc-pack", title: "Pack brunch para 2", price: "$13.800", description: "Incluye cafetería, bakery y opción salada." },
+  ],
+  "3": [
+    { id: "mn-mesa", title: "Mesa comedor nórdica", price: "$389.000", description: "Madera maciza con terminación natural mate." },
+    { id: "mn-rack", title: "Rack TV minimalista", price: "$215.000", description: "Con puertas corredizas y módulo de guardado." },
+    { id: "mn-sillon", title: "Sillón 2 cuerpos", price: "$492.000", description: "Tapizado premium, fabricación local." },
+  ],
+  "4": [
+    { id: "md-mesa", title: "Mesa ratona artesanal", price: "$148.000", description: "Fabricación a pedido con medidas personalizadas." },
+    { id: "md-escritorio", title: "Escritorio compacto", price: "$179.000", description: "Diseño funcional para home office." },
+    { id: "md-estanteria", title: "Estantería modular", price: "$126.000", description: "Terminaciones a elección y entrega coordinada." },
+  ],
+  "5": [
+    { id: "lc-set", title: "Set desayuno cerámica", price: "$58.000", description: "Taza + plato + bowl hechos a mano." },
+    { id: "lc-jarron", title: "Jarrón decorativo", price: "$34.000", description: "Pieza artesanal esmaltada, edición limitada." },
+    { id: "lc-plato", title: "Plato de autor", price: "$19.000", description: "Modelado manual para vajilla de diseño." },
+  ],
+  "6": [
+    { id: "ds-torta", title: "Torta personalizada", price: "$72.000", description: "Diseño por encargo para eventos especiales." },
+    { id: "ds-box", title: "Box mini pastelería", price: "$29.500", description: "Selección de mini piezas para compartir." },
+    { id: "ds-mesa", title: "Mesa dulce premium", price: "$185.000", description: "Propuesta integral para cumpleaños/eventos." },
+  ],
 }
 
 function ratingStars(value: number) {
@@ -43,6 +84,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   const [reviewText, setReviewText] = useState("")
   const [reviewSubmitted, setReviewSubmitted] = useState(false)
   const [reviews, setReviews] = useState<CommerceReview[]>(commerce.reviews ?? [])
+  const [cart, setCart] = useState<Record<string, number>>({})
 
   useEffect(() => {
     trackProfileView(commerce.id)
@@ -62,6 +104,15 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
   const waUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
     `Hola ${commerce.name}, los contacto desde VEZI.`
+  )}`
+  const catalogProducts = CATALOG_BY_COMMERCE[commerce.id] ?? []
+  const cartCount = Object.values(cart).reduce((acc, qty) => acc + qty, 0)
+  const cartSummary = catalogProducts
+    .filter((product) => cart[product.id])
+    .map((product) => `• ${product.title} x${cart[product.id]}`)
+    .join("\n")
+  const cartWhatsappUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+    `Hola ${commerce.name}, quiero pedir:\n${cartSummary}\n\nGracias.`
   )}`
 
   const handleSubmitReview = () => {
@@ -104,6 +155,27 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           "Entrega o retiro a convenir",
         ]
   }, [isCommerce])
+
+  const profileContextItems = isCommerce
+    ? [
+        { label: "Tipo de negocio", value: "Comercio con atención presencial" },
+        { label: "Presencia física", value: "Sí, dirección visible para vecinos" },
+        { label: "Modalidad de entrega", value: "Retiro en local y coordinación por WhatsApp" },
+        { label: "Canal principal", value: "Atención presencial + contacto directo" },
+      ]
+    : [
+        { label: "Tipo de negocio", value: "Emprendimiento local independiente" },
+        { label: "Presencia física", value: "Sin local físico, atención directa" },
+        { label: "Modalidad de entrega", value: "Entrega o retiro coordinado según pedido" },
+        { label: "Canal principal", value: "Atención por WhatsApp y encargos a medida" },
+      ]
+
+  const handleAddToCart = (productId: string) => {
+    setCart((prev) => ({
+      ...prev,
+      [productId]: (prev[productId] ?? 0) + 1,
+    }))
+  }
 
   return (
     <div className="flex max-w-6xl flex-col gap-5 md:gap-6">
@@ -169,6 +241,13 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             </div>
 
             <div className="flex flex-wrap gap-2 md:justify-end md:pt-8">
+              <Button asChild variant="secondary" className="gap-2">
+                <a href="#catalogo">
+                  <Package className="h-4 w-4" />
+                  Ver catálogo
+                </a>
+              </Button>
+
               <Button asChild className="gap-2 bg-emerald-700 text-white hover:bg-emerald-800">
                 <a href={waUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick(commerce.id)}>
                   <MessageSquare className="h-4 w-4" />
@@ -199,6 +278,18 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                 <p className="font-medium text-foreground">{text}</p>
               </div>
             ))}
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-border bg-background p-4">
+            <h2 className="text-base font-semibold text-foreground">Contexto del perfil</h2>
+            <div className="mt-3 grid gap-3 md:grid-cols-2">
+              {profileContextItems.map((item) => (
+                <div key={item.label} className="rounded-xl border border-border bg-card p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{item.label}</p>
+                  <p className="mt-1 text-sm text-foreground">{item.value}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -303,6 +394,49 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             </>
           )}
 
+          <div id="catalogo" className="rounded-3xl border border-border bg-card p-6 scroll-mt-32">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Catálogo</h2>
+                <p className="text-sm text-muted-foreground">
+                  Productos disponibles con pedido directo y coordinación por WhatsApp.
+                </p>
+              </div>
+              <Badge variant="secondary">{catalogProducts.length} productos</Badge>
+            </div>
+
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              {catalogProducts.map((product) => {
+                const productWhatsappUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+                  `Hola ${commerce.name}, me interesa "${product.title}" (${product.price}) desde VEZI.`
+                )}`
+
+                return (
+                  <article key={product.id} className="rounded-2xl border border-border bg-background p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="font-semibold text-foreground">{product.title}</h3>
+                      <span className="text-sm font-semibold text-foreground">{product.price}</span>
+                    </div>
+                    <p className="mt-2 text-sm text-muted-foreground">{product.description}</p>
+
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      <Button size="sm" variant="outline" className="gap-1.5" onClick={() => handleAddToCart(product.id)}>
+                        <ShoppingCart className="h-3.5 w-3.5" />
+                        Agregar al carrito{cart[product.id] ? ` (${cart[product.id]})` : ""}
+                      </Button>
+                      <Button size="sm" asChild className="gap-1.5 bg-emerald-700 text-white hover:bg-emerald-800">
+                        <a href={productWhatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick(commerce.id)}>
+                          <MessageSquare className="h-3.5 w-3.5" />
+                          Pedir por WhatsApp
+                        </a>
+                      </Button>
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          </div>
+
           <div className="rounded-3xl border border-border bg-card p-6">
             <h2 className="text-lg font-semibold text-foreground">Reseñas</h2>
 
@@ -368,6 +502,25 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                 <p className="mt-1 text-muted-foreground">{isCommerce ? commerce.address : "Coordinación directa según pedido o entrega."}</p>
               </div>
             </div>
+          </div>
+
+          <div className="rounded-3xl border border-border bg-card p-6">
+            <h2 className="text-base font-semibold text-foreground">Pedido rápido</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {cartCount > 0
+                ? `${cartCount} producto(s) agregado(s). Enviá tu pedido directo al comercio.`
+                : "Agregá productos del catálogo para armar un pedido rápido."}
+            </p>
+            <Button
+              asChild
+              className="mt-4 w-full gap-2 bg-emerald-700 text-white hover:bg-emerald-800"
+              disabled={cartCount === 0}
+            >
+              <a href={cartWhatsappUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackWhatsAppClick(commerce.id)}>
+                <MessageSquare className="h-4 w-4" />
+                Enviar pedido por WhatsApp
+              </a>
+            </Button>
           </div>
 
           <div className="rounded-3xl border border-border bg-card p-6">
