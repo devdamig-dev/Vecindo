@@ -52,13 +52,13 @@ function CommercialListCard({
     <article
       className={`rounded-[28px] border p-5 transition hover:-translate-y-0.5 hover:shadow-sm ${
         isCommerce
-          ? "border-sky-200 bg-sky-50/40"
-          : "border-amber-200 bg-amber-50/40"
+          ? "border-violet-200 bg-violet-50/40"
+          : "border-violet-200 bg-violet-50/40"
       }`}
     >
       <div
         className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl ${
-          isCommerce ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"
+          isCommerce ? "bg-violet-100 text-violet-700" : "bg-violet-100 text-violet-700"
         }`}
       >
         {isCommerce ? <Store className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
@@ -112,14 +112,14 @@ export default function ComerciosPageContent({
       <div
         className={`rounded-[28px] border p-5 ${
           isCommerceTab
-            ? "border-sky-200 bg-sky-50/60"
-            : "border-amber-200 bg-amber-50/60"
+            ? "border-violet-200 bg-violet-50/60"
+            : "border-violet-200 bg-violet-50/60"
         }`}
       >
         <div className="flex items-start gap-3">
           <div
             className={`mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl ${
-              isCommerceTab ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"
+              isCommerceTab ? "bg-violet-100 text-violet-700" : "bg-violet-100 text-violet-700"
             }`}
           >
             {isCommerceTab ? <MapPin className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
@@ -128,7 +128,7 @@ export default function ComerciosPageContent({
           <div className="space-y-1">
             <h2
               className={`text-[1.35rem] font-semibold tracking-tight ${
-                isCommerceTab ? "text-sky-900" : "text-amber-900"
+                isCommerceTab ? "text-violet-900" : "text-violet-900"
               }`}
             >
               {isCommerceTab ? "Comercios" : "Emprendimientos locales"}
@@ -177,7 +177,7 @@ export default function ComerciosPageContent({
           </div>
 
           {showMyBusiness ? (
-            <Button asChild>
+            <Button asChild className="shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-[1.01]">
               <Link href="/dashboard/comercial">Ir a Mi negocio</Link>
             </Button>
           ) : (
@@ -189,7 +189,7 @@ export default function ComerciosPageContent({
                 </Link>
               </Button>
               <Button asChild variant="outline">
-                <Link href="/dashboard/services">Ofrecer servicios</Link>
+                <Link href="/dashboard/services/new">Ofrecer servicios</Link>
               </Button>
             </div>
           )}
