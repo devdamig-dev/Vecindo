@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   Clock,
   MapPin,
-  MapPinned,
   MessageSquare,
   Phone,
   ShieldCheck,
@@ -45,7 +44,12 @@ function formatARS(value: number) {
 
 export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   const { saveItem, isSaved, auth } = useAuth()
-  const { trackProfileView, trackWhatsAppClick, trackCallClick, trackSave } = useCommerceAnalytics()
+  const {
+    trackProfileView,
+    trackWhatsAppClick,
+    trackCallClick,
+    trackSave,
+  } = useCommerceAnalytics()
 
   const [reviewRating, setReviewRating] = useState(0)
   const [reviewText, setReviewText] = useState("")
@@ -74,6 +78,22 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
     `Hola ${commerce.name}, los contacto desde VEZI.`
   )}`
 
+  const openStatus = useMemo(() => {
+    const normalized = commerce.hours.toLowerCase()
+
+    if (normalized.includes("cerrado")) return "Cerrado"
+    if (normalized.includes("pedido")) return "Atención por pedidos"
+    if (normalized.includes("whatsapp")) return "Atención por WhatsApp"
+
+    return "Abierto hoy"
+  }, [commerce.hours])
+
+  const averageRating = useMemo(() => {
+    if (!reviews.length) return 0
+    const total = reviews.reduce((acc, review) => acc + review.rating, 0)
+    return total / reviews.length
+  }, [reviews])
+
   const cartItems = useMemo(() => {
     return (commerce.products ?? [])
       .filter((product) => (cart[product.id] ?? 0) > 0)
@@ -95,9 +115,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   )
 
   const cartSummary = useMemo(() => {
-    return cartItems
-      .map((item) => `• ${item.product.name} x${item.quantity}`)
-      .join("\n")
+    return cartItems.map((item) => `• ${item.product.name} x${item.quantity}`).join("\n")
   }, [cartItems])
 
   const cartWhatsappUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
@@ -111,7 +129,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
       ? [
           "Ubicación visible en la zona",
           "Horarios y atención publicados",
-          "Ficha comercial institucional",
+          "Perfil comercial con datos claros",
         ]
       : [
           "Atención directa por WhatsApp",
@@ -120,37 +138,23 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
         ]
   }, [isCommerce])
 
-  const profileContextItems = isCommerce
-    ? [
-        { label: "Tipo de negocio", value: "Comercio con atención presencial" },
-        { label: "Presencia física", value: "Sí, dirección visible para vecinos" },
-        {
-          label: "Modalidad de entrega",
-          value: "Retiro en local y coordinación por WhatsApp",
-        },
-        {
-          label: "Canal principal",
-          value: "Atención presencial + contacto directo",
-        },
-        { label: "Metadata de confianza", value: commerce.meta },
-      ]
-    : [
-        { label: "Tipo de negocio", value: "Emprendimiento local independiente" },
-        { label: "Presencia física", value: "Sin local físico, atención directa" },
-        {
-          label: "Modalidad de entrega",
-          value: "Entrega o retiro coordinado según pedido",
-        },
-        {
-          label: "Canal principal",
-          value: "Atención por WhatsApp y encargos a medida",
-        },
-        { label: "Metadata de confianza", value: commerce.meta },
-      ]
+  const addressLabel = isCommerce
+    ? commerce.address
+    : "Sin local físico · entrega/retiro coordinado"
+
+  const deliveryLabel = isCommerce
+    ? "Retiro en local / coordinación"
+    : "Entrega o retiro coordinado"
 
   const adjustCart = (productId: string, delta: number) => {
     setCart((prev) => {
       const nextQty = Math.max((prev[productId] ?? 0) + delta, 0)
+
+      if (nextQty === 0) {
+        const { [productId]: _, ...rest } = prev
+        return rest
+      }
+
       return {
         ...prev,
         [productId]: nextQty,
@@ -192,6 +196,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   const share = async () => {
     const url = typeof window !== "undefined" ? window.location.href : ""
 
+    if (!url) return
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -200,14 +206,18 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           url,
         })
         return
-      } catch {}
+      } catch {
+        // fallback to clipboard
+      }
     }
 
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
-    } catch {}
+    } catch {
+      // no-op
+    }
   }
 
   return (
@@ -233,82 +243,121 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             </div>
 
             <div className="relative px-4 pb-6 pt-0 sm:px-6 md:px-8">
-              <div className="-mt-10 grid gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
+              <div className="-mt-10">
+                <Avatar className="h-20 w-20 border-4 border-card shadow-sm md:h-24 md:w-24">
+                  <AvatarFallback
+                    className={
+                      isCommerce
+                        ? "bg-sky-100 text-sky-700"
+                        : "bg-amber-100 text-amber-700"
+                    }
+                  >
+                    <span className="text-2xl font-bold">{commerce.logo}</span>
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+
+              <div className="mt-4 flex flex-col gap-5 md:grid md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
                 <div className="min-w-0">
-                  <div className="flex items-start gap-4">
-                    <Avatar className="h-16 w-16 shrink-0 border-4 border-card md:h-20 md:w-20">
-                      <AvatarFallback
-                        className={
-                          isCommerce
-                            ? "bg-sky-100 text-sky-700"
-                            : "bg-amber-100 text-amber-700"
-                        }
+                  <div className="mb-3 flex flex-wrap items-center gap-2">
+                    <Badge
+                      className={
+                        isCommerce
+                          ? "bg-sky-100 text-sky-700 hover:bg-sky-100"
+                          : "bg-amber-100 text-amber-700 hover:bg-amber-100"
+                      }
+                    >
+                      {isCommerce ? (
+                        <>
+                          <Store className="mr-1 h-3.5 w-3.5" />
+                          Comercio
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="mr-1 h-3.5 w-3.5" />
+                          Emprendimiento local
+                        </>
+                      )}
+                    </Badge>
+
+                    <Badge variant="secondary">{commerce.category}</Badge>
+
+                    {saved && (
+                      <Badge
+                        variant="outline"
+                        className="gap-1 border-emerald-200 text-emerald-700"
                       >
-                        <span className="text-xl font-bold">{commerce.logo}</span>
-                      </AvatarFallback>
-                    </Avatar>
-
-                    <div className="min-w-0 pt-4 sm:pt-5">
-                      <div className="mb-2 flex flex-wrap items-center gap-2">
-                        <Badge
-                          className={
-                            isCommerce
-                              ? "bg-sky-100 text-sky-700 hover:bg-sky-100"
-                              : "bg-amber-100 text-amber-700 hover:bg-amber-100"
-                          }
-                        >
-                          {isCommerce ? (
-                            <>
-                              <Store className="mr-1 h-3.5 w-3.5" />
-                              Comercio
-                            </>
-                          ) : (
-                            <>
-                              <Sparkles className="mr-1 h-3.5 w-3.5" />
-                              Emprendimiento local
-                            </>
-                          )}
-                        </Badge>
-
-                        <Badge variant="secondary">{commerce.category}</Badge>
-
-                        {saved && (
-                          <Badge
-                            variant="outline"
-                            className="gap-1 border-emerald-200 text-emerald-700"
-                          >
-                            <Bookmark className="h-3.5 w-3.5" />
-                            Guardado
-                          </Badge>
-                        )}
-                      </div>
-
-                      <h1 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-                        {commerce.name}
-                      </h1>
-
-                      <p className="mt-2 max-w-2xl text-sm text-muted-foreground md:text-[15px]">
-                        {commerce.description}
-                      </p>
-
-                      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
-                        <span className="inline-flex items-center gap-1.5">
-                          <Clock className="h-4 w-4" />
-                          {commerce.hours}
-                        </span>
-
-                        <span className="inline-flex items-center gap-1.5">
-                          <MapPin className="h-4 w-4" />
-                          {isCommerce
-                            ? commerce.address
-                            : "Sin local físico · entrega/retiro coordinado"}
-                        </span>
-                      </div>
-                    </div>
+                        <Bookmark className="h-3.5 w-3.5" />
+                        Guardado
+                      </Badge>
+                    )}
                   </div>
+
+                  <h1 className="max-w-3xl text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                    {commerce.name}
+                  </h1>
+
+                  <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-[15px]">
+                    {commerce.description}
+                  </p>
+
+                  <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                    <span className="inline-flex items-center gap-1.5">
+                      <div className="flex items-center gap-0.5">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Star
+                            key={i}
+                            className={`h-4 w-4 ${
+                              i < Math.round(averageRating)
+                                ? "fill-amber-400 text-amber-400"
+                                : "text-muted-foreground/30"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <span className="font-medium text-foreground">
+                        {averageRating > 0 ? averageRating.toFixed(1) : "Nuevo"}
+                      </span>
+                      <span>({reviews.length} reseñas)</span>
+                    </span>
+
+                    <span className="inline-flex items-center gap-1.5">
+                      <MapPin className="h-4 w-4" />
+                      {commerce.location}
+                    </span>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
+                    <Badge variant="outline" className="gap-1.5 text-muted-foreground">
+                      <MapPin className="h-3.5 w-3.5" />
+                      {addressLabel}
+                    </Badge>
+
+                    <Badge variant="outline" className="gap-1.5 text-muted-foreground">
+                      <Clock className="h-3.5 w-3.5" />
+                      {commerce.hours}
+                    </Badge>
+
+                    <Badge variant="outline" className="gap-1.5 text-muted-foreground">
+                      <Truck className="h-3.5 w-3.5" />
+                      {deliveryLabel}
+                    </Badge>
+
+                    <Badge
+                      className={
+                        openStatus === "Cerrado"
+                          ? "bg-rose-100 text-rose-700 hover:bg-rose-100"
+                          : "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                      }
+                    >
+                      {openStatus}
+                    </Badge>
+                  </div>
+
+                  <p className="mt-4 text-xs text-muted-foreground">{commerce.meta}</p>
                 </div>
 
-                <div className="flex flex-wrap gap-2 md:justify-end md:pt-8">
+                <div className="flex flex-wrap gap-2 md:justify-end md:pt-2">
                   <Button asChild variant="secondary" className="gap-2">
                     <a href="#catalogo">
                       <Package className="h-4 w-4" />
@@ -347,153 +396,13 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                   </Button>
 
                   <Button variant="outline" className="gap-2" onClick={handleSave}>
-                    <Bookmark className="h-4 w-4" />
+                    <Bookmark className={`h-4 w-4 ${saved ? "fill-current" : ""}`} />
                     {saved ? "Guardado" : "Guardar"}
                   </Button>
                 </div>
               </div>
             </div>
           </div>
-
-          <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-lg font-semibold text-foreground">Contexto del perfil</h2>
-
-            <div className="mt-4 grid gap-4 md:grid-cols-2">
-              {profileContextItems.map((item) => (
-                <div key={item.label} className="rounded-2xl border border-border bg-background p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    {item.label}
-                  </p>
-                  <p className="mt-1 text-sm text-foreground">{item.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {isCommerce ? (
-            <>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="rounded-2xl border border-sky-200 bg-white p-4">
-                  <p className="text-sm font-medium text-foreground">Dirección visible</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{commerce.address}</p>
-                </div>
-
-                <div className="rounded-2xl border border-sky-200 bg-white p-4">
-                  <p className="text-sm font-medium text-foreground">Horarios publicados</p>
-                  <p className="mt-1 text-sm text-muted-foreground">{commerce.hours}</p>
-                </div>
-              </div>
-
-              <div className="mt-4 overflow-hidden rounded-2xl border border-sky-200 bg-white">
-                <div className="flex h-60 items-center justify-center bg-[linear-gradient(135deg,#dbeafe_0%,#eff6ff_100%)] text-center">
-                  <div>
-                    <MapPinned className="mx-auto h-8 w-8 text-sky-700" />
-                    <p className="mt-3 font-medium text-foreground">Mapa de geolocalización</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Acá se visualiza la ubicación del comercio dentro de la zona.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-border bg-card p-6">
-                <h2 className="text-lg font-semibold text-foreground">Qué vas a encontrar</h2>
-
-                <div className="mt-4 grid gap-4 md:grid-cols-3">
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Atención en local</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Experiencia presencial, asesoramiento y compra directa en la zona.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Beneficios para vecinos</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Promociones, convenios o ventajas exclusivas dentro de VEZI.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Ficha institucional</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Perfil más formal para generar confianza y facilitar la elección.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="rounded-3xl border border-amber-200 bg-amber-50/70 p-6">
-                <div className="mb-4 flex items-center gap-2 text-amber-700">
-                  <Package className="h-5 w-5" />
-                  <h2 className="text-lg font-semibold">Cómo trabaja este emprendimiento</h2>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-3">
-                  <div className="rounded-2xl border border-amber-200 bg-white p-4">
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
-                      <Sparkles className="h-4 w-4" />
-                    </div>
-                    <p className="font-medium text-foreground">Pedido directo</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Consultás por WhatsApp, coordinás detalles y resolvés sin vueltas.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-amber-200 bg-white p-4">
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
-                      <Clock className="h-4 w-4" />
-                    </div>
-                    <p className="font-medium text-foreground">Producción o armado</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Ideal para encargos, trabajos a pedido o productos con tiempos coordinados.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-amber-200 bg-white p-4">
-                    <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
-                      <Truck className="h-4 w-4" />
-                    </div>
-                    <p className="font-medium text-foreground">Entrega o retiro</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Entrega pactada, retiro o coordinación flexible según cada caso.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-3xl border border-border bg-card p-6">
-                <h2 className="text-lg font-semibold text-foreground">
-                  Qué destaca de este perfil
-                </h2>
-
-                <div className="mt-4 grid gap-4 md:grid-cols-3">
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Catálogo o propuesta propia</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Productos o servicios con identidad, especialización y trato directo.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Atención personalizada</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Conversación directa con quien emprende, sin intermediarios.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-border p-4">
-                    <p className="font-medium text-foreground">Modelo flexible</p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Ideal para pedidos especiales, producción a medida o encargos.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </>
-          )}
 
           <div
             id="catalogo"
@@ -603,6 +512,51 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             </div>
           </div>
 
+          <div className="rounded-3xl border border-border bg-card p-6 lg:hidden">
+            <h2 className="text-base font-semibold text-foreground">Pedido rápido</h2>
+            <p className="mt-2 text-sm text-muted-foreground">
+              {cartCount > 0
+                ? `${cartCount} producto(s) agregado(s). Enviá tu pedido directo al comercio.`
+                : "Agregá productos del catálogo para armar un pedido rápido."}
+            </p>
+
+            {cartItems.length > 0 && (
+              <div className="mt-4 space-y-2 rounded-2xl border border-border bg-background p-4">
+                {cartItems.map((item) => (
+                  <div
+                    key={item.product.id}
+                    className="flex items-center justify-between gap-3 text-sm"
+                  >
+                    <span>
+                      {item.quantity}x {item.product.name}
+                    </span>
+                    <span className="font-medium">{formatARS(item.total)}</span>
+                  </div>
+                ))}
+
+                <div className="border-t border-border pt-2 text-sm font-semibold text-foreground">
+                  Total estimado: {formatARS(total)}
+                </div>
+              </div>
+            )}
+
+            <Button
+              asChild
+              className="mt-4 w-full gap-2 bg-emerald-700 text-white hover:bg-emerald-800"
+              disabled={cartCount === 0}
+            >
+              <a
+                href={cartWhatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => trackWhatsAppClick(commerce.id)}
+              >
+                <MessageSquare className="h-4 w-4" />
+                Enviar pedido por WhatsApp
+              </a>
+            </Button>
+          </div>
+
           <div className="rounded-3xl border border-border bg-card p-6">
             <h2 className="text-lg font-semibold text-foreground">Reseñas</h2>
 
@@ -698,7 +652,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           </div>
         </div>
 
-        <aside className="space-y-6">
+        <aside className="hidden space-y-6 lg:block">
           <div className="rounded-3xl border border-border bg-card p-6">
             <h2 className="text-base font-semibold text-foreground">Pedido rápido</h2>
 
