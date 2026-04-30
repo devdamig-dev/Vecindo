@@ -34,9 +34,15 @@ export default function MarketplacePage() {
             <Store className="h-3.5 w-3.5" /> Mercado de tu zona
           </div>
           <h1 className="text-2xl font-bold text-foreground">Mercado</h1>
-          <p className="max-w-2xl text-sm text-muted-foreground">Comprá y vendé productos dentro de tu comunidad, sin comisiones y con contacto directo.</p>
+          <p className="max-w-2xl text-sm text-muted-foreground">Comprá y vendé entre vecinos de la zona. Sin comisiones, sin intermediarios y con contacto directo por WhatsApp.</p>
         </div>
-        <Button size="sm" className="gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700">
+        <Button
+          size="sm"
+          disabled
+          aria-disabled="true"
+          title="Próximamente"
+          className="gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700"
+        >
           <Plus className="h-4 w-4" /> Publicar producto
         </Button>
       </div>
@@ -44,8 +50,8 @@ export default function MarketplacePage() {
       <SectionIntroBanner
         sectionId="marketplace"
         variant="marketplace"
-        title="Mercado de la comunidad"
-        description="Compra y venta entre vecinos, simple y sin intermediarios."
+        title="Mercado entre vecinos"
+        description="Compra y venta dentro de tu zona, simple, sin intermediarios y con coordinación directa."
         howItWorks={{
           title: "¿Cómo funciona?",
           steps: [

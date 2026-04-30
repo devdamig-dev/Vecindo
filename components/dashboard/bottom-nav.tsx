@@ -13,7 +13,7 @@ type Props = {
 const navItems = [
   { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, activeClass: "bg-emerald-500/10 text-emerald-700", glowClass: "drop-shadow-[0_4px_10px_rgba(16,185,129,0.25)]" },
   { label: "Servicios", href: "/dashboard/services", icon: Wrench, activeClass: "bg-sky-500/10 text-sky-700", glowClass: "drop-shadow-[0_4px_10px_rgba(14,165,233,0.24)]" },
-  { label: "Comercial", href: "/dashboard/espacio-comercial", icon: Store, activeClass: "bg-violet-500/10 text-violet-700", glowClass: "drop-shadow-[0_4px_10px_rgba(139,92,246,0.25)]" },
+  { label: "Espacio", href: "/dashboard/espacio-comercial", icon: Store, activeClass: "bg-violet-500/10 text-violet-700", glowClass: "drop-shadow-[0_4px_10px_rgba(139,92,246,0.25)]" },
   { label: "Ayuda", href: "/dashboard/ayuda", icon: HeartHandshake, activeClass: "bg-rose-500/10 text-rose-700", glowClass: "drop-shadow-[0_4px_10px_rgba(244,63,94,0.24)]" },
 ]
 

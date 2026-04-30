@@ -4,19 +4,32 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Store, Sparkles, MapPin, ChevronRight, Briefcase, Package, Search } from "lucide-react"
+import { Store, Sparkles, MapPin, ChevronRight, Briefcase, Package, Search, Lock } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 import { hasCommercialActivity } from "@/lib/commercial"
+import { commerces } from "@/lib/commerces-data"
 
-const commerceItems = [
-  { title: "Mueblería Nórdica Hudson", description: "Muebles, decoración y objetos para el hogar con atención en la zona.", badge: "Geolocalizable", meta: "Hudson · Abierto hoy · WhatsApp", href: "/dashboard/comercios/3" },
-  { title: "Farmacia de la Zona", description: "Atención presencial, asesoramiento y productos de cuidado personal.", badge: "Local físico", meta: "Berazategui · Dirección visible", href: "/dashboard/comercios/1" },
-]
+const commerceItems = commerces
+  .filter((c) => c.type === "commerce")
+  .slice(0, 2)
+  .map((c) => ({
+    title: c.name,
+    description: c.description,
+    badge: c.badge,
+    meta: c.meta,
+    href: `/dashboard/comercios/${c.id}`,
+  }))
 
-const entrepreneurItems = [
-  { title: "Mikage Deco", description: "Mesas, racks y muebles hechos a pedido con entrega en la zona.", badge: "Catálogo", meta: "Emprendimiento local · Respuesta por WhatsApp", href: "/dashboard/comercios/4?tipo=emprendimientos" },
-  { title: "Luna Cerámica", description: "Piezas artesanales para el hogar, regalos y deco hechas por encargo.", badge: "Hecho a pedido", meta: "Sin local físico · Entregas coordinadas", href: "/dashboard/comercios/5?tipo=emprendimientos" },
-]
+const entrepreneurItems = commerces
+  .filter((c) => c.type === "entrepreneur")
+  .slice(0, 2)
+  .map((c) => ({
+    title: c.name,
+    description: c.description,
+    badge: c.badge,
+    meta: c.meta,
+    href: `/dashboard/comercios/${c.id}?tipo=emprendimientos`,
+  }))
 
 function CommercialPreviewCard({ title, description, badge, meta, href, type }: { title: string; description: string; badge: string; meta: string; href: string; type: "commerce" | "entrepreneur" }) {
   const isCommerce = type === "commerce"
@@ -88,7 +101,10 @@ export default function EspacioComercialPage() {
             <p className="mt-1 text-sm text-muted-foreground">Publicá productos, ofrecé servicios o activá tu perfil comercial para empezar a aparecer en este módulo.</p>
           </div>
           {showMyBusiness ? (
-            <Button asChild className="bg-sidebar-primary text-sidebar-primary-foreground hover:opacity-90"><Link href="/dashboard/comercial"><Briefcase className="mr-2 h-4 w-4" />Ir a Mi negocio</Link></Button>
+            <div className="flex flex-col items-end gap-1">
+              <Button asChild className="bg-sidebar-primary text-sidebar-primary-foreground hover:opacity-90"><Link href="/dashboard/comercial"><Briefcase className="mr-2 h-4 w-4" />Ir a Mi negocio</Link></Button>
+              <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"><Lock className="h-3 w-3" />Panel privado de tu cuenta</span>
+            </div>
           ) : (
             <div className="flex flex-wrap gap-2">
               <Button asChild variant="outline"><Link href="/dashboard/marketplace"><Package className="mr-2 h-4 w-4" />Publicar producto</Link></Button>
