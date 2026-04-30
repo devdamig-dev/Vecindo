@@ -11,7 +11,7 @@ const activities = [
     tag: "Servicio destacado",
     image:
       "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=640&h=420&fit=crop",
-    href: "/dashboard/services",
+    href: "/dashboard/services/1",
   },
   {
     type: "comercial",
