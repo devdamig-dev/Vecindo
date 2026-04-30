@@ -58,14 +58,14 @@ export default function ServicesPage() {
       <div className="space-y-1">
         <div className="inline-flex items-center gap-2 rounded-full bg-sky-100 px-3 py-1 text-xs font-medium text-sky-700"><SearchIcon className="h-3.5 w-3.5" />Servicios de tu zona</div>
         <h1 className="text-2xl font-bold text-foreground">Servicios</h1>
-        <p className="text-sm text-muted-foreground">Ofrecé o encontrá servicios, oficios y ayuda real dentro de tu zona.</p>
+        <p className="text-sm text-muted-foreground">Profesionales, oficios y vecinos que ofrecen su servicio dentro de la zona. Encontrá ayuda real o publicá la tuya.</p>
       </div>
 
       <SectionIntroBanner
         sectionId="services"
         variant="services"
         title="Servicios de la comunidad"
-        description="Encontrá perfiles con reseñas reales y contacto directo."
+        description="Profesionales y vecinos que ofrecen lo que saben hacer. Reseñas reales y contacto directo."
         howItWorks={{ title: "¿Cómo funciona Servicios?", steps: ["Buscá por categoría o escribiendo el servicio que necesitás.", "Mirá reseñas, experiencia y datos del perfil.", "Contactá directamente por WhatsApp sin intermediarios.", "Después del trabajo, dejá tu reseña para ayudar a otros vecinos."] }}
       />
 
@@ -74,11 +74,11 @@ export default function ServicesPage() {
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-200 text-sky-700"><Briefcase className="h-5 w-5" /></div>
             <div>
-              <p className="text-sm font-semibold text-foreground">¿Ofrecés un servicio en la zona?</p>
-              <p className="mt-1 text-sm text-muted-foreground">Creá tu perfil y empezá a recibir consultas de vecinos de tu comunidad.</p>
+              <p className="text-sm font-semibold text-foreground">¿Tenés un oficio o servicio para ofrecer?</p>
+              <p className="mt-1 text-sm text-muted-foreground">No hace falta ser profesional. Si ofrecés algo en la zona, publicá tu perfil y empezá a recibir consultas.</p>
             </div>
           </div>
-          <Button asChild className="bg-sky-600 text-white hover:bg-sky-700"><Link href="/dashboard/services/new"><Plus className="mr-2 h-4 w-4" />Ofrecer servicio</Link></Button>
+          <Button asChild className="bg-sky-600 text-white hover:bg-sky-700"><Link href="/dashboard/services/new"><Plus className="mr-2 h-4 w-4" />Publicar mi servicio</Link></Button>
         </div>
       )}
 

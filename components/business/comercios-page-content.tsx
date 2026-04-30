@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth-context"
 import { hasCommercialActivity } from "@/lib/commercial"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Package, Store, Sparkles, MapPin, MessageSquare } from "lucide-react"
+import { Package, Store, Sparkles, MapPin, MessageSquare, Lock } from "lucide-react"
 import ComerciosZoneMap from "@/components/business/comercios-zone-map"
 import type { CommerceItem } from "@/lib/commerces-data"
 
@@ -195,9 +195,12 @@ export default function ComerciosPageContent({
           </div>
 
           {showMyBusiness ? (
-            <Button asChild className="shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-[1.01]">
-              <Link href="/dashboard/comercial">Ir a Mi negocio</Link>
-            </Button>
+            <div className="flex flex-col items-end gap-1">
+              <Button asChild className="shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-[1.01]">
+                <Link href="/dashboard/comercial">Ir a Mi negocio</Link>
+              </Button>
+              <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"><Lock className="h-3 w-3" />Panel privado de tu cuenta</span>
+            </div>
           ) : (
             <div className="flex flex-wrap gap-2">
               <Button asChild>

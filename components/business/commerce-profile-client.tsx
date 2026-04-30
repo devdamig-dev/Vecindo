@@ -27,7 +27,8 @@ import {
 } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 import { useCommerceAnalytics } from "@/hooks/use-commerce-analytics"
-import type { CommerceItem, CommerceReview } from "@/lib/commerces-data"
+import type { CommerceItem, CommerceProduct, CommerceReview } from "@/lib/commerces-data"
+import { ProductDetailDrawer } from "@/components/business/product-detail-drawer"
 
 type Props = {
   commerce: CommerceItem
@@ -57,6 +58,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   const [reviews, setReviews] = useState<CommerceReview[]>(commerce.reviews ?? [])
   const [cart, setCart] = useState<Record<string, number>>({})
   const [copied, setCopied] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<CommerceProduct | null>(null)
+  const [detailOpen, setDetailOpen] = useState(false)
 
   useEffect(() => {
     trackProfileView(commerce.id)
@@ -164,6 +167,15 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
   const handleAddToCart = (productId: string) => {
     adjustCart(productId, 1)
+  }
+
+  const openProductDetail = (product: CommerceProduct) => {
+    setSelectedProduct(product)
+    setDetailOpen(true)
+  }
+
+  const handleConfirmFromDetail = (productId: string, quantity: number) => {
+    setCart((prev) => ({ ...prev, [productId]: (prev[productId] ?? 0) + quantity }))
   }
 
   const handleSave = () => {
@@ -431,10 +443,22 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                   )}) desde VEZI.`
                 )}`
 
+                const stop = (e: React.MouseEvent | React.PointerEvent) => e.stopPropagation()
+
                 return (
                   <article
                     key={product.id}
-                    className="rounded-2xl border border-border bg-background p-4"
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Ver detalle de ${product.name}`}
+                    onClick={() => openProductDetail(product)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault()
+                        openProductDetail(product)
+                      }
+                    }}
+                    className="cursor-pointer rounded-2xl border border-border bg-background p-4 text-left transition hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30"
                   >
                     <img
                       src={product.imageUrl}
@@ -449,16 +473,24 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                       </span>
                     </div>
 
-                    <p className="mt-2 text-sm text-muted-foreground">
+                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                       {product.shortDescription}
                     </p>
 
                     <div className="mt-4 flex items-center justify-between gap-3">
-                      <div className="flex items-center rounded-lg border border-border">
+                      <div
+                        className="flex items-center rounded-lg border border-border"
+                        onClick={stop}
+                        onPointerDown={stop}
+                      >
                         <button
                           type="button"
+                          aria-label="Restar"
                           className="px-3 py-2"
-                          onClick={() => adjustCart(product.id, -1)}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            adjustCart(product.id, -1)
+                          }}
                         >
                           <Minus className="h-4 w-4" />
                         </button>
@@ -467,14 +499,24 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
                         <button
                           type="button"
+                          aria-label="Sumar"
                           className="px-3 py-2"
-                          onClick={() => adjustCart(product.id, 1)}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            adjustCart(product.id, 1)
+                          }}
                         >
                           <Plus className="h-4 w-4" />
                         </button>
                       </div>
 
-                      <Button size="sm" onClick={() => handleAddToCart(product.id)}>
+                      <Button
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleAddToCart(product.id)
+                        }}
+                      >
                         Agregar
                       </Button>
                     </div>
@@ -484,7 +526,10 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                         size="sm"
                         variant="outline"
                         className="gap-1.5"
-                        onClick={() => handleAddToCart(product.id)}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleAddToCart(product.id)
+                        }}
                       >
                         <ShoppingCart className="h-3.5 w-3.5" />
                         Agregar al carrito{qty ? ` (${qty})` : ""}
@@ -499,7 +544,10 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                           href={productWhatsappUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={() => trackWhatsAppClick(commerce.id)}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            trackWhatsAppClick(commerce.id)
+                          }}
                         >
                           <MessageSquare className="h-3.5 w-3.5" />
                           Pedir por WhatsApp
@@ -713,6 +761,17 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           </div>
         </aside>
       </div>
+
+      <ProductDetailDrawer
+        commerce={commerce}
+        product={selectedProduct}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+        initialQuantity={selectedProduct ? cart[selectedProduct.id] ?? 0 : 0}
+        onConfirm={handleConfirmFromDetail}
+        onWhatsAppClick={() => trackWhatsAppClick(commerce.id)}
+        formatPrice={formatARS}
+      />
     </div>
   )
 }
