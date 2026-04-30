@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { useMemo, useState } from "react"
 import { MarketplaceGrid, listings } from "@/components/marketplace/marketplace-grid"
 import { MarketplaceFilters } from "@/components/marketplace/marketplace-filters"
@@ -36,14 +37,10 @@ export default function MarketplacePage() {
           <h1 className="text-2xl font-bold text-foreground">Mercado</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">Comprá y vendé entre vecinos de la zona. Sin comisiones, sin intermediarios y con contacto directo por WhatsApp.</p>
         </div>
-        <Button
-          size="sm"
-          disabled
-          aria-disabled="true"
-          title="Próximamente"
-          className="gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700"
-        >
-          <Plus className="h-4 w-4" /> Publicar producto
+        <Button asChild size="sm" className="gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700">
+          <Link href="/dashboard/marketplace/new">
+            <Plus className="h-4 w-4" /> Publicar producto
+          </Link>
         </Button>
       </div>
 
