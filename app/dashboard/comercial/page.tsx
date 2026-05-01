@@ -148,12 +148,12 @@ export default function ComercialPage() {
   const activity = auth?.commercialActivity
   const stats = [
     {
-      label: "Publicaciones en mercado",
+      label: "Productos publicados",
       value: String(activity?.marketplaceListingsCount ?? 0),
       icon: Package,
     },
     {
-      label: "Servicios activos",
+      label: "Servicios vinculados",
       value: String(activity?.serviceListingsCount ?? 0),
       icon: Wrench,
     },
@@ -163,9 +163,9 @@ export default function ComercialPage() {
       icon: MessageSquare,
     },
     {
-      label: "Vistas del perfil",
-      value: "127",
-      icon: Eye,
+      label: "Visualizaciones / clicks",
+      value: "127 / 38",
+      icon: BarChart3,
     },
   ]
 
@@ -192,26 +192,19 @@ export default function ComercialPage() {
           </div>
           <h1 className="text-2xl font-bold text-foreground">Mi negocio</h1>
           <p className="text-sm text-muted-foreground">
-            Este panel aparece cuando publicás productos, ofrecés servicios o creás tu perfil comercial.
+            Panel privado de gestión comercial. Este espacio se habilita cuando activás tu presencia comercial.
           </p>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-6">
-          <h2 className="text-lg font-semibold text-foreground">Todavía no tenés actividad comercial</h2>
+          <h2 className="text-lg font-semibold text-foreground">Todavía no tenés un negocio activo</h2>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
-            Cuando publiques en Mercado, actives tus servicios o crees tu emprendimiento o comercio,
-            vas a poder gestionar todo desde acá.
+            Cuando crees tu perfil comercial vas a poder gestionar publicaciones, servicios y métricas desde este panel.
           </p>
 
           <div className="mt-4 flex flex-wrap gap-2">
             <Button asChild>
-              <Link href="/dashboard/marketplace">Publicar en Mercado</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/dashboard/services/new">Ofrecer servicios</Link>
-            </Button>
-            <Button asChild variant="outline">
-              <Link href="/dashboard/espacio-comercial">Ir a Espacio comercial</Link>
+              <Link href="/dashboard/profile">Crear perfil comercial</Link>
             </Button>
           </div>
         </div>
@@ -229,7 +222,7 @@ export default function ComercialPage() {
 
         <h1 className="text-2xl font-bold text-foreground">Mi negocio</h1>
         <p className="text-sm text-muted-foreground">
-          Gestioná tu perfil, tus publicaciones y el rendimiento de tu actividad comercial dentro de la comunidad.
+          Panel privado para gestionar tu perfil comercial, publicaciones, servicios y rendimiento dentro de VEZI.
         </p>
       </div>
 
@@ -259,10 +252,16 @@ export default function ComercialPage() {
           </div>
 
           <div className="flex flex-wrap gap-2">
+            <Button asChild variant="secondary">
+              <Link href="/dashboard/espacio-comercial">
+                <Eye className="h-4 w-4" />
+                Ver perfil público
+              </Link>
+            </Button>
             <Button asChild>
-              <Link href="/dashboard/marketplace">
+              <Link href="/dashboard/marketplace/new">
                 <Plus className="h-4 w-4" />
-                Nueva publicación
+                Agregar producto
               </Link>
             </Button>
 
@@ -328,22 +327,36 @@ export default function ComercialPage() {
                 <h2 className="font-semibold text-foreground">Accesos rápidos</h2>
                 <div className="mt-4 grid gap-2">
                   <Button asChild variant="outline" className="justify-between">
-                    <Link href="/dashboard/marketplace">
-                      Gestionar productos
-                      <ChevronRight className="h-4 w-4" />
-                    </Link>
-                  </Button>
-
-                  <Button asChild variant="outline" className="justify-between">
-                    <Link href="/dashboard/services">
-                      Gestionar servicios
-                      <ChevronRight className="h-4 w-4" />
-                    </Link>
-                  </Button>
-
-                  <Button asChild variant="outline" className="justify-between">
                     <Link href="/dashboard/espacio-comercial">
-                      Ver espacio comercial
+                      Ver perfil público
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+
+                  <Button asChild variant="outline" className="justify-between">
+                    <Link href="/dashboard/profile">
+                      Editar perfil
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+
+                  <Button asChild variant="outline" className="justify-between">
+                    <Link href="/dashboard/marketplace/new">
+                      Agregar producto
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+
+                  <Button asChild variant="outline" className="justify-between">
+                    <Link href="/dashboard/marketplace">
+                      Ver catálogo
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+
+                  <Button asChild variant="outline" className="justify-between">
+                    <Link href="/dashboard/services/new">
+                      Publicar servicio
                       <ChevronRight className="h-4 w-4" />
                     </Link>
                   </Button>
