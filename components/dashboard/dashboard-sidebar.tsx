@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/lib/auth-context"
-import { hasCommercialActivity } from "@/lib/commercial"
+import { canAccessMyBusiness, canAccessServiceManagement, hasServiceProviderActivity, isResident } from "@/lib/commercial"
 import {
   MapPinned,
   LayoutDashboard,
@@ -64,13 +64,13 @@ export function DashboardSidebar() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const { auth } = useAuth()
-  const isResident = auth.accountType === "resident"
+  const residentUser = isResident(auth)
   const isProfessional = auth.accountType === "external_professional"
   const { capabilities } = auth
-  const showCommercialPanel = hasCommercialActivity(auth)
+  const showCommercialPanel = canAccessMyBusiness(auth)
 
   const navItems = allNavItems.filter((item) => {
-    if (item.residentOnly && !isResident) return false
+    if (item.residentOnly && !residentUser) return false
     if (item.professionalOnly && !isProfessional) return false
     if (item.commercialOnly && !showCommercialPanel) return false
     if (item.requireCapability) {
@@ -80,7 +80,7 @@ export function DashboardSidebar() {
     return true
   })
 
-  const homeHref = isResident ? "/dashboard" : "/dashboard/pro"
+  const homeHref = residentUser ? "/dashboard" : "/dashboard/pro"
 
   return (
     <>
@@ -118,7 +118,7 @@ export function DashboardSidebar() {
             <p className="text-sm font-semibold">Hudson – Berazategui</p>
           </div>
           <div className="mt-2 flex items-center gap-2 rounded-xl bg-sidebar-accent/50 px-3 py-2.5">
-            {isResident ? (
+            {residentUser ? (
               <>
                 <ShieldCheck className="h-3.5 w-3.5 text-sidebar-primary" />
                 <span className="text-xs font-medium text-sidebar-foreground/80">Residente</span>

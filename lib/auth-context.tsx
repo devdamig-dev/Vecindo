@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, type ReactNode } from "react"
 
-export type AccountType = "resident" | "external_professional"
+export type AccountType = "resident" | "external_professional" | "external_business"
 
 export interface UserCapabilities {
   canOfferServices: boolean
@@ -83,6 +83,7 @@ export interface AuthState {
 interface AuthContextType {
   auth: AuthState
   setAccountType: (type: AccountType) => void
+  setDemoPersona: (persona: DemoPersona) => void
   setCapability: (key: keyof UserCapabilities, value: boolean) => void
   updateProfile: (profile: Partial<UserProfile>) => void
   updateProfessionalProfile: (data: Partial<ProfessionalProfileData>) => void
@@ -201,6 +202,16 @@ const defaultExternal: AuthState = {
   },
 }
 
+
+
+export type DemoPersona = "resident_owner" | "service_provider" | "resident_business" | "external_business"
+
+const demoPersonas: Record<DemoPersona, AuthState> = {
+  resident_owner: { ...defaultResident, professionalProfile: null, businessProfile: null, hasCommerceProfile: false, managesCommerceIds: [], commercialActivity: { marketplaceListingsCount: 1, serviceListingsCount: 0, hasEntrepreneurProfile: false, hasBusinessProfile: false } },
+  service_provider: { ...defaultExternal, accountType: "external_professional", capabilities: { ...defaultExternal.capabilities, canOfferServices: true }, businessProfile: null, hasCommerceProfile: false, managesCommerceIds: [], commercialActivity: { marketplaceListingsCount: 0, serviceListingsCount: 2, hasEntrepreneurProfile: false, hasBusinessProfile: false } },
+  resident_business: { ...defaultResident, capabilities: { ...defaultResident.capabilities, canSell: true, canOfferServices: false }, professionalProfile: null, hasCommerceProfile: true, managesCommerceIds: ["1"], commercialActivity: { marketplaceListingsCount: 3, serviceListingsCount: 0, hasEntrepreneurProfile: true, hasBusinessProfile: true } },
+  external_business: { ...defaultExternal, accountType: "external_business", capabilities: { ...defaultExternal.capabilities, canOfferServices: false, canSell: false, canAccessMarketplace: false }, professionalProfile: null, businessProfile: { businessName: "Ferretería Norte", description: "Negocio externo con entregas en la zona.", whatsapp: "+54 11 2222-3333", bannerImage: "", products: [] }, hasCommerceProfile: true, managesCommerceIds: ["2"], commercialActivity: { marketplaceListingsCount: 0, serviceListingsCount: 0, hasEntrepreneurProfile: false, hasBusinessProfile: true } },
+}
 const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -208,6 +219,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const stored = window.localStorage.getItem("vecindo_account_type") as AccountType | null
       if (stored === "external_professional") return defaultExternal
+      if (stored === "external_business") return demoPersonas.external_business
       return defaultResident
     } catch {
       return defaultResident
@@ -215,14 +227,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   })
 
   const setAccountType = (type: AccountType) => {
-    if (type === "resident") {
-      setAuth(defaultResident)
-    } else {
-      setAuth(defaultExternal)
-    }
+    if (type === "resident") setAuth(defaultResident)
+    else if (type === "external_business") setAuth(demoPersonas.external_business)
+    else setAuth(defaultExternal)
 
     try {
       window.localStorage.setItem("vecindo_account_type", type)
+    } catch {}
+  }
+
+  const setDemoPersona = (persona: DemoPersona) => {
+    setAuth(demoPersonas[persona])
+    try {
+      window.localStorage.setItem("vecindo_account_type", demoPersonas[persona].accountType)
     } catch {}
   }
 
@@ -382,6 +399,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         auth,
         setAccountType,
+        setDemoPersona,
         setCapability,
         updateProfile,
         updateProfessionalProfile,
