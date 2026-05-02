@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useAuth } from "@/lib/auth-context"
-import { hasCommercialActivity } from "@/lib/commercial"
+import { canAccessMyBusiness, canAccessServiceManagement, hasServiceProviderActivity, isResident } from "@/lib/commercial"
 import {
   BarChart3,
   Briefcase,
@@ -118,7 +118,7 @@ function getListingStatusClass(status: string) {
 
 export default function ComercialPage() {
   const { auth } = useAuth()
-  const canAccessCommercialPanel = hasCommercialActivity(auth)
+  const canAccessCommercialPanel = canAccessMyBusiness(auth)
 
   const commercialProfile = useMemo(() => {
     const hasBusinessProfile = Boolean(auth?.commercialActivity?.hasBusinessProfile || auth?.businessProfile)

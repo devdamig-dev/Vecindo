@@ -8,12 +8,13 @@ import { ServicesList, professionals } from "@/components/services/services-list
 import { SectionIntroBanner } from "@/components/ui/section-intro-banner"
 import { NeighborRecommendations } from "@/components/services/neighbor-recommendations"
 import { Button } from "@/components/ui/button"
-import { Search as SearchIcon, Plus, Briefcase } from "lucide-react"
+import { canAccessServiceManagement, hasServiceProviderActivity, isResident } from "@/lib/commercial"
+import { Search as SearchIcon, Plus, Briefcase, Settings } from "lucide-react"
 
 export default function ServicesPage() {
   const { auth } = useAuth()
-  const isProfessional = auth.accountType === "external_professional"
-  const isResident = auth.accountType === "resident"
+  const isProfessional = hasServiceProviderActivity(auth) && !isResident(auth)
+  const residentUser = isResident(auth)
   const [query, setQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState("Todos")
 
@@ -69,7 +70,7 @@ export default function ServicesPage() {
         howItWorks={{ title: "¿Cómo funciona Servicios?", steps: ["Buscá por categoría o escribiendo el servicio que necesitás.", "Mirá reseñas, experiencia y datos del perfil.", "Contactá directamente por WhatsApp sin intermediarios.", "Después del trabajo, dejá tu reseña para ayudar a otros vecinos."] }}
       />
 
-      {isResident && (
+      {residentUser && canAccessServiceManagement(auth) && (
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-sky-200 bg-sky-100 px-4 py-4">
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-200 text-sky-700"><Briefcase className="h-5 w-5" /></div>

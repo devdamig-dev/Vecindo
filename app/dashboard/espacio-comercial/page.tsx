@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Store, Sparkles, MapPin, ChevronRight, Briefcase, Package, Search, Lock } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
-import { hasCommercialActivity } from "@/lib/commercial"
+import { canAccessMyBusiness, canAccessServiceManagement, hasServiceProviderActivity, isResident } from "@/lib/commercial"
 import { commerces } from "@/lib/commerces-data"
 
 const commerceItems = commerces
@@ -46,7 +46,7 @@ function CommercialPreviewCard({ title, description, badge, meta, href, type }: 
 
 export default function EspacioComercialPage() {
   const { auth } = useAuth()
-  const showMyBusiness = hasCommercialActivity(auth)
+  const showMyBusiness = canAccessMyBusiness(auth)
 
   return (
     <div className="flex max-w-full flex-col gap-6">

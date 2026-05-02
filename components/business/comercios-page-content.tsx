@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useAuth } from "@/lib/auth-context"
-import { hasCommercialActivity } from "@/lib/commercial"
+import { canAccessMyBusiness, canAccessServiceManagement, hasServiceProviderActivity, isResident } from "@/lib/commercial"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Package, Store, Sparkles, MapPin, MessageSquare, Lock } from "lucide-react"
@@ -122,7 +122,7 @@ export default function ComerciosPageContent({
   filteredProfiles,
 }: Props) {
   const { auth } = useAuth()
-  const showMyBusiness = hasCommercialActivity(auth)
+  const showMyBusiness = canAccessMyBusiness(auth)
   const isCommerceTab = activeTab === "comercios"
 
   return (
