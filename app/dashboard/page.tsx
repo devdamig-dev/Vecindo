@@ -155,7 +155,7 @@ function ActivityPanel({ role }: { role: HomeRole }) {
     <section className="rounded-3xl border border-border/70 bg-card/95 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.05)]">
       <SectionHeader
         title={role === "service_provider" ? "Movimiento para tus servicios" : isCommercial ? "Movimiento comercial local" : "Actividad de la zona"}
-        subtitle={role === "service_provider" ? "Señales breves para conectar con vecinos y comercios sin convertir el home en panel." : isCommercial ? "Oportunidades puntuales para tu negocio dentro de la vida barrial." : "Destacados comunitarios para seguir el pulso del barrio."}
+        subtitle={role === "service_provider" ? "Señales breves para conectar con vecinos y comercios." : isCommercial ? "Oportunidades puntuales para tu negocio dentro de la vida barrial." : "Destacados comunitarios para seguir el pulso del barrio."}
       />
       <div className="grid gap-3 sm:grid-cols-2">
         {opportunities[role].map((item) => {
@@ -193,12 +193,14 @@ export default function DashboardPage() {
 
       <MainModules />
 
-      <RoleNudgeCard role={role} />
-
       <RecentActivity />
 
+      <section className="flex min-w-0 flex-col gap-4">
+        <RoleNudgeCard role={role} />
+        <ActivityChips insights={getHomeActivitySignals(role)} limit={3} className="px-1" />
+      </section>
+
       <section className="flex min-w-0 flex-col gap-6">
-        <ActivityChips insights={getHomeActivitySignals(role)} className="rounded-2xl border border-primary/10 bg-card/80 p-3" />
         <ActivityPanel role={role} />
         <RecentAyudaWidget />
       </section>

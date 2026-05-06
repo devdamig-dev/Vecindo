@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation"
 import { BarChart3, Bookmark, Briefcase, CreditCard, HeartHandshake, HelpCircle, Home, Info, Menu, MessageCircle, Settings, Store, User, Wrench, ShoppingBag, type LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/lib/auth-context"
-import { getVisibleNavItems, type CommercialModule } from "@/lib/commercial"
+import { getVisibleNavItems, type CommercialModule, type VisibleNavItem } from "@/lib/commercial"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,10 +31,25 @@ const iconByModule: Record<CommercialModule, LucideIcon> = {
   settings: Settings,
 }
 
+const primaryModules = new Set<CommercialModule>(["home", "marketplace", "services", "commercialSpace", "help"])
+const communitySecondaryModules: CommercialModule[] = ["questions", "saved", "usefulInfo", "subscriptions", "profile", "settings"]
+const contextualModules: CommercialModule[] = ["myBusiness", "serviceManagement", "professionalDashboard"]
+
+function sortMenuItems(items: VisibleNavItem[]) {
+  const order = [...communitySecondaryModules, ...contextualModules]
+
+  return [...items].sort((a, b) => order.indexOf(a.module) - order.indexOf(b.module))
+}
+
 export function MobileHeaderMenu() {
   const router = useRouter()
   const { auth } = useAuth()
-  const menuItems = getVisibleNavItems(auth).filter((item) => item.priority === "secondary" || item.module === "questions" || item.module === "usefulInfo")
+  const menuItems = sortMenuItems(
+    getVisibleNavItems(auth).filter((item) => {
+      if (primaryModules.has(item.module)) return false
+      return communitySecondaryModules.includes(item.module) || contextualModules.includes(item.module)
+    }),
+  )
 
   return (
     <DropdownMenu>

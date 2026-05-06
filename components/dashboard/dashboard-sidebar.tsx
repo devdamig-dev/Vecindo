@@ -28,6 +28,13 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 
+type SidebarNavItem = {
+  label: string
+  href: string
+  module: CommercialModule
+  access?: "full" | "preview"
+}
+
 const iconByModule: Record<CommercialModule, LucideIcon> = {
   home: LayoutDashboard,
   professionalDashboard: BarChart3,
@@ -44,6 +51,14 @@ const iconByModule: Record<CommercialModule, LucideIcon> = {
   profile: User,
   settings: Settings,
 }
+
+const mainNavItems: SidebarNavItem[] = [
+  { label: "Inicio", href: "/dashboard", module: "home" },
+  { label: "Mercado", href: "/dashboard/marketplace", module: "marketplace" },
+  { label: "Servicios", href: "/dashboard/services", module: "services" },
+  { label: "Espacio comercial", href: "/dashboard/espacio-comercial", module: "commercialSpace" },
+  { label: "Ayuda comunitaria", href: "/dashboard/ayuda", module: "help" },
+]
 
 function getActiveClass(module: CommercialModule) {
   if (module === "services" || module === "serviceManagement" || module === "professionalDashboard") return "bg-sky-600 text-white"
@@ -62,14 +77,33 @@ function getRoleLabel(role: ReturnType<typeof getUserPrimaryRole>) {
   return "Prestador de servicios"
 }
 
-export function DashboardSidebar() {
+function SidebarLink({ item, onNavigate }: { item: SidebarNavItem; onNavigate: () => void }) {
   const pathname = usePathname()
+  const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
+  const Icon = iconByModule[item.module]
+
+  return (
+    <Link
+      href={item.href}
+      onClick={onNavigate}
+      className={cn(
+        "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+        isActive ? getActiveClass(item.module) : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground",
+      )}
+    >
+      <Icon className="h-4 w-4" />
+      <span className="flex-1">{item.label}</span>
+      {item.access === "preview" && <span className="rounded-full bg-sidebar-accent px-2 py-0.5 text-[10px] uppercase tracking-wide text-sidebar-foreground/60">Preview</span>}
+    </Link>
+  )
+}
+
+export function DashboardSidebar() {
   const [open, setOpen] = useState(false)
   const { auth } = useAuth()
   const residentUser = isResident(auth)
   const role = getUserPrimaryRole(auth)
-  const navItems = getVisibleNavItems(auth)
-  const homeHref = navItems[0]?.href ?? (residentUser ? "/dashboard" : "/dashboard/pro")
+  const contextualItems = getVisibleNavItems(auth).filter((item) => !mainNavItems.some((mainItem) => mainItem.module === item.module))
 
   return (
     <>
@@ -92,7 +126,7 @@ export function DashboardSidebar() {
         )}
       >
         <div className="flex items-center justify-between border-b border-sidebar-border px-6 py-5">
-          <Link href={homeHref} className="flex items-center gap-2">
+          <Link href="/dashboard" className="flex items-center gap-2">
             <MapPinned className="h-6 w-6 text-sidebar-primary" />
             <span className="text-lg font-bold tracking-tight">VEZI</span>
           </Link>
@@ -113,38 +147,34 @@ export function DashboardSidebar() {
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-2">
+          <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wide text-sidebar-foreground/45">Ecosistema VEZI</p>
           <ul className="flex flex-col gap-1">
-            {navItems.map((item) => {
-              const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
-              const Icon = iconByModule[item.module]
-              return (
-                <li key={`${item.module}-${item.href}`}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setOpen(false)}
-                    className={cn(
-                      "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-                      isActive ? getActiveClass(item.module) : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-                    )}
-                  >
-                    <Icon className="h-4 w-4" />
-                    <span className="flex-1">{item.label}</span>
-                    {item.access === "preview" && <span className="rounded-full bg-sidebar-accent px-2 py-0.5 text-[10px] uppercase tracking-wide text-sidebar-foreground/60">Preview</span>}
-                  </Link>
-                </li>
-              )
-            })}
+            {mainNavItems.map((item) => (
+              <li key={`${item.module}-${item.href}`}>
+                <SidebarLink item={item} onNavigate={() => setOpen(false)} />
+              </li>
+            ))}
           </ul>
+
+          {contextualItems.length > 0 && (
+            <>
+              <p className="px-3 pb-2 pt-5 text-[11px] font-semibold uppercase tracking-wide text-sidebar-foreground/45">Accesos contextuales</p>
+              <ul className="flex flex-col gap-1">
+                {contextualItems.map((item) => (
+                  <li key={`${item.module}-${item.href}`}>
+                    <SidebarLink item={item} onNavigate={() => setOpen(false)} />
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </nav>
 
         <div className="border-t border-sidebar-border px-3 py-4">
           <Link
             href="/dashboard/settings"
             onClick={() => setOpen(false)}
-            className={cn(
-              "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-              pathname === "/dashboard/settings" ? "bg-sidebar-primary text-sidebar-primary-foreground" : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
-            )}
+            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
           >
             <Settings className="h-4 w-4" />
             Configuración
