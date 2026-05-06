@@ -3,10 +3,12 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { listings } from "@/components/marketplace/marketplace-grid"
+import { getMarketplaceActivityInsights } from "@/lib/activity-insights"
 import { useAuth } from "@/lib/auth-context"
 import {
   ArrowLeft,
@@ -89,6 +91,7 @@ export default function MarketplaceDetailPage() {
   const sellerListings = listings.filter(
     (l) => l.sellerId === listing.sellerId && l.id !== listing.id
   )
+  const activityInsights = getMarketplaceActivityInsights(listing.id)
 
   const nextImage = () => {
     setCurrentImage((prev) => (prev + 1) % listing.images.length)
@@ -226,7 +229,7 @@ export default function MarketplaceDetailPage() {
                       <p className="mt-0.5 text-sm font-bold text-emerald-700">{item.price}</p>
                       <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Clock className="h-3 w-3" />
-                        {item.posted}
+                        {getMarketplaceActivityInsights(item.id)[0].label.replace("Publicado ", "")}
                       </div>
                     </div>
                   </Link>
@@ -248,9 +251,10 @@ export default function MarketplaceDetailPage() {
                   </span>
                   <span className="flex items-center gap-1.5">
                     <Clock className="h-4 w-4" />
-                    {listing.posted}
+                    {activityInsights[0].label.replace("Publicado ", "")}
                   </span>
                 </div>
+                <ActivityChips insights={activityInsights.slice(1)} limit={3} className="mt-3" />
               </div>
 
               <span className="text-2xl font-bold text-emerald-700 sm:text-3xl">

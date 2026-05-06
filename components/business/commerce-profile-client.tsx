@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -29,6 +30,7 @@ import { useAuth } from "@/lib/auth-context"
 import { useCommerceAnalytics } from "@/hooks/use-commerce-analytics"
 import type { CommerceItem, CommerceProduct, CommerceReview } from "@/lib/commerces-data"
 import { ProductDetailDrawer } from "@/components/business/product-detail-drawer"
+import { getCommerceProductInsights, getCommerceProfileInsights } from "@/lib/activity-insights"
 
 type Props = {
   commerce: CommerceItem
@@ -65,6 +67,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
     trackProfileView(commerce.id)
   }, [commerce.id, trackProfileView])
 
+  const commerceInsights = getCommerceProfileInsights(commerce.id)
   const saved = isSaved(commerce.name)
   const isCommerce = commerce.type === "commerce"
   const cameFromEntrepreneurTab = activeTab === "emprendimientos"
@@ -366,6 +369,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     </Badge>
                   </div>
 
+                  <ActivityChips insights={commerceInsights} limit={3} className="mt-4" />
                   <p className="mt-4 text-xs text-muted-foreground">{commerce.meta}</p>
                 </div>
 
@@ -428,7 +432,10 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                 </p>
               </div>
 
-              <Badge variant="secondary">{commerce.products.length} productos</Badge>
+              <div className="flex flex-wrap items-center gap-2">
+                <ActivityChips insights={[{ label: commerceInsights[1].label.replace("abrieron catálogo", "abrieron este catálogo"), tone: "violet" }]} />
+                <Badge variant="secondary">{commerce.products.length} productos</Badge>
+              </div>
             </div>
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -476,6 +483,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                       {product.shortDescription}
                     </p>
+                    <ActivityChips insights={getCommerceProductInsights(product.id)} limit={2} className="mt-3" />
 
                     <div className="mt-4 flex items-center justify-between gap-3">
                       <div

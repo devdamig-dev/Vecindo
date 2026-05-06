@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useMemo } from "react"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -27,6 +28,7 @@ import {
   Store,
   Wrench,
 } from "lucide-react"
+import { getCommerceGrowthInsights, getCommerceProductInsights } from "@/lib/activity-insights"
 
 type ListingType = "product" | "service"
 
@@ -146,6 +148,7 @@ export default function ComercialPage() {
   const ProfileIcon = profileBadge.icon
 
   const activity = auth?.commercialActivity
+  const commerceGrowthInsights = getCommerceGrowthInsights(commercialProfile.name)
   const stats = [
     {
       label: "Productos publicados",
@@ -158,13 +161,13 @@ export default function ComercialPage() {
       icon: Wrench,
     },
     {
-      label: "Consultas recibidas",
-      value: "14",
+      label: "Pedidos iniciados",
+      value: commerceGrowthInsights[2].label.split(" ")[0],
       icon: MessageSquare,
     },
     {
-      label: "Visualizaciones / clicks",
-      value: "127 / 38",
+      label: "Visibilidad semanal",
+      value: commerceGrowthInsights[0].label.split(" ")[0],
       icon: BarChart3,
     },
   ]
@@ -275,6 +278,8 @@ export default function ComercialPage() {
         </div>
       </div>
 
+      <ActivityChips insights={commerceGrowthInsights} limit={4} className="rounded-2xl border border-violet-100 bg-violet-50/60 p-3" />
+
       <Tabs defaultValue="publicaciones" className="gap-4">
         <TabsList className="w-full justify-start overflow-x-auto rounded-xl bg-muted p-1 md:w-fit">
           <TabsTrigger value="publicaciones">Publicaciones</TabsTrigger>
@@ -309,6 +314,7 @@ export default function ComercialPage() {
 
                       <p className="truncate font-medium text-foreground">{item.title}</p>
                       <p className="mt-1 text-sm text-muted-foreground">{item.price}</p>
+                      <ActivityChips insights={getCommerceProductInsights(item.id)} limit={2} className="mt-2" />
                     </div>
 
                     <Button asChild variant="ghost" size="sm">
@@ -486,21 +492,21 @@ export default function ComercialPage() {
                 <div>
                   <div className="mb-2 flex items-center justify-between text-sm">
                     <span className="text-muted-foreground">Vistas del perfil</span>
-                    <span className="font-medium text-foreground">127</span>
+                    <span className="font-medium text-foreground">{commerceGrowthInsights[0].label.split(" ")[0]}</span>
                   </div>
                   <Progress value={78} />
                 </div>
                 <div>
                   <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Clicks a WhatsApp</span>
-                    <span className="font-medium text-foreground">38</span>
+                    <span className="text-muted-foreground">Catálogos abiertos</span>
+                    <span className="font-medium text-foreground">{commerceGrowthInsights[1].label.split(" ")[0]}</span>
                   </div>
                   <Progress value={54} />
                 </div>
                 <div>
                   <div className="mb-2 flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Consultas recibidas</span>
-                    <span className="font-medium text-foreground">14</span>
+                    <span className="text-muted-foreground">Pedidos iniciados</span>
+                    <span className="font-medium text-foreground">{commerceGrowthInsights[2].label.split(" ")[0]}</span>
                   </div>
                   <Progress value={36} />
                 </div>

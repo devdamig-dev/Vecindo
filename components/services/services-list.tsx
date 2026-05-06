@@ -1,7 +1,9 @@
 import Link from "next/link"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Star, ShieldCheck, MapPin, Zap } from "lucide-react"
+import { getProfessionalCardInsights } from "@/lib/activity-insights"
 
 export const professionals = [
   {
@@ -165,6 +167,8 @@ export function ServicesList({ professionals }: ServicesListProps) {
               <span>•</span>
               <span>{pro.reviews} vecinos lo recomiendan</span>
             </div>
+
+            <ActivityChips insights={getProfessionalCardInsights(pro.id, pro.category)} className="mt-2" />
 
             <div className="mt-3 flex flex-wrap gap-1.5">
               {pro.tags.map((tag) => (

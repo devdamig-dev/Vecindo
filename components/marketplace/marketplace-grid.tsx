@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
@@ -10,6 +11,7 @@ import {
   ShieldCheck,
   Bookmark,
 } from "lucide-react"
+import { getMarketplaceActivityInsights } from "@/lib/activity-insights"
 
 export type ListingStatus = "Disponible" | "Reservado" | "Vendido"
 
@@ -234,6 +236,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
 
         const detailHref = `/dashboard/marketplace/${listing.id}`
         const isSold = listing.status === "Vendido"
+        const activityInsights = getMarketplaceActivityInsights(listing.id)
 
         return (
           <article
@@ -293,9 +296,11 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock className="h-3.5 w-3.5" />
-                      {listing.posted}
+                      {activityInsights[0].label.replace("Publicado ", "")}
                     </span>
                   </div>
+
+                  <ActivityChips insights={activityInsights.slice(1)} limit={2} className="mt-2" />
                 </div>
               </div>
 
