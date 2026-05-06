@@ -16,6 +16,7 @@ import {
   Wrench,
   type LucideIcon,
 } from "lucide-react"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { RecentActivity } from "@/components/dashboard/recent-activity"
 import { RecentAyudaWidget } from "@/components/ayuda/recent-ayuda-widget"
 import { DiscoveryCard } from "@/components/dashboard/discovery-card"
@@ -25,6 +26,7 @@ import { ZoneUpdatesCarousel } from "@/components/zone-updates/zone-updates-caro
 import { useAuth } from "@/lib/auth-context"
 import { getUserPrimaryRole, type UserPrimaryRole } from "@/lib/commercial"
 import { cn } from "@/lib/utils"
+import { getHomeActivitySignals } from "@/lib/activity-insights"
 
 type HomeRole = UserPrimaryRole
 
@@ -293,6 +295,7 @@ export default function DashboardPage() {
       </section>
 
       <ContextBanner role={role} />
+      <ActivityChips insights={getHomeActivitySignals(role)} className="rounded-2xl border border-primary/10 bg-card/80 p-3" />
       <DynamicQuickActions actions={quickActions[role]} />
       <InsightStrip insights={roleInsights[role]} />
 

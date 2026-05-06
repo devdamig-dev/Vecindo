@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useMemo, useState } from "react"
 import { useAuth } from "@/lib/auth-context"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { ServicesSearch } from "@/components/services/services-search"
 import { ServicesList, professionals } from "@/components/services/services-list"
 import { SectionIntroBanner } from "@/components/ui/section-intro-banner"
@@ -10,6 +11,7 @@ import { NeighborRecommendations } from "@/components/services/neighbor-recommen
 import { Button } from "@/components/ui/button"
 import { canAccessServiceManagement, hasPreviewAccessToModule, hasServiceProviderActivity, isResident } from "@/lib/commercial"
 import { Search as SearchIcon, Plus, Briefcase, Store } from "lucide-react"
+import { getServiceDemandInsights } from "@/lib/activity-insights"
 
 export default function ServicesPage() {
   const { auth } = useAuth()
@@ -18,6 +20,7 @@ export default function ServicesPage() {
   const servicesPreview = hasPreviewAccessToModule(auth, "services")
   const [query, setQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState("Todos")
+  const serviceDemandInsights = getServiceDemandInsights(auth?.profile?.email ?? auth?.profile?.name ?? "services")
 
   const filteredProfessionals = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase()
@@ -42,6 +45,7 @@ export default function ServicesPage() {
           <h1 className="text-2xl font-bold text-foreground">Servicios</h1>
           <p className="text-sm text-muted-foreground">Explorá cómo se muestran otros perfiles y detectá oportunidades dentro de la comunidad.</p>
         </div>
+        <ActivityChips insights={serviceDemandInsights} limit={3} className="rounded-2xl border border-sky-100 bg-sky-50/60 p-3" />
         <SectionIntroBanner
           sectionId="services-professional-directory"
           title="Vista profesional del directorio"
@@ -97,6 +101,10 @@ export default function ServicesPage() {
           </div>
           <Button asChild className="bg-sky-600 text-white hover:bg-sky-700"><Link href="/dashboard/services/new"><Plus className="mr-2 h-4 w-4" />Publicar mi servicio</Link></Button>
         </div>
+      )}
+
+      {canAccessServiceManagement(auth) && (
+        <ActivityChips insights={serviceDemandInsights} limit={3} className="rounded-2xl border border-sky-100 bg-sky-50/60 p-3" />
       )}
 
       <ServicesSearch query={query} onQueryChange={setQuery} activeCategory={activeCategory} onCategoryChange={setActiveCategory} />

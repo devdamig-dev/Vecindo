@@ -3,11 +3,13 @@
 import Link from "next/link"
 import { useAuth } from "@/lib/auth-context"
 import { canAccessMyBusiness, canAccessServiceManagement, hasServiceProviderActivity, isResident } from "@/lib/commercial"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Package, Store, Sparkles, MapPin, MessageSquare, Lock } from "lucide-react"
 import ComerciosZoneMap from "@/components/business/comercios-zone-map"
 import type { CommerceItem } from "@/lib/commerces-data"
+import { getCommerceGrowthInsights, getCommerceProfileInsights } from "@/lib/activity-insights"
 
 type Props = {
   activeTab: "comercios" | "emprendimientos"
@@ -109,6 +111,8 @@ function CommercialListCard({
           )}
         </div>
 
+        <ActivityChips insights={getCommerceProfileInsights(item.id)} limit={2} />
+
         <Button asChild variant="link" className="h-auto p-0 text-slate-950">
           <Link href={detailHref}>Ver perfil y catálogo</Link>
         </Button>
@@ -143,7 +147,7 @@ export default function ComerciosPageContent({
             {isCommerceTab ? <MapPin className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
           </div>
 
-          <div className="space-y-1">
+          <div className="space-y-3">
             <h2
               className={`text-[1.35rem] font-semibold tracking-tight ${
                 isCommerceTab ? "text-violet-900" : "text-violet-900"
@@ -156,6 +160,7 @@ export default function ComerciosPageContent({
                 ? "Negocios, marcas y locales de la zona con catálogo activo, ubicación visible y pedido simple por WhatsApp."
                 : "Marcas y proyectos de vecinos con catálogo público, atención directa y pedidos coordinados sin necesidad de local físico."}
             </p>
+            <ActivityChips insights={getCommerceGrowthInsights("commercial-directory")} limit={3} />
           </div>
         </div>
       </div>
