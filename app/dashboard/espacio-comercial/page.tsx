@@ -4,9 +4,9 @@ import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Store, Sparkles, MapPin, ChevronRight, Briefcase, Package, Search, Lock } from "lucide-react"
+import { Store, Sparkles, MapPin, ChevronRight, Briefcase, Package, Search, Lock, Handshake } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
-import { canAccessMyBusiness, canAccessServiceManagement, hasServiceProviderActivity, isResident } from "@/lib/commercial"
+import { canAccessMyBusiness, getUserPrimaryRole, hasPreviewAccessToModule } from "@/lib/commercial"
 import { commerces } from "@/lib/commerces-data"
 
 const commerceItems = commerces
@@ -47,6 +47,8 @@ function CommercialPreviewCard({ title, description, badge, meta, href, type }: 
 export default function EspacioComercialPage() {
   const { auth } = useAuth()
   const showMyBusiness = canAccessMyBusiness(auth)
+  const commercialSpacePreview = hasPreviewAccessToModule(auth, "commercialSpace")
+  const role = getUserPrimaryRole(auth)
 
   return (
     <div className="flex max-w-full flex-col gap-6">
@@ -60,6 +62,21 @@ export default function EspacioComercialPage() {
         <h2 className="text-lg font-semibold">Un único módulo, dos tipos de perfiles</h2>
         <p className="mt-2 max-w-3xl text-sm text-white/85">Los comercios muestran ubicación visible y ficha institucional. Los emprendimientos destacan catálogo, atención directa y entregas coordinadas, aunque no tengan local físico.</p>
       </div>
+
+      {commercialSpacePreview && (
+        <div className="rounded-[24px] border border-violet-200 bg-violet-50 p-5">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-violet-700"><Handshake className="h-5 w-5" /></div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">{role === "service_provider" ? "Conectá con comercios de tu zona para ofrecer tus servicios o generar alianzas." : "Mirá cómo tu negocio puede aparecer dentro de la red local."}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{role === "service_provider" ? "Esta vista preview te muestra comercios y emprendimientos cercanos para detectar oportunidades comerciales sin bloquearte el ecosistema." : "Esta vista preview te ayuda a entender la presencia comercial disponible antes de activar el acceso completo a comunidad."}</p>
+              </div>
+            </div>
+            <Button asChild className="bg-violet-600 text-white hover:bg-violet-700"><Link href="/dashboard/suscripciones">{role === "service_provider" ? "Activar plan Red local" : "Activar acceso Comunidad"}</Link></Button>
+          </div>
+        </div>
+      )}
 
       <Tabs defaultValue="comercios" className="w-full">
         <TabsList className="grid h-auto w-full max-w-[520px] grid-cols-2 gap-2 rounded-2xl bg-muted p-1.5">
@@ -105,6 +122,8 @@ export default function EspacioComercialPage() {
               <Button asChild className="bg-sidebar-primary text-sidebar-primary-foreground hover:opacity-90"><Link href="/dashboard/comercial"><Briefcase className="mr-2 h-4 w-4" />Ir a Mi negocio</Link></Button>
               <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"><Lock className="h-3 w-3" />Panel privado de tu cuenta</span>
             </div>
+          ) : role === "service_provider" ? (
+            <Button asChild className="bg-violet-600 text-white hover:bg-violet-700"><Link href="/dashboard/suscripciones"><Handshake className="mr-2 h-4 w-4" />Activar plan Red local</Link></Button>
           ) : (
             <div className="flex flex-wrap gap-2">
               <Button asChild variant="outline"><Link href="/dashboard/marketplace"><Package className="mr-2 h-4 w-4" />Publicar producto</Link></Button>

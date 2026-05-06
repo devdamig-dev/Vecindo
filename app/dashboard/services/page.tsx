@@ -8,13 +8,14 @@ import { ServicesList, professionals } from "@/components/services/services-list
 import { SectionIntroBanner } from "@/components/ui/section-intro-banner"
 import { NeighborRecommendations } from "@/components/services/neighbor-recommendations"
 import { Button } from "@/components/ui/button"
-import { canAccessServiceManagement, hasServiceProviderActivity, isResident } from "@/lib/commercial"
-import { Search as SearchIcon, Plus, Briefcase, Settings } from "lucide-react"
+import { canAccessServiceManagement, hasPreviewAccessToModule, hasServiceProviderActivity, isResident } from "@/lib/commercial"
+import { Search as SearchIcon, Plus, Briefcase, Store } from "lucide-react"
 
 export default function ServicesPage() {
   const { auth } = useAuth()
   const isProfessional = hasServiceProviderActivity(auth) && !isResident(auth)
   const residentUser = isResident(auth)
+  const servicesPreview = hasPreviewAccessToModule(auth, "services")
   const [query, setQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState("Todos")
 
@@ -69,6 +70,21 @@ export default function ServicesPage() {
         description="Profesionales y vecinos que ofrecen lo que saben hacer. Reseñas reales y contacto directo."
         howItWorks={{ title: "¿Cómo funciona Servicios?", steps: ["Buscá por categoría o escribiendo el servicio que necesitás.", "Mirá reseñas, experiencia y datos del perfil.", "Contactá directamente por WhatsApp sin intermediarios.", "Después del trabajo, dejá tu reseña para ayudar a otros vecinos."] }}
       />
+
+      {servicesPreview && (
+        <div className="rounded-[24px] border border-sky-200 bg-sky-50 p-5">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-sky-700"><Store className="h-5 w-5" /></div>
+              <div>
+                <p className="text-sm font-semibold text-foreground">Encontrá prestadores de la zona para resolver necesidades de tu negocio.</p>
+                <p className="mt-1 text-sm text-muted-foreground">Esta vista preview te ayuda a detectar colaboradores, oficios y proveedores cercanos antes de activar acceso completo a la comunidad.</p>
+              </div>
+            </div>
+            <Button asChild className="bg-sky-600 text-white hover:bg-sky-700"><Link href="/dashboard/suscripciones">Activar acceso Comunidad</Link></Button>
+          </div>
+        </div>
+      )}
 
       {residentUser && canAccessServiceManagement(auth) && (
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-sky-200 bg-sky-100 px-4 py-4">

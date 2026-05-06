@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/lib/auth-context"
-import { canAccessMyBusiness, canAccessServiceManagement, hasServiceProviderActivity, isResident } from "@/lib/commercial"
+import { getUserPrimaryRole, getVisibleNavItems, isResident, type CommercialModule } from "@/lib/commercial"
 import {
   MapPinned,
   LayoutDashboard,
@@ -23,41 +23,43 @@ import {
   Heart,
   Info,
   BarChart3,
+  User,
+  type LucideIcon,
 } from "lucide-react"
 import { useState } from "react"
 
-interface NavItem {
-  label: string
-  href: string
-  icon: typeof LayoutDashboard
-  requireCapability?: string
-  residentOnly?: boolean
-  professionalOnly?: boolean
-  commercialOnly?: boolean
+const iconByModule: Record<CommercialModule, LucideIcon> = {
+  home: LayoutDashboard,
+  professionalDashboard: BarChart3,
+  marketplace: ShoppingBag,
+  services: Search,
+  commercialSpace: Store,
+  help: Heart,
+  questions: MessageCircle,
+  saved: Bookmark,
+  usefulInfo: Info,
+  subscriptions: CreditCard,
+  myBusiness: Briefcase,
+  serviceManagement: BarChart3,
+  profile: User,
+  settings: Settings,
 }
 
-const allNavItems: NavItem[] = [
-  { label: "Inicio", href: "/dashboard", icon: LayoutDashboard, residentOnly: true },
-  { label: "Panel profesional", href: "/dashboard/pro", icon: BarChart3, professionalOnly: true },
-  { label: "Mercado", href: "/dashboard/marketplace", icon: ShoppingBag, requireCapability: "canAccessMarketplace" },
-  { label: "Servicios", href: "/dashboard/services", icon: Search },
-  { label: "Espacio comercial", href: "/dashboard/espacio-comercial", icon: Store },
-  { label: "Comunidad", href: "/dashboard/questions", icon: MessageCircle, requireCapability: "canPublishQuestions" },
-  { label: "Ayuda comunitaria", href: "/dashboard/ayuda", icon: Heart },
-  { label: "Información útil", href: "/dashboard/informacion-util", icon: Info },
-  { label: "Guardados", href: "/dashboard/guardados", icon: Bookmark, residentOnly: true },
-  { label: "Suscripciones", href: "/dashboard/suscripciones", icon: CreditCard },
-  { label: "Mi negocio", href: "/dashboard/comercial", icon: Briefcase, commercialOnly: true },
-]
-
-function getActiveClass(href: string) {
-  if (href.includes("/dashboard/services")) return "bg-sky-600 text-white"
-  if (href.includes("/dashboard/questions")) return "bg-violet-600 text-white"
-  if (href.includes("/dashboard/marketplace")) return "bg-emerald-600 text-white"
-  if (href.includes("/dashboard/ayuda")) return "bg-rose-600 text-white"
-  if (href.includes("/dashboard/espacio-comercial")) return "bg-amber-600 text-white"
-  if (href.includes("/dashboard/comercial")) return "bg-sidebar-primary text-sidebar-primary-foreground"
+function getActiveClass(module: CommercialModule) {
+  if (module === "services" || module === "serviceManagement" || module === "professionalDashboard") return "bg-sky-600 text-white"
+  if (module === "questions") return "bg-violet-600 text-white"
+  if (module === "marketplace") return "bg-emerald-600 text-white"
+  if (module === "help") return "bg-rose-600 text-white"
+  if (module === "commercialSpace") return "bg-amber-600 text-white"
+  if (module === "myBusiness") return "bg-sidebar-primary text-sidebar-primary-foreground"
   return "bg-sidebar-primary text-sidebar-primary-foreground"
+}
+
+function getRoleLabel(role: ReturnType<typeof getUserPrimaryRole>) {
+  if (role === "resident_business") return "Residente + negocio"
+  if (role === "resident") return "Residente"
+  if (role === "external_business") return "Comercio externo"
+  return "Prestador de servicios"
 }
 
 export function DashboardSidebar() {
@@ -65,22 +67,9 @@ export function DashboardSidebar() {
   const [open, setOpen] = useState(false)
   const { auth } = useAuth()
   const residentUser = isResident(auth)
-  const isProfessional = auth.accountType === "external_professional"
-  const { capabilities } = auth
-  const showCommercialPanel = canAccessMyBusiness(auth)
-
-  const navItems = allNavItems.filter((item) => {
-    if (item.residentOnly && !residentUser) return false
-    if (item.professionalOnly && !isProfessional) return false
-    if (item.commercialOnly && !showCommercialPanel) return false
-    if (item.requireCapability) {
-      const cap = item.requireCapability as keyof typeof capabilities
-      if (!capabilities[cap]) return false
-    }
-    return true
-  })
-
-  const homeHref = residentUser ? "/dashboard" : "/dashboard/pro"
+  const role = getUserPrimaryRole(auth)
+  const navItems = getVisibleNavItems(auth)
+  const homeHref = navItems[0]?.href ?? (residentUser ? "/dashboard" : "/dashboard/pro")
 
   return (
     <>
@@ -118,17 +107,8 @@ export function DashboardSidebar() {
             <p className="text-sm font-semibold">Hudson – Berazategui</p>
           </div>
           <div className="mt-2 flex items-center gap-2 rounded-xl bg-sidebar-accent/50 px-3 py-2.5">
-            {residentUser ? (
-              <>
-                <ShieldCheck className="h-3.5 w-3.5 text-sidebar-primary" />
-                <span className="text-xs font-medium text-sidebar-foreground/80">Residente</span>
-              </>
-            ) : (
-              <>
-                <Briefcase className="h-3.5 w-3.5 text-sidebar-primary" />
-                <span className="text-xs font-medium text-sidebar-foreground/80">Prestador de servicios</span>
-              </>
-            )}
+            {residentUser ? <ShieldCheck className="h-3.5 w-3.5 text-sidebar-primary" /> : <Briefcase className="h-3.5 w-3.5 text-sidebar-primary" />}
+            <span className="text-xs font-medium text-sidebar-foreground/80">{getRoleLabel(role)}</span>
           </div>
         </div>
 
@@ -136,18 +116,20 @@ export function DashboardSidebar() {
           <ul className="flex flex-col gap-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href))
+              const Icon = iconByModule[item.module]
               return (
-                <li key={item.href}>
+                <li key={`${item.module}-${item.href}`}>
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
                     className={cn(
                       "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-                      isActive ? getActiveClass(item.href) : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
+                      isActive ? getActiveClass(item.module) : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                     )}
                   >
-                    <item.icon className="h-4 w-4" />
-                    {item.label}
+                    <Icon className="h-4 w-4" />
+                    <span className="flex-1">{item.label}</span>
+                    {item.access === "preview" && <span className="rounded-full bg-sidebar-accent px-2 py-0.5 text-[10px] uppercase tracking-wide text-sidebar-foreground/60">Preview</span>}
                   </Link>
                 </li>
               )
