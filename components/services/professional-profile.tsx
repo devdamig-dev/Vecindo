@@ -1,8 +1,10 @@
 import Link from "next/link"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Star, ShieldCheck, MapPin, Phone, Calendar, ArrowLeft, MessageSquare } from "lucide-react"
+import { Star, ShieldCheck, MapPin, Phone, Calendar, ArrowLeft, MessageSquare, Zap } from "lucide-react"
+import { getProfessionalCardInsights, getServiceTrustInsights } from "@/lib/activity-insights"
 
 const proData: Record<string, {
   name: string; initials: string; title: string; category: string;
@@ -52,6 +54,9 @@ function SubScoreBar({ label, score }: { label: string; score: number }) {
 export function ProfessionalProfile({ id }: { id: string }) {
   const pro = proData[id] || proData["1"]
 
+  const activityInsights = getProfessionalCardInsights(id, pro.category)
+  const trustInsights = getServiceTrustInsights(id)
+
   const whatsappUrl = `https://wa.me/${pro.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${pro.name}, te contacto desde VEZI por tu servicio de ${pro.category}.`)}`
 
   return (
@@ -76,7 +81,12 @@ export function ProfessionalProfile({ id }: { id: string }) {
               {pro.tags.map((tag) => (
                 <Badge key={tag} variant="secondary" className="text-xs">{tag}</Badge>
               ))}
+              <Badge variant="outline" className="gap-1 border-sky-200 text-sky-700">
+                <Zap className="h-3 w-3" />
+                Responde rápido
+              </Badge>
             </div>
+            <ActivityChips insights={activityInsights} limit={3} className="mt-3" />
           </div>
           <div className="flex flex-col items-start gap-2 sm:items-end">
             <div className="flex items-center gap-1">
@@ -91,6 +101,11 @@ export function ProfessionalProfile({ id }: { id: string }) {
               </a>
             </Button>
           </div>
+        </div>
+
+        <div className="mt-6 rounded-2xl border border-sky-100 bg-sky-50/60 p-4">
+          <p className="text-sm font-semibold text-foreground">Demanda y confianza local</p>
+          <ActivityChips insights={trustInsights} className="mt-3" />
         </div>
 
         {/* Subscores */}

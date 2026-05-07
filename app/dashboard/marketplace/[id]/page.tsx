@@ -91,7 +91,7 @@ export default function MarketplaceDetailPage() {
   const sellerListings = listings.filter(
     (l) => l.sellerId === listing.sellerId && l.id !== listing.id
   )
-  const activityInsights = getMarketplaceActivityInsights(listing.id)
+  const activityInsights = getMarketplaceActivityInsights(listing.id, listing.status)
 
   const nextImage = () => {
     setCurrentImage((prev) => (prev + 1) % listing.images.length)

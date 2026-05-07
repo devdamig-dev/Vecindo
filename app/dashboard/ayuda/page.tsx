@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { SectionIntroBanner } from "@/components/ui/section-intro-banner"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { CreateAyudaForm } from "@/components/ayuda/create-ayuda-form"
 import { useAuth } from "@/lib/auth-context"
 import {
@@ -22,6 +23,7 @@ import {
   AlertTriangle,
   CheckCircle2,
 } from "lucide-react"
+import { getAyudaCommunityInsights } from "@/lib/activity-insights"
 
 export type AyudaCategory = "mascotas" | "donaciones" | "objetos" | "personal" | "urgente"
 export type AyudaStatus = "activo" | "resuelto"
@@ -312,6 +314,7 @@ export default function AyudaPage() {
             const CatIcon = cat.icon
             const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VECINDO.`)}`
             const saved = isSaved(post.title)
+            const communityInsights = getAyudaCommunityInsights(post.id, post.status, post.category)
 
             return (
               <div
@@ -374,6 +377,8 @@ export default function AyudaPage() {
                       {post.zone}
                     </Badge>
                   </div>
+
+                  <ActivityChips insights={communityInsights} limit={2} className="mt-2" />
 
                   <div className="mt-3 flex gap-2 border-t border-border pt-3">
                     <Button

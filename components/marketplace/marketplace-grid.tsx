@@ -236,7 +236,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
 
         const detailHref = `/dashboard/marketplace/${listing.id}`
         const isSold = listing.status === "Vendido"
-        const activityInsights = getMarketplaceActivityInsights(listing.id)
+        const activityInsights = getMarketplaceActivityInsights(listing.id, listing.status)
 
         return (
           <article
