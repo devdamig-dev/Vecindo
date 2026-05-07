@@ -1,14 +1,14 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { SectionIntroBanner } from "@/components/ui/section-intro-banner"
-import { ActivityChips } from "@/components/activity/activity-chips"
-import { CreateAyudaForm } from "@/components/ayuda/create-ayuda-form"
-import { useAuth } from "@/lib/auth-context"
+import { useState } from "react";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { SectionIntroBanner } from "@/components/ui/section-intro-banner";
+import { ActivityChips } from "@/components/activity/activity-chips";
+import { CreateAyudaForm } from "@/components/ayuda/create-ayuda-form";
+import { useAuth } from "@/lib/auth-context";
 import {
   Heart,
   MapPin,
@@ -22,35 +22,63 @@ import {
   Users,
   AlertTriangle,
   CheckCircle2,
-} from "lucide-react"
-import { getAyudaCommunityInsights } from "@/lib/activity-insights"
+} from "lucide-react";
+import { getAyudaCommunityInsights } from "@/lib/activity-insights";
 
-export type AyudaCategory = "mascotas" | "donaciones" | "objetos" | "personal" | "urgente"
-export type AyudaStatus = "activo" | "resuelto"
+export type AyudaCategory =
+  | "mascotas"
+  | "donaciones"
+  | "objetos"
+  | "personal"
+  | "urgente";
+export type AyudaStatus = "activo" | "resuelto";
 
 export interface AyudaPost {
-  id: string
-  title: string
-  category: AyudaCategory
-  status: AyudaStatus
-  description: string
-  fullDescription: string
-  images: string[]
-  authorId: string
-  authorName: string
-  authorInitials: string
-  whatsapp: string
-  zone: string
-  postedAt: string
+  id: string;
+  title: string;
+  category: AyudaCategory;
+  status: AyudaStatus;
+  description: string;
+  fullDescription: string;
+  images: string[];
+  authorId: string;
+  authorName: string;
+  authorInitials: string;
+  whatsapp: string;
+  zone: string;
+  postedAt: string;
 }
 
-const categoryConfig: Record<AyudaCategory, { label: string; icon: typeof PawPrint; color: string }> = {
-  mascotas: { label: "Mascotas", icon: PawPrint, color: "bg-amber-500/10 text-amber-600" },
-  donaciones: { label: "Donaciones", icon: Gift, color: "bg-pink-500/10 text-pink-600" },
-  objetos: { label: "Objetos perdidos", icon: Key, color: "bg-blue-500/10 text-blue-600" },
-  personal: { label: "Personal", icon: Users, color: "bg-green-500/10 text-green-600" },
-  urgente: { label: "Urgente", icon: AlertTriangle, color: "bg-destructive/10 text-destructive" },
-}
+const categoryConfig: Record<
+  AyudaCategory,
+  { label: string; icon: typeof PawPrint; color: string }
+> = {
+  mascotas: {
+    label: "Mascotas",
+    icon: PawPrint,
+    color: "bg-amber-500/10 text-amber-600",
+  },
+  donaciones: {
+    label: "Donaciones",
+    icon: Gift,
+    color: "bg-pink-500/10 text-pink-600",
+  },
+  objetos: {
+    label: "Objetos perdidos",
+    icon: Key,
+    color: "bg-blue-500/10 text-blue-600",
+  },
+  personal: {
+    label: "Personal",
+    icon: Users,
+    color: "bg-green-500/10 text-green-600",
+  },
+  urgente: {
+    label: "Urgente",
+    icon: AlertTriangle,
+    color: "bg-destructive/10 text-destructive",
+  },
+};
 
 export const ayudaPosts: AyudaPost[] = [
   {
@@ -58,7 +86,8 @@ export const ayudaPosts: AyudaPost[] = [
     title: "Perro perdido - Golden Retriever",
     category: "mascotas",
     status: "activo",
-    description: "Se perdió ayer cerca de la plaza central. Responde al nombre de Max.",
+    description:
+      "Se perdió ayer cerca de la plaza central. Responde al nombre de Max.",
     fullDescription:
       "Se perdió ayer a las 18hs cerca de la plaza central de Hudson. Es un Golden Retriever macho de 4 años, color dorado claro, tiene collar azul con chapita. Responde al nombre de Max. Es muy amigable. Por favor si lo ven avisen, estamos muy preocupados. Hay recompensa.",
     images: [
@@ -77,7 +106,8 @@ export const ayudaPosts: AyudaPost[] = [
     title: "Colecta para cirugía veterinaria",
     category: "donaciones",
     status: "activo",
-    description: "Necesitamos ayuda para operar a un gatito rescatado de la calle.",
+    description:
+      "Necesitamos ayuda para operar a un gatito rescatado de la calle.",
     fullDescription:
       "Rescatamos un gatito de 6 meses que estaba abandonado y tiene una fractura en la patita. El veterinario nos presupuestó $85.000 para la operación. Ya juntamos $40.000 pero necesitamos el resto urgente. Cualquier aporte ayuda. También aceptamos donaciones de comida para gatos o mantas. El gatito está en tránsito en mi casa y se recupera bien del susto.",
     images: [
@@ -115,7 +145,8 @@ export const ayudaPosts: AyudaPost[] = [
     title: "Busco niñera para 2 tardes por semana",
     category: "personal",
     status: "activo",
-    description: "Necesito alguien de confianza para cuidar a mis hijos martes y jueves.",
+    description:
+      "Necesito alguien de confianza para cuidar a mis hijos martes y jueves.",
     fullDescription:
       "Busco una niñera responsable y cariñosa para cuidar a mis dos hijos (5 y 8 años) los martes y jueves de 14 a 19hs. Las tareas incluyen buscarlos del colegio, darles la merienda, ayudarlos con tareas simples y jugar con ellos. Preferentemente alguien del barrio con referencias. Pago $8.000 por tarde. Empezaría la semana que viene.",
     images: [],
@@ -131,7 +162,8 @@ export const ayudaPosts: AyudaPost[] = [
     title: "URGENTE: Corte de luz en manzana 12",
     category: "urgente",
     status: "resuelto",
-    description: "Llevamos 8 horas sin luz, necesitamos difusión para que Edesur responda.",
+    description:
+      "Llevamos 8 horas sin luz, necesitamos difusión para que Edesur responda.",
     fullDescription:
       "Llevamos más de 8 horas sin luz en toda la manzana 12. Ya hicimos el reclamo a Edesur (nro 12345678) pero no dan respuesta. Hay personas mayores que necesitan equipos médicos enchufados. Necesitamos difusión para que nos den prioridad. Si alguien tiene contacto en Edesur o conoce a alguien del municipio que pueda ayudar, por favor escríbanos. ACTUALIZACIÓN: Ya volvió la luz a las 22hs, gracias a todos por la difusión.",
     images: [],
@@ -166,7 +198,8 @@ export const ayudaPosts: AyudaPost[] = [
     title: "Donación de ropa de bebé",
     category: "donaciones",
     status: "activo",
-    description: "Tengo ropa de bebé de 0 a 12 meses en buen estado para donar.",
+    description:
+      "Tengo ropa de bebé de 0 a 12 meses en buen estado para donar.",
     fullDescription:
       "Mi bebé ya creció y tengo mucha ropa de 0 a 12 meses en muy buen estado para donar. Hay bodys, enteritos, medias, gorros de invierno, etc. Todo lavado y en buenas condiciones. Prioridad para familias que realmente lo necesiten. Pasar a buscar por mi casa en Hudson, cerca del supermercado Día.",
     images: [
@@ -195,7 +228,7 @@ export const ayudaPosts: AyudaPost[] = [
     zone: "Hudson",
     postedAt: "hace 1 semana",
   },
-]
+];
 
 const categoryFilters: { key: AyudaCategory | "todos"; label: string }[] = [
   { key: "todos", label: "Todos" },
@@ -204,26 +237,32 @@ const categoryFilters: { key: AyudaCategory | "todos"; label: string }[] = [
   { key: "objetos", label: "Objetos" },
   { key: "personal", label: "Personal" },
   { key: "urgente", label: "Urgente" },
-]
+];
 
 const statusFilters: { key: AyudaStatus | "todos"; label: string }[] = [
   { key: "todos", label: "Todos" },
   { key: "activo", label: "Activos" },
   { key: "resuelto", label: "Resueltos" },
-]
+];
 
 export default function AyudaPage() {
-  const { auth, saveItem, isSaved } = useAuth()
-  const isResident = auth.accountType === "resident"
-  const [activeCategory, setActiveCategory] = useState<AyudaCategory | "todos">("todos")
-  const [activeStatus, setActiveStatus] = useState<AyudaStatus | "todos">("todos")
-  const [showCreateForm, setShowCreateForm] = useState(false)
+  const { auth, saveItem, isSaved } = useAuth();
+  const isResident = auth.accountType === "resident";
+  const [activeCategory, setActiveCategory] = useState<AyudaCategory | "todos">(
+    "todos",
+  );
+  const [activeStatus, setActiveStatus] = useState<AyudaStatus | "todos">(
+    "todos",
+  );
+  const [showCreateForm, setShowCreateForm] = useState(false);
 
   const filtered = ayudaPosts.filter((post) => {
-    const matchesCategory = activeCategory === "todos" || post.category === activeCategory
-    const matchesStatus = activeStatus === "todos" || post.status === activeStatus
-    return matchesCategory && matchesStatus
-  })
+    const matchesCategory =
+      activeCategory === "todos" || post.category === activeCategory;
+    const matchesStatus =
+      activeStatus === "todos" || post.status === activeStatus;
+    return matchesCategory && matchesStatus;
+  });
 
   return (
     <div className="flex max-w-full flex-col gap-6">
@@ -234,9 +273,12 @@ export default function AyudaPage() {
             Ayuda comunitaria
           </div>
 
-          <h1 className="text-2xl font-bold text-foreground">Ayuda comunitaria</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            Ayuda comunitaria
+          </h1>
           <p className="text-sm text-muted-foreground">
-            Mascotas, objetos perdidos, colectas, búsquedas y avisos importantes de la zona.
+            Mascotas, objetos perdidos, colectas, búsquedas y avisos importantes
+            de la zona.
           </p>
         </div>
 
@@ -305,16 +347,22 @@ export default function AyudaPage() {
       {filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-rose-200 py-16 text-center">
           <Heart className="mb-3 h-10 w-10 text-rose-300" />
-          <p className="text-sm text-muted-foreground">No hay avisos en esta categoría</p>
+          <p className="text-sm text-muted-foreground">
+            No hay avisos en esta categoría
+          </p>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((post) => {
-            const cat = categoryConfig[post.category]
-            const CatIcon = cat.icon
-            const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VECINDO.`)}`
-            const saved = isSaved(post.title)
-            const communityInsights = getAyudaCommunityInsights(post.id, post.status, post.category)
+            const cat = categoryConfig[post.category];
+            const CatIcon = cat.icon;
+            const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VECINDO.`)}`;
+            const saved = isSaved(post.title, "ayuda", post.id);
+            const communityInsights = getAyudaCommunityInsights(
+              post.id,
+              post.status,
+              post.category,
+            );
 
             return (
               <div
@@ -356,7 +404,10 @@ export default function AyudaPage() {
 
                 <div className="flex flex-1 flex-col p-4">
                   <div className="flex items-start justify-between gap-2">
-                    <Link href={`/dashboard/ayuda/${post.id}`} className="block min-w-0 flex-1">
+                    <Link
+                      href={`/dashboard/ayuda/${post.id}`}
+                      className="block min-w-0 flex-1"
+                    >
                       <h3 className="line-clamp-2 font-semibold leading-snug text-foreground transition-colors hover:text-rose-700">
                         {post.title}
                       </h3>
@@ -368,17 +419,27 @@ export default function AyudaPage() {
                   </p>
 
                   <div className="mt-2 flex flex-wrap gap-1.5">
-                    <Badge variant="secondary" className={`px-1.5 py-0 text-[10px] ${cat.color}`}>
+                    <Badge
+                      variant="secondary"
+                      className={`px-1.5 py-0 text-[10px] ${cat.color}`}
+                    >
                       <CatIcon className="mr-1 h-2.5 w-2.5" />
                       {cat.label}
                     </Badge>
-                    <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
+                    <Badge
+                      variant="secondary"
+                      className="px-1.5 py-0 text-[10px]"
+                    >
                       <MapPin className="mr-1 h-2.5 w-2.5" />
                       {post.zone}
                     </Badge>
                   </div>
 
-                  <ActivityChips insights={communityInsights} limit={2} className="mt-2" />
+                  <ActivityChips
+                    insights={communityInsights}
+                    limit={2}
+                    className="mt-2"
+                  />
 
                   <div className="mt-3 flex gap-2 border-t border-border pt-3">
                     <Button
@@ -387,7 +448,11 @@ export default function AyudaPage() {
                       size="sm"
                       className="flex-1 gap-1.5 border-rose-200 text-rose-700 hover:bg-rose-50 hover:text-rose-700"
                     >
-                      <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                      <a
+                        href={whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <MessageSquare className="h-3.5 w-3.5" />
                         WhatsApp
                       </a>
@@ -396,18 +461,25 @@ export default function AyudaPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className={saved ? "text-rose-700" : "text-muted-foreground"}
+                      className={
+                        saved ? "text-rose-700" : "text-muted-foreground"
+                      }
                       onClick={() => {
                         if (!saved) {
                           saveItem({
                             type: "ayuda",
+                            targetId: post.id,
                             title: post.title,
                             subtitle: `${cat.label} · ${post.authorName}`,
-                          })
+                            href: `/dashboard/ayuda/${post.id}`,
+                            activity: "3 vecinos también lo siguen",
+                          });
                         }
                       }}
                     >
-                      <Bookmark className={`h-4 w-4 ${saved ? "fill-current" : ""}`} />
+                      <Bookmark
+                        className={`h-4 w-4 ${saved ? "fill-current" : ""}`}
+                      />
                     </Button>
                   </div>
 
@@ -418,7 +490,9 @@ export default function AyudaPage() {
                           {post.authorInitials}
                         </AvatarFallback>
                       </Avatar>
-                      <span className="text-xs text-muted-foreground">{post.authorName}</span>
+                      <span className="text-xs text-muted-foreground">
+                        {post.authorName}
+                      </span>
                     </div>
 
                     <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
@@ -428,12 +502,12 @@ export default function AyudaPage() {
                   </div>
                 </div>
               </div>
-            )
+            );
           })}
         </div>
       )}
 
       <CreateAyudaForm open={showCreateForm} onOpenChange={setShowCreateForm} />
     </div>
-  )
+  );
 }

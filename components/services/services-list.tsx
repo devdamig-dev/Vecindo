@@ -1,9 +1,13 @@
-import Link from "next/link"
-import { ActivityChips } from "@/components/activity/activity-chips"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Star, ShieldCheck, MapPin, Zap } from "lucide-react"
-import { getProfessionalCardInsights } from "@/lib/activity-insights"
+"use client";
+
+import Link from "next/link";
+import { ActivityChips } from "@/components/activity/activity-chips";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Bookmark, Star, ShieldCheck, MapPin, Users, Zap } from "lucide-react";
+import { getProfessionalCardInsights } from "@/lib/activity-insights";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth-context";
 
 export const professionals = [
   {
@@ -96,102 +100,168 @@ export const professionals = [
       "Plomero matriculado con mas de 10 anos de experiencia. Servicio de emergencia disponible 24/7.",
     tags: ["24/7", "Matriculado", "Emergencias"],
   },
-]
+];
 
 interface ServicesListProps {
-  professionals: typeof professionals
+  professionals: typeof professionals;
 }
 
 export function ServicesList({ professionals }: ServicesListProps) {
+  const { saveItem, isSaved } = useAuth();
+
   if (professionals.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-sky-200 bg-sky-50 p-8 text-center">
-        <h3 className="text-base font-semibold text-foreground">No encontramos resultados</h3>
+        <h3 className="text-base font-semibold text-foreground">
+          No encontramos resultados
+        </h3>
         <p className="mt-1 text-sm text-muted-foreground">
           Probá con otra categoría o cambiá el texto de búsqueda.
         </p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="flex flex-col gap-3">
-      {professionals.map((pro) => (
-        <Link
-          key={pro.id}
-          href={`/dashboard/services/${pro.id}`}
-          className="group flex flex-col gap-3 rounded-xl border border-border bg-card p-5 transition-all hover:border-sky-300 hover:shadow-sm sm:flex-row sm:items-start"
-        >
-          <Avatar className="h-14 w-14 shrink-0">
-            {pro.avatarUrl ? (
-              <img
-                src={pro.avatarUrl}
-                alt={pro.name}
-                className="h-full w-full rounded-full object-cover"
+      {professionals.map((pro) => {
+        const saved = isSaved(pro.name, "service", pro.id);
+
+        return (
+          <article
+            key={pro.id}
+            className="group flex flex-col gap-3 rounded-xl border border-border bg-card p-5 transition-all hover:border-sky-300 hover:shadow-sm sm:flex-row sm:items-start"
+          >
+            <Link href={`/dashboard/services/${pro.id}`} className="shrink-0">
+              <Avatar className="h-14 w-14">
+                {pro.avatarUrl ? (
+                  <img
+                    src={pro.avatarUrl}
+                    alt={pro.name}
+                    className="h-full w-full rounded-full object-cover"
+                  />
+                ) : (
+                  <AvatarFallback className="bg-sky-100 font-semibold text-sky-700">
+                    {pro.initials}
+                  </AvatarFallback>
+                )}
+              </Avatar>
+            </Link>
+
+            <Link
+              href={`/dashboard/services/${pro.id}`}
+              className="min-w-0 flex-1"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="font-semibold text-foreground">{pro.name}</h3>
+
+                {pro.verified && (
+                  <ShieldCheck className="h-4 w-4 text-sky-600" />
+                )}
+
+                {pro.isTop && (
+                  <Badge className="border-0 bg-yellow-500/10 text-[10px] text-yellow-700 hover:bg-yellow-500/10">
+                    Destacado
+                  </Badge>
+                )}
+
+                {pro.isFast && (
+                  <Badge className="border-0 bg-green-500/10 text-[10px] text-green-700 hover:bg-green-500/10">
+                    <Zap className="mr-1 h-3 w-3" />
+                    Respuesta rápida
+                  </Badge>
+                )}
+              </div>
+
+              <p className="text-sm text-muted-foreground">{pro.title}</p>
+
+              <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                {pro.description}
+              </p>
+
+              <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                <span>+{pro.jobs} trabajos</span>
+                <span>•</span>
+                <span>{pro.reviews} vecinos lo recomiendan</span>
+              </div>
+
+              <ActivityChips
+                insights={getProfessionalCardInsights(pro.id, pro.category)}
+                className="mt-2"
               />
-            ) : (
-              <AvatarFallback className="bg-sky-100 font-semibold text-sky-700">
-                {pro.initials}
-              </AvatarFallback>
-            )}
-          </Avatar>
 
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="font-semibold text-foreground">{pro.name}</h3>
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {pro.tags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="px-1.5 py-0 text-[10px]"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </Link>
 
-              {pro.verified && <ShieldCheck className="h-4 w-4 text-sky-600" />}
-
-              {pro.isTop && (
-                <Badge className="border-0 bg-yellow-500/10 text-[10px] text-yellow-700 hover:bg-yellow-500/10">
-                  Destacado
+            <div className="flex shrink-0 flex-col items-end gap-2 text-right">
+              <div className="flex items-center gap-1">
+                <Star className="h-4 w-4 fill-warning text-warning" />
+                <span className="text-sm font-bold text-foreground">
+                  {pro.rating}
+                </span>
+              </div>
+              <span className="text-xs text-muted-foreground">
+                {pro.reviews} resenas
+              </span>
+              <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+                <MapPin className="h-3 w-3" />
+                {pro.zone}
+              </div>
+              <div className="mt-1 flex flex-col items-end gap-1">
+                <Badge
+                  variant="outline"
+                  className="gap-1 border-sky-200 text-[10px] text-sky-700"
+                >
+                  <Users className="h-3 w-3" />
+                  Guardado por vecinos
                 </Badge>
-              )}
-
-              {pro.isFast && (
-                <Badge className="border-0 bg-green-500/10 text-[10px] text-green-700 hover:bg-green-500/10">
-                  <Zap className="mr-1 h-3 w-3" />
-                  Respuesta rápida
-                </Badge>
-              )}
+                {saved && (
+                  <Badge
+                    variant="outline"
+                    className="gap-1 border-emerald-200 text-[10px] text-emerald-700"
+                  >
+                    <Bookmark className="h-3 w-3" />
+                    Guardado
+                  </Badge>
+                )}
+              </div>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="mt-1 gap-1.5 border-sky-200 text-sky-700 hover:bg-sky-50 hover:text-sky-700"
+                onClick={() =>
+                  saveItem({
+                    type: "service",
+                    targetId: pro.id,
+                    title: pro.name,
+                    subtitle: `${pro.category} · ${pro.rating} estrellas`,
+                    href: `/dashboard/services/${pro.id}`,
+                    activity: pro.isFast
+                      ? "Respondió hace 15 min"
+                      : "Recomendado por vecinos",
+                  })
+                }
+              >
+                <Bookmark
+                  className={`h-3.5 w-3.5 ${saved ? "fill-current" : ""}`}
+                />
+                {saved ? "Guardado" : "Guardar"}
+              </Button>
             </div>
-
-            <p className="text-sm text-muted-foreground">{pro.title}</p>
-
-            <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
-              {pro.description}
-            </p>
-
-            <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
-              <span>+{pro.jobs} trabajos</span>
-              <span>•</span>
-              <span>{pro.reviews} vecinos lo recomiendan</span>
-            </div>
-
-            <ActivityChips insights={getProfessionalCardInsights(pro.id, pro.category)} className="mt-2" />
-
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {pro.tags.map((tag) => (
-                <Badge key={tag} variant="secondary" className="px-1.5 py-0 text-[10px]">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex shrink-0 flex-col items-end gap-1 text-right">
-            <div className="flex items-center gap-1">
-              <Star className="h-4 w-4 fill-warning text-warning" />
-              <span className="text-sm font-bold text-foreground">{pro.rating}</span>
-            </div>
-            <span className="text-xs text-muted-foreground">{pro.reviews} resenas</span>
-            <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-              <MapPin className="h-3 w-3" />
-              {pro.zone}
-            </div>
-          </div>
-        </Link>
-      ))}
+          </article>
+        );
+      })}
     </div>
-  )
+  );
 }

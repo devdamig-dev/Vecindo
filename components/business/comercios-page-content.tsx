@@ -1,54 +1,72 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useAuth } from "@/lib/auth-context"
-import { canAccessMyBusiness, canAccessServiceManagement, hasServiceProviderActivity, isResident } from "@/lib/commercial"
-import { ActivityChips } from "@/components/activity/activity-chips"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Package, Store, Sparkles, MapPin, MessageSquare, Lock } from "lucide-react"
-import ComerciosZoneMap from "@/components/business/comercios-zone-map"
-import type { CommerceItem } from "@/lib/commerces-data"
-import { getCommerceGrowthInsights, getCommerceProfileInsights } from "@/lib/activity-insights"
+import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
+import {
+  canAccessMyBusiness,
+  canAccessServiceManagement,
+  hasServiceProviderActivity,
+  isResident,
+} from "@/lib/commercial";
+import { ActivityChips } from "@/components/activity/activity-chips";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Bookmark,
+  Package,
+  Store,
+  Sparkles,
+  MapPin,
+  MessageSquare,
+  Lock,
+} from "lucide-react";
+import ComerciosZoneMap from "@/components/business/comercios-zone-map";
+import type { CommerceItem } from "@/lib/commerces-data";
+import {
+  getCommerceGrowthInsights,
+  getCommerceProfileInsights,
+} from "@/lib/activity-insights";
 
 type Props = {
-  activeTab: "comercios" | "emprendimientos"
-  filteredProfiles: CommerceItem[]
-}
+  activeTab: "comercios" | "emprendimientos";
+  filteredProfiles: CommerceItem[];
+};
 
 function getDescription(item: CommerceItem) {
   return (
     (item as any).shortDescription ||
     (item as any).description ||
     "Perfil comercial de la zona."
-  )
+  );
 }
 
 function getFirstBadge(item: CommerceItem) {
   if (Array.isArray((item as any).badges) && (item as any).badges.length > 0) {
-    return (item as any).badges[0]
+    return (item as any).badges[0];
   }
 
-  if ((item as any).tag) return (item as any).tag
-  if ((item as any).category) return (item as any).category
+  if ((item as any).tag) return (item as any).tag;
+  if ((item as any).category) return (item as any).category;
 
-  return null
+  return null;
 }
 
 function CommercialListCard({
   item,
   activeTab,
 }: {
-  item: CommerceItem
-  activeTab: "comercios" | "emprendimientos"
+  item: CommerceItem;
+  activeTab: "comercios" | "emprendimientos";
 }) {
   const detailHref =
     activeTab === "emprendimientos"
       ? `/dashboard/comercios/${item.id}?tipo=emprendimientos`
-      : `/dashboard/comercios/${item.id}`
+      : `/dashboard/comercios/${item.id}`;
 
-  const isCommerce = item.type === "commerce"
-  const firstBadge = getFirstBadge(item)
+  const { saveItem, isSaved } = useAuth();
+  const isCommerce = item.type === "commerce";
+  const firstBadge = getFirstBadge(item);
+  const saved = isSaved(item.name, "commerce", item.id);
 
   return (
     <article
@@ -60,10 +78,16 @@ function CommercialListCard({
     >
       <div
         className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl ${
-          isCommerce ? "bg-violet-100 text-violet-700" : "bg-violet-100 text-violet-700"
+          isCommerce
+            ? "bg-violet-100 text-violet-700"
+            : "bg-violet-100 text-violet-700"
         }`}
       >
-        {isCommerce ? <Store className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
+        {isCommerce ? (
+          <Store className="h-5 w-5" />
+        ) : (
+          <Sparkles className="h-5 w-5" />
+        )}
       </div>
 
       <div className="space-y-3">
@@ -96,6 +120,16 @@ function CommercialListCard({
               <MessageSquare className="h-3 w-3" />
               Pedido por WhatsApp
             </Badge>
+
+            {saved && (
+              <Badge
+                variant="outline"
+                className="gap-1 border-emerald-200 text-emerald-700"
+              >
+                <Bookmark className="h-3 w-3" />
+                Guardado
+              </Badge>
+            )}
           </div>
 
           <p className="line-clamp-2 text-sm text-slate-600">
@@ -105,29 +139,61 @@ function CommercialListCard({
 
         <div className="text-xs text-slate-500">
           {isCommerce ? (
-            <p>{(item as any).location || "Zona visible"} · Dirección visible</p>
+            <p>
+              {(item as any).location || "Zona visible"} · Dirección visible
+            </p>
           ) : (
-            <p>{(item as any).location || "Zona visible"} · Entregas coordinadas</p>
+            <p>
+              {(item as any).location || "Zona visible"} · Entregas coordinadas
+            </p>
           )}
         </div>
 
-        <ActivityChips insights={getCommerceProfileInsights(item.id)} limit={2} />
+        <ActivityChips
+          insights={getCommerceProfileInsights(item.id)}
+          limit={2}
+        />
 
-        <Button asChild variant="link" className="h-auto p-0 text-slate-950">
-          <Link href={detailHref}>Ver perfil y catálogo</Link>
-        </Button>
+        <div className="flex flex-wrap items-center gap-2">
+          <Button asChild variant="link" className="h-auto p-0 text-slate-950">
+            <Link href={detailHref}>Ver perfil y catálogo</Link>
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="gap-1.5 border-violet-200 text-violet-700 hover:bg-violet-50 hover:text-violet-700"
+            onClick={() =>
+              saveItem({
+                type: "commerce",
+                targetId: item.id,
+                title: item.name,
+                subtitle: `${item.category} · ${item.location}`,
+                href: detailHref,
+                activity:
+                  getCommerceProfileInsights(item.id)[0]?.label ??
+                  "Nuevo producto agregado",
+              })
+            }
+          >
+            <Bookmark
+              className={`h-3.5 w-3.5 ${saved ? "fill-current" : ""}`}
+            />
+            {saved ? "Guardado" : "Guardar"}
+          </Button>
+        </div>
       </div>
     </article>
-  )
+  );
 }
 
 export default function ComerciosPageContent({
   activeTab,
   filteredProfiles,
 }: Props) {
-  const { auth } = useAuth()
-  const showMyBusiness = canAccessMyBusiness(auth)
-  const isCommerceTab = activeTab === "comercios"
+  const { auth } = useAuth();
+  const showMyBusiness = canAccessMyBusiness(auth);
+  const isCommerceTab = activeTab === "comercios";
 
   return (
     <div className="space-y-6">
@@ -141,10 +207,16 @@ export default function ComerciosPageContent({
         <div className="flex items-start gap-3">
           <div
             className={`mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl ${
-              isCommerceTab ? "bg-violet-100 text-violet-700" : "bg-violet-100 text-violet-700"
+              isCommerceTab
+                ? "bg-violet-100 text-violet-700"
+                : "bg-violet-100 text-violet-700"
             }`}
           >
-            {isCommerceTab ? <MapPin className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
+            {isCommerceTab ? (
+              <MapPin className="h-4 w-4" />
+            ) : (
+              <Sparkles className="h-4 w-4" />
+            )}
           </div>
 
           <div className="space-y-3">
@@ -160,7 +232,10 @@ export default function ComerciosPageContent({
                 ? "Negocios, marcas y locales de la zona con catálogo activo, ubicación visible y pedido simple por WhatsApp."
                 : "Marcas y proyectos de vecinos con catálogo público, atención directa y pedidos coordinados sin necesidad de local físico."}
             </p>
-            <ActivityChips insights={getCommerceGrowthInsights("commercial-directory")} limit={3} />
+            <ActivityChips
+              insights={getCommerceGrowthInsights("commercial-directory")}
+              limit={3}
+            />
           </div>
         </div>
       </div>
@@ -182,7 +257,9 @@ export default function ComerciosPageContent({
                 : "/dashboard/comercios?tipo=emprendimientos"
             }
           >
-            {isCommerceTab ? "Ver todos los comercios" : "Ver todos los emprendimientos"}
+            {isCommerceTab
+              ? "Ver todos los comercios"
+              : "Ver todos los emprendimientos"}
           </Link>
         </Button>
       </div>
@@ -201,10 +278,16 @@ export default function ComerciosPageContent({
 
           {showMyBusiness ? (
             <div className="flex flex-col items-end gap-1">
-              <Button asChild className="shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-[1.01]">
+              <Button
+                asChild
+                className="shadow-[0_6px_20px_rgba(0,0,0,0.08)] transition-all duration-200 hover:scale-[1.01]"
+              >
                 <Link href="/dashboard/comercial">Ir a Mi negocio</Link>
               </Button>
-              <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"><Lock className="h-3 w-3" />Panel privado de tu cuenta</span>
+              <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                <Lock className="h-3 w-3" />
+                Panel privado de tu cuenta
+              </span>
             </div>
           ) : (
             <div className="flex flex-wrap gap-2">
@@ -222,5 +305,5 @@ export default function ComerciosPageContent({
         </div>
       </section>
     </div>
-  )
+  );
 }
