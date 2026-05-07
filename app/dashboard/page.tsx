@@ -11,6 +11,7 @@ import {
   ShoppingBag,
   Sparkles,
   Store,
+  TrendingUp,
   Wrench,
   type LucideIcon,
 } from "lucide-react"
@@ -22,7 +23,7 @@ import { SearchBar } from "@/components/dashboard/search-bar"
 import { SectionHeader } from "@/components/dashboard/section-header"
 import { ZoneUpdatesCarousel } from "@/components/zone-updates/zone-updates-carousel"
 import { useAuth } from "@/lib/auth-context"
-import { getHomeActivitySignals } from "@/lib/activity-insights"
+import { getHomeActivitySignals, getZonalActivitySignals } from "@/lib/activity-insights"
 import { getUserPrimaryRole, type UserPrimaryRole } from "@/lib/commercial"
 
 type HomeRole = UserPrimaryRole
@@ -148,6 +149,34 @@ function RoleNudgeCard({ role }: { role: HomeRole }) {
   )
 }
 
+function ZonalMovementStrip({ role }: { role: HomeRole }) {
+  const signals = getZonalActivitySignals(role)
+
+  return (
+    <section className="rounded-3xl border border-border/70 bg-card/95 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.04)]">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold text-foreground">Actividad zonal</p>
+          <p className="text-xs text-muted-foreground">Tendencias suaves del barrio, sin ruido ni métricas invasivas.</p>
+        </div>
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+          <TrendingUp className="h-4 w-4" />
+        </div>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-3">
+        {signals.map((signal) => (
+          <div key={`${signal.eyebrow}-${signal.label}`} className="rounded-2xl border border-border/60 bg-muted/20 p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">{signal.eyebrow}</p>
+            <ActivityChips insights={[signal]} className="mt-2" />
+            <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{signal.description}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 function ActivityPanel({ role }: { role: HomeRole }) {
   const isCommercial = role === "resident_business" || role === "external_business"
 
@@ -201,6 +230,7 @@ export default function DashboardPage() {
       </section>
 
       <section className="flex min-w-0 flex-col gap-6">
+        <ZonalMovementStrip role={role} />
         <ActivityPanel role={role} />
         <RecentAyudaWidget />
       </section>

@@ -1,8 +1,13 @@
-export type ActivityTone = "emerald" | "sky" | "violet" | "amber" | "slate"
+export type ActivityTone = "emerald" | "sky" | "violet" | "amber" | "rose" | "slate"
 
 export type ActivityInsight = {
   label: string
   tone?: ActivityTone
+}
+
+export type ZonalActivitySignal = ActivityInsight & {
+  eyebrow: string
+  description: string
 }
 
 function getSeed(input: string) {
@@ -21,18 +26,27 @@ function plural(value: number, singular: string, pluralLabel: string) {
   return `${value} ${value === 1 ? singular : pluralLabel}`
 }
 
-export function getMarketplaceActivityInsights(id: string): ActivityInsight[] {
+export function getMarketplaceActivityInsights(id: string, status = "Disponible"): ActivityInsight[] {
   const seed = getSeed(id)
   const hoursAgo = range(seed, 2, 9)
   const views = range(seed * 3, 12, 46)
   const interested = range(seed * 5, 2, 8)
   const saved = range(seed * 7, 1, 5)
+  const contextual = pick(
+    [
+      { label: "Retira hoy", tone: "emerald" as const },
+      { label: "Última rebaja", tone: "amber" as const },
+      { label: "Consultas abiertas", tone: "sky" as const },
+    ],
+    seed,
+  )
 
   return [
-    { label: `Publicado hace ${hoursAgo} hs`, tone: "slate" },
+    { label: status === "Reservado" ? "Reservado" : `Publicado hace ${hoursAgo} hs`, tone: status === "Reservado" ? "amber" : "slate" },
     { label: plural(views, "visualización", "visualizaciones"), tone: "emerald" },
     { label: `${interested} vecinos interesados`, tone: "emerald" },
     { label: `Guardado por ${saved} personas`, tone: "slate" },
+    contextual,
   ]
 }
 
@@ -52,11 +66,27 @@ export function getServiceDemandInsights(id = "service-profile"): ActivityInsigh
 export function getProfessionalCardInsights(id: string, category: string): ActivityInsight[] {
   const seed = getSeed(`${id}-${category}`)
   const inquiries = range(seed, 2, 5)
+  const recommended = range(seed * 2, 4, 9)
+  const response = range(seed * 4, 12, 28)
   const recency = pick(["Activo hoy", "Consultas recientes", "Disponible esta semana"], seed)
 
   return [
     { label: recency, tone: "sky" },
     { label: `${inquiries} consultas esta semana`, tone: "slate" },
+    { label: `${recommended} vecinos recomiendan este servicio`, tone: "emerald" },
+    { label: `Respuesta promedio: ${response} min`, tone: "sky" },
+  ]
+}
+
+export function getServiceTrustInsights(id: string): ActivityInsight[] {
+  const seed = getSeed(id)
+  const recommendations = range(seed * 3, 5, 12)
+  const response = range(seed * 5, 12, 22)
+
+  return [
+    { label: "Nivel de confianza alto", tone: "emerald" },
+    { label: `${recommendations} vecinos recomiendan este servicio`, tone: "emerald" },
+    { label: `Respuesta promedio: ${response} min`, tone: "sky" },
   ]
 }
 
@@ -71,6 +101,7 @@ export function getCommerceGrowthInsights(id = "my-business"): ActivityInsight[]
     { label: `${catalogOpens} personas abrieron tu catálogo`, tone: "violet" },
     { label: `${startedOrders} pedidos iniciados`, tone: "emerald" },
     { label: "Tu negocio apareció en Cerca tuyo", tone: "slate" },
+    { label: "Más visto en tu zona", tone: "amber" },
   ]
 }
 
@@ -78,10 +109,12 @@ export function getCommerceProfileInsights(id: string): ActivityInsight[] {
   const seed = getSeed(id)
   const views = range(seed * 4, 72, 148)
   const catalogOpens = range(seed * 5, 8, 24)
+  const startedOrders = range(seed * 6, 1, 4)
 
   return [
     { label: `${views} vistas esta semana`, tone: "violet" },
     { label: `${catalogOpens} abrieron catálogo`, tone: "slate" },
+    { label: `${startedOrders} pedidos iniciados`, tone: "emerald" },
     { label: "Aparece en Cerca tuyo", tone: "emerald" },
   ]
 }
@@ -90,10 +123,31 @@ export function getCommerceProductInsights(id: string): ActivityInsight[] {
   const seed = getSeed(id)
   const opens = range(seed * 2, 4, 15)
   const orders = range(seed * 3, 1, 3)
+  const context = pick(["Más visto en tu zona", "Retiro coordinado hoy", "Consulta reciente"], seed)
 
   return [
     { label: `${opens} vistas`, tone: "slate" },
     { label: `${orders} pedidos iniciados`, tone: "emerald" },
+    { label: context, tone: context.includes("Más") ? "amber" : "violet" },
+  ]
+}
+
+export function getAyudaCommunityInsights(id: string, status = "activo", category = "personal"): ActivityInsight[] {
+  const seed = getSeed(`${id}-${category}`)
+  const neighbors = range(seed * 2, 2, 7)
+  const shares = range(seed * 3, 3, 12)
+  const state = status === "resuelto"
+    ? category === "mascotas"
+      ? "Mascota encontrada"
+      : "Resuelto"
+    : category === "urgente"
+      ? "Urgente"
+      : "Vecinos colaborando"
+
+  return [
+    { label: state, tone: status === "resuelto" ? "emerald" : category === "urgente" ? "rose" : "amber" },
+    { label: `${neighbors} vecinos participando`, tone: "rose" },
+    { label: `${shares} difusiones en la zona`, tone: "slate" },
   ]
 }
 
@@ -104,7 +158,8 @@ export function getHomeActivitySignals(role: HomeActivityRole): ActivityInsight[
     resident: [
       { label: "Vecinos buscando electricistas", tone: "sky" },
       { label: "Productos más vistos esta semana", tone: "emerald" },
-      { label: "Nuevos comercios en tu zona", tone: "violet" },
+      { label: "Nuevo emprendimiento en Hudson", tone: "violet" },
+      { label: "3 comercios comenzaron promociones hoy", tone: "amber" },
       { label: "Servicios destacados cerca tuyo", tone: "sky" },
     ],
     service_provider: [
@@ -128,4 +183,29 @@ export function getHomeActivitySignals(role: HomeActivityRole): ActivityInsight[
   }
 
   return signals[role]
+}
+
+export function getZonalActivitySignals(role: HomeActivityRole): ZonalActivitySignal[] {
+  const common: ZonalActivitySignal[] = [
+    { eyebrow: "Tendencia", label: "Hogar y reparaciones", description: "Electricidad, plomería y jardinería concentraron más búsquedas locales.", tone: "sky" },
+    { eyebrow: "Búsqueda frecuente", label: "Mesa, bici y herramientas", description: "Productos usados con retiro simple se están moviendo mejor esta semana.", tone: "emerald" },
+    { eyebrow: "Nuevo cerca", label: "Emprendimiento en Hudson", description: "Un catálogo de pastelería se sumó a la zona con pedidos coordinados.", tone: "violet" },
+  ]
+
+  if (role === "service_provider") {
+    return [
+      { eyebrow: "Demanda", label: "Consultas de mantenimiento", description: "Vecinos y comercios están buscando respuestas rápidas para arreglos chicos.", tone: "sky" },
+      ...common.slice(1),
+    ]
+  }
+
+  if (role === "resident_business" || role === "external_business") {
+    return [
+      { eyebrow: "Visibilidad", label: "Catálogos con movimiento", description: "Productos con foto clara y retiro simple reciben más aperturas locales.", tone: "violet" },
+      { eyebrow: "Cerca tuyo", label: "Comercios recomendados", description: "Los perfiles activos aparecen mejor en recorridos barriales.", tone: "emerald" },
+      common[0],
+    ]
+  }
+
+  return common
 }

@@ -3,10 +3,12 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useParams } from "next/navigation"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/lib/auth-context"
+import { getAyudaCommunityInsights } from "@/lib/activity-insights"
 import { ayudaPosts, type AyudaCategory } from "../page"
 import {
   ArrowLeft,
@@ -55,6 +57,7 @@ export default function AyudaDetailPage() {
   }
 
   const cat = categoryConfig[post.category]
+  const communityInsights = getAyudaCommunityInsights(post.id, post.status, post.category)
   const CatIcon = cat.icon
   const saved = isSaved(post.title)
   const isAuthor = isResident && post.authorId === "resident1" // Demo: first resident is the author
@@ -159,6 +162,8 @@ export default function AyudaDetailPage() {
 
         <h1 className="text-2xl font-bold text-foreground">{post.title}</h1>
 
+        <ActivityChips insights={communityInsights} className="mt-1" />
+
         <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Avatar className="h-6 w-6">
@@ -174,6 +179,12 @@ export default function AyudaDetailPage() {
             {post.postedAt}
           </span>
         </div>
+      </div>
+
+      <div className="rounded-xl border border-rose-100 bg-rose-50/50 p-4">
+        <p className="text-sm font-medium text-foreground">Movimiento del aviso</p>
+        <p className="mt-1 text-xs text-muted-foreground">Participación visible para que la ayuda se sienta acompañada y humana.</p>
+        <ActivityChips insights={communityInsights} className="mt-3" />
       </div>
 
       {/* Description */}

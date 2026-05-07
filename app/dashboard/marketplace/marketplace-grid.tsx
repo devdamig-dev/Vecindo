@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { ActivityChips } from "@/components/activity/activity-chips"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import {
   MapPin,
@@ -10,6 +11,7 @@ import {
   ShieldCheck,
   Bookmark,
 } from "lucide-react"
+import { getMarketplaceActivityInsights } from "@/lib/activity-insights"
 
 export const listings = [
   {
@@ -215,6 +217,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
 
         const detailHref = `/dashboard/marketplace/${listing.id}`
         const isSold = listing.status.toLowerCase() === "vendido"
+        const activityInsights = getMarketplaceActivityInsights(listing.id, listing.status)
 
         return (
           <article
@@ -274,7 +277,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock className="h-3.5 w-3.5" />
-                      {listing.posted}
+                      {activityInsights[0].label.replace("Publicado ", "")}
                     </span>
                   </div>
                 </div>
@@ -283,6 +286,8 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
               <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-muted-foreground">
                 {listing.description}
               </p>
+
+              <ActivityChips insights={activityInsights.slice(1)} limit={2} className="mt-3" />
 
               <div className="mt-4 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2">
                 <div className="flex items-center justify-between gap-2">

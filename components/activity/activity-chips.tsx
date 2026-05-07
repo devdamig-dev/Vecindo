@@ -7,6 +7,7 @@ const toneClasses: Record<ActivityTone, string> = {
   sky: "border-sky-200 bg-sky-50 text-sky-700",
   violet: "border-violet-200 bg-violet-50 text-violet-700",
   amber: "border-amber-200 bg-amber-50 text-amber-700",
+  rose: "border-rose-200 bg-rose-50 text-rose-700",
   slate: "border-border bg-muted/40 text-muted-foreground",
 }
 
