@@ -1,8 +1,10 @@
-import Link from "next/link"
-import { ActivityChips } from "@/components/activity/activity-chips"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+"use client";
+
+import Link from "next/link";
+import { ActivityChips } from "@/components/activity/activity-chips";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   MapPin,
   Clock,
@@ -10,29 +12,30 @@ import {
   Eye,
   ShieldCheck,
   Bookmark,
-} from "lucide-react"
-import { getMarketplaceActivityInsights } from "@/lib/activity-insights"
+} from "lucide-react";
+import { getMarketplaceActivityInsights } from "@/lib/activity-insights";
+import { useAuth } from "@/lib/auth-context";
 
-export type ListingStatus = "Disponible" | "Reservado" | "Vendido"
+export type ListingStatus = "Disponible" | "Reservado" | "Vendido";
 
 export type Listing = {
-  id: string
-  title: string
-  price: string
-  priceNum: number
-  category: string
-  condition: string
-  status: ListingStatus
-  seller: string
-  sellerId: string
-  initials: string
-  whatsapp: string
-  zone: string
-  posted: string
-  description: string
-  fullDescription: string
-  images: string[]
-}
+  id: string;
+  title: string;
+  price: string;
+  priceNum: number;
+  category: string;
+  condition: string;
+  status: ListingStatus;
+  seller: string;
+  sellerId: string;
+  initials: string;
+  whatsapp: string;
+  zone: string;
+  posted: string;
+  description: string;
+  fullDescription: string;
+  images: string[];
+};
 
 export const listings: Listing[] = [
   {
@@ -49,7 +52,8 @@ export const listings: Listing[] = [
     whatsapp: "+5411234567891",
     zone: "Hudson",
     posted: "hace 2 hrs",
-    description: "Parrilla a gas de 3 quemadores, casi sin uso. Incluye funda y set de utensilios.",
+    description:
+      "Parrilla a gas de 3 quemadores, casi sin uso. Incluye funda y set de utensilios.",
     fullDescription:
       "Parrilla Weber Genesis de 3 quemadores a gas. Comprada hace 1 año, usada solo 5 veces. Estado impecable, funciona perfectamente. Incluye funda original Weber, set de 4 utensilios de acero inoxidable y 2 garrafas vacías. Motivo de venta: nos mudamos a departamento. Se retira por Hudson, cerca de la rotonda.",
     images: [
@@ -96,7 +100,8 @@ export const listings: Listing[] = [
     whatsapp: "+5411456789012",
     zone: "Hudson",
     posted: "hace 1 día",
-    description: "Hamaca de madera, 2 columpios y un tobogán. Se retira, requiere desarme parcial.",
+    description:
+      "Hamaca de madera, 2 columpios y un tobogán. Se retira, requiere desarme parcial.",
     fullDescription:
       "Juego de plaza de madera tratada para exterior. Incluye estructura con 2 columpios y tobogán de 2 metros. Capacidad para niños de 3 a 10 años. Muy resistente, estuvo 3 años en nuestro jardín. Se desarma fácil con herramientas comunes. Ideal para quintas o jardines grandes.",
     images: [
@@ -119,7 +124,8 @@ export const listings: Listing[] = [
     whatsapp: "+5411567890123",
     zone: "Hudson",
     posted: "hace 1 día",
-    description: 'Modelo 2024, soporte de pared incluido. Cambiamos a 75" así que vendemos este.',
+    description:
+      'Modelo 2024, soporte de pared incluido. Cambiamos a 75" así que vendemos este.',
     fullDescription:
       "Samsung Crystal UHD 55 pulgadas, modelo 2024. Resolución 4K, Smart TV con todas las apps (Netflix, Disney+, etc). Control remoto original y soporte de pared incluidos. Funciona perfecto, sin rayas ni manchas. Lo vendemos porque compramos uno de 75 pulgadas para el living.",
     images: [
@@ -142,7 +148,8 @@ export const listings: Listing[] = [
     whatsapp: "+5411345678902",
     zone: "Hudson",
     posted: "hace 2 días",
-    description: "Cuero italiano, forma de L. Para 6 personas. Desgaste menor en un apoyabrazos.",
+    description:
+      "Cuero italiano, forma de L. Para 6 personas. Desgaste menor en un apoyabrazos.",
     fullDescription:
       "Sofá seccional de cuero italiano color marrón oscuro. Forma de L, 3 cuerpos + chaise longue. Capacidad 6 personas cómodamente. Tiene un pequeño desgaste en un apoyabrazos (se muestra en fotos). Muy cómodo y resistente. Se retira desarmado.",
     images: [
@@ -166,7 +173,8 @@ export const listings: Listing[] = [
     whatsapp: "+5411789012345",
     zone: "Hudson",
     posted: "hace 3 días",
-    description: "Pala, rastrillo, tijera de podar, guantes de jardinería. Todo en buen estado.",
+    description:
+      "Pala, rastrillo, tijera de podar, guantes de jardinería. Todo en buen estado.",
     fullDescription:
       "Set completo de herramientas de jardinería: pala de punta, rastrillo de metal, tijera de podar profesional Tramontina, guantes de cuero y bolsa de transporte. Todo en buen estado, con algo de uso pero funcional. Ideal para quien está armando su primer kit de jardín.",
     images: [
@@ -175,68 +183,76 @@ export const listings: Listing[] = [
       "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=500&h=400&fit=crop",
     ],
   },
-]
+];
 
 interface MarketplaceGridProps {
-  listings: Listing[]
+  listings: Listing[];
 }
 
 function getConditionBadgeClass(condition: string) {
-  const normalized = condition.toLowerCase()
+  const normalized = condition.toLowerCase();
 
   if (normalized.includes("como nueva")) {
-    return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+    return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100";
   }
 
   if (normalized.includes("excelente")) {
-    return "bg-sky-100 text-sky-700 hover:bg-sky-100"
+    return "bg-sky-100 text-sky-700 hover:bg-sky-100";
   }
 
   if (normalized.includes("bueno")) {
-    return "bg-amber-100 text-amber-700 hover:bg-amber-100"
+    return "bg-amber-100 text-amber-700 hover:bg-amber-100";
   }
 
-  return "bg-muted text-muted-foreground hover:bg-muted"
+  return "bg-muted text-muted-foreground hover:bg-muted";
 }
 
 function getStatusBadgeClass(status: ListingStatus) {
   if (status === "Disponible") {
-    return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+    return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100";
   }
 
   if (status === "Reservado") {
-    return "bg-amber-100 text-amber-700 hover:bg-amber-100"
+    return "bg-amber-100 text-amber-700 hover:bg-amber-100";
   }
 
   if (status === "Vendido") {
-    return "bg-muted text-muted-foreground hover:bg-muted"
+    return "bg-muted text-muted-foreground hover:bg-muted";
   }
 
-  return "bg-muted text-muted-foreground hover:bg-muted"
+  return "bg-muted text-muted-foreground hover:bg-muted";
 }
 
 export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
+  const { saveItem, isSaved } = useAuth();
+
   if (listings.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-emerald-200 bg-emerald-50 p-8 text-center">
-        <h3 className="text-base font-semibold text-foreground">No encontramos publicaciones</h3>
+        <h3 className="text-base font-semibold text-foreground">
+          No encontramos publicaciones
+        </h3>
         <p className="mt-1 text-sm text-muted-foreground">
           Probá con otra categoría o cambiá el texto de búsqueda.
         </p>
       </div>
-    )
+    );
   }
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {listings.map((listing) => {
         const whatsappUrl = `https://wa.me/${listing.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-          `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VEZI.`
-        )}`
+          `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VEZI.`,
+        )}`;
 
-        const detailHref = `/dashboard/marketplace/${listing.id}`
-        const isSold = listing.status === "Vendido"
-        const activityInsights = getMarketplaceActivityInsights(listing.id, listing.status)
+        const detailHref = `/dashboard/marketplace/${listing.id}`;
+        const isSold = listing.status === "Vendido";
+        const activityInsights = getMarketplaceActivityInsights(
+          listing.id,
+          listing.status,
+        );
+        const saved = isSaved(listing.title, "marketplace_item", listing.id);
 
         return (
           <article
@@ -275,7 +291,9 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                 </div>
 
                 <div className="absolute bottom-3 left-3 rounded-xl bg-background/95 px-3 py-2 shadow-sm">
-                  <p className="text-lg font-bold leading-none text-foreground">{listing.price}</p>
+                  <p className="text-lg font-bold leading-none text-foreground">
+                    {listing.price}
+                  </p>
                 </div>
               </div>
             </Link>
@@ -300,7 +318,27 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                     </span>
                   </div>
 
-                  <ActivityChips insights={activityInsights.slice(1)} limit={2} className="mt-2" />
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <ActivityChips
+                      insights={activityInsights.slice(1)}
+                      limit={2}
+                    />
+                    <Badge
+                      variant="outline"
+                      className="border-emerald-200 text-[10px] text-emerald-700"
+                    >
+                      Guardado por 3 personas
+                    </Badge>
+                    {saved && (
+                      <Badge
+                        variant="outline"
+                        className="gap-1 border-emerald-200 text-[10px] text-emerald-700"
+                      >
+                        <Bookmark className="h-3 w-3" />
+                        Guardado
+                      </Badge>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -318,7 +356,9 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                     </Avatar>
 
                     <div className="min-w-0">
-                      <p className="truncate text-xs font-medium text-foreground">{listing.seller}</p>
+                      <p className="truncate text-xs font-medium text-foreground">
+                        {listing.seller}
+                      </p>
                       <div className="flex items-center gap-1 text-[11px] text-emerald-700">
                         <ShieldCheck className="h-3 w-3" />
                         Vecino de la zona
@@ -343,27 +383,52 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                   disabled={isSold}
                   className="flex-1 gap-2 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50"
                 >
-                  <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <MessageSquare className="h-3.5 w-3.5" />
                     {isSold ? "No disponible" : "Consultar"}
                   </a>
                 </Button>
 
                 <Button
-                  asChild
+                  type="button"
                   variant="outline"
                   size="sm"
-                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-700"
+                  className="gap-1.5 border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-700"
+                  onClick={() =>
+                    saveItem({
+                      type: "marketplace_item",
+                      targetId: listing.id,
+                      title: listing.title,
+                      subtitle: `${listing.price} · ${listing.seller}`,
+                      href: detailHref,
+                      activity:
+                        listing.status === "Reservado"
+                          ? "Volvió a tener consultas"
+                          : "5 vecinos interesados",
+                    })
+                  }
+                  aria-label={
+                    saved
+                      ? `Publicación ${listing.title} guardada`
+                      : `Guardar ${listing.title}`
+                  }
                 >
-                  <Link href={detailHref}>
-                    <Bookmark className="h-3.5 w-3.5" />
-                  </Link>
+                  <Bookmark
+                    className={`h-3.5 w-3.5 ${saved ? "fill-current" : ""}`}
+                  />
+                  <span className="sr-only sm:not-sr-only">
+                    {saved ? "Guardado" : "Guardar"}
+                  </span>
                 </Button>
               </div>
             </div>
           </article>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { useParams } from "next/navigation"
-import { ActivityChips } from "@/components/activity/activity-chips"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { useAuth } from "@/lib/auth-context"
-import { getAyudaCommunityInsights } from "@/lib/activity-insights"
-import { ayudaPosts, type AyudaCategory } from "../page"
+import { useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { ActivityChips } from "@/components/activity/activity-chips";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth-context";
+import { getAyudaCommunityInsights } from "@/lib/activity-insights";
+import { ayudaPosts, type AyudaCategory } from "../page";
 import {
   ArrowLeft,
   ChevronLeft,
@@ -25,61 +25,95 @@ import {
   Key,
   Users,
   AlertTriangle,
-} from "lucide-react"
+} from "lucide-react";
 
-const categoryConfig: Record<AyudaCategory, { label: string; icon: typeof PawPrint; color: string }> = {
-  mascotas: { label: "Mascotas", icon: PawPrint, color: "bg-amber-500/10 text-amber-600" },
-  donaciones: { label: "Donaciones", icon: Gift, color: "bg-pink-500/10 text-pink-600" },
-  objetos: { label: "Objetos perdidos", icon: Key, color: "bg-blue-500/10 text-blue-600" },
-  personal: { label: "Personal", icon: Users, color: "bg-green-500/10 text-green-600" },
-  urgente: { label: "Urgente", icon: AlertTriangle, color: "bg-destructive/10 text-destructive" },
-}
+const categoryConfig: Record<
+  AyudaCategory,
+  { label: string; icon: typeof PawPrint; color: string }
+> = {
+  mascotas: {
+    label: "Mascotas",
+    icon: PawPrint,
+    color: "bg-amber-500/10 text-amber-600",
+  },
+  donaciones: {
+    label: "Donaciones",
+    icon: Gift,
+    color: "bg-pink-500/10 text-pink-600",
+  },
+  objetos: {
+    label: "Objetos perdidos",
+    icon: Key,
+    color: "bg-blue-500/10 text-blue-600",
+  },
+  personal: {
+    label: "Personal",
+    icon: Users,
+    color: "bg-green-500/10 text-green-600",
+  },
+  urgente: {
+    label: "Urgente",
+    icon: AlertTriangle,
+    color: "bg-destructive/10 text-destructive",
+  },
+};
 
 export default function AyudaDetailPage() {
-  const { id } = useParams<{ id: string }>()
-  const post = ayudaPosts.find((p) => p.id === id)
-  const [currentImage, setCurrentImage] = useState(0)
-  const { auth, saveItem, isSaved } = useAuth()
-  const isResident = auth.accountType === "resident"
+  const { id } = useParams<{ id: string }>();
+  const post = ayudaPosts.find((p) => p.id === id);
+  const [currentImage, setCurrentImage] = useState(0);
+  const { auth, saveItem, isSaved } = useAuth();
+  const isResident = auth.accountType === "resident";
 
   if (!post) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4 text-center max-w-md mx-auto">
-        <h1 className="text-xl font-bold text-foreground mb-2">Aviso no encontrado</h1>
+        <h1 className="text-xl font-bold text-foreground mb-2">
+          Aviso no encontrado
+        </h1>
         <p className="text-sm text-muted-foreground mb-6">
           El aviso que buscas no existe o fue eliminado.
         </p>
-        <Link href="/dashboard/ayuda" className="text-sm text-primary hover:underline">
+        <Link
+          href="/dashboard/ayuda"
+          className="text-sm text-primary hover:underline"
+        >
           Volver a Ayuda
         </Link>
       </div>
-    )
+    );
   }
 
-  const cat = categoryConfig[post.category]
-  const communityInsights = getAyudaCommunityInsights(post.id, post.status, post.category)
-  const CatIcon = cat.icon
-  const saved = isSaved(post.title)
-  const isAuthor = isResident && post.authorId === "resident1" // Demo: first resident is the author
+  const cat = categoryConfig[post.category];
+  const communityInsights = getAyudaCommunityInsights(
+    post.id,
+    post.status,
+    post.category,
+  );
+  const CatIcon = cat.icon;
+  const saved = isSaved(post.title, "ayuda", post.id);
+  const isAuthor = isResident && post.authorId === "resident1"; // Demo: first resident is the author
 
-  const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VECINDO.`)}`
+  const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VECINDO.`)}`;
 
   // Related posts (same category, excluding current)
   const relatedPosts = ayudaPosts
     .filter((p) => p.category === post.category && p.id !== post.id)
-    .slice(0, 3)
+    .slice(0, 3);
 
   const nextImage = () => {
     if (post.images.length > 0) {
-      setCurrentImage((prev) => (prev + 1) % post.images.length)
+      setCurrentImage((prev) => (prev + 1) % post.images.length);
     }
-  }
+  };
 
   const prevImage = () => {
     if (post.images.length > 0) {
-      setCurrentImage((prev) => (prev - 1 + post.images.length) % post.images.length)
+      setCurrentImage(
+        (prev) => (prev - 1 + post.images.length) % post.images.length,
+      );
     }
-  }
+  };
 
   return (
     <div className="flex flex-col gap-6 max-w-3xl mx-auto">
@@ -182,14 +216,20 @@ export default function AyudaDetailPage() {
       </div>
 
       <div className="rounded-xl border border-rose-100 bg-rose-50/50 p-4">
-        <p className="text-sm font-medium text-foreground">Movimiento del aviso</p>
-        <p className="mt-1 text-xs text-muted-foreground">Participación visible para que la ayuda se sienta acompañada y humana.</p>
+        <p className="text-sm font-medium text-foreground">
+          Movimiento del aviso
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Participación visible para que la ayuda se sienta acompañada y humana.
+        </p>
         <ActivityChips insights={communityInsights} className="mt-3" />
       </div>
 
       {/* Description */}
       <div className="rounded-xl border border-border bg-card p-5">
-        <h2 className="font-semibold text-foreground mb-2">{"Descripci\u00f3n"}</h2>
+        <h2 className="font-semibold text-foreground mb-2">
+          {"Descripci\u00f3n"}
+        </h2>
         <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-line">
           {post.fullDescription}
         </p>
@@ -212,9 +252,12 @@ export default function AyudaDetailPage() {
               if (!saved) {
                 saveItem({
                   type: "ayuda",
+                  targetId: post.id,
                   title: post.title,
                   subtitle: `${cat.label} · ${post.authorName}`,
-                })
+                  href: `/dashboard/ayuda/${post.id}`,
+                  activity: "3 vecinos también lo siguen",
+                });
               }
             }}
           >
@@ -230,10 +273,18 @@ export default function AyudaDetailPage() {
       {isAuthor && post.status === "activo" && (
         <div className="rounded-xl border border-success/20 bg-success/5 p-4 flex items-center justify-between gap-4">
           <div>
-            <p className="text-sm font-medium text-foreground">{"\u00bfSe resolvi\u00f3 el aviso?"}</p>
-            <p className="text-xs text-muted-foreground">{"Marc\u00e1lo como resuelto para que otros sepan."}</p>
+            <p className="text-sm font-medium text-foreground">
+              {"\u00bfSe resolvi\u00f3 el aviso?"}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {"Marc\u00e1lo como resuelto para que otros sepan."}
+            </p>
           </div>
-          <Button variant="outline" size="sm" className="border-success/30 text-success hover:bg-success/5 gap-1.5">
+          <Button
+            variant="outline"
+            size="sm"
+            className="border-success/30 text-success hover:bg-success/5 gap-1.5"
+          >
             <CheckCircle2 className="h-4 w-4" />
             Marcar como resuelto
           </Button>
@@ -243,11 +294,13 @@ export default function AyudaDetailPage() {
       {/* Related posts */}
       {relatedPosts.length > 0 && (
         <div className="border-t border-border pt-6">
-          <h2 className="font-semibold text-foreground mb-4">{"M\u00e1s avisos similares"}</h2>
+          <h2 className="font-semibold text-foreground mb-4">
+            {"M\u00e1s avisos similares"}
+          </h2>
           <div className="grid gap-3 sm:grid-cols-3">
             {relatedPosts.map((related) => {
-              const relCat = categoryConfig[related.category]
-              const RelIcon = relCat.icon
+              const relCat = categoryConfig[related.category];
+              const RelIcon = relCat.icon;
               return (
                 <Link
                   key={related.id}
@@ -271,13 +324,15 @@ export default function AyudaDetailPage() {
                   <h3 className="text-sm font-medium text-foreground line-clamp-2 group-hover:text-primary transition-colors">
                     {related.title}
                   </h3>
-                  <p className="text-[10px] text-muted-foreground mt-1">{related.postedAt}</p>
+                  <p className="text-[10px] text-muted-foreground mt-1">
+                    {related.postedAt}
+                  </p>
                 </Link>
-              )
+              );
             })}
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

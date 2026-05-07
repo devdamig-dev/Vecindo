@@ -1,100 +1,112 @@
-"use client"
+"use client";
 
-import { createContext, useContext, useState, type ReactNode } from "react"
+import { createContext, useContext, useState, type ReactNode } from "react";
 
-export type AccountType = "resident" | "external_professional" | "external_business"
+export type AccountType =
+  | "resident"
+  | "external_professional"
+  | "external_business";
 
 export interface UserCapabilities {
-  canOfferServices: boolean
-  canSell: boolean
-  canPostPets: boolean
-  canPostZoneUpdates: boolean
-  canAccessMarketplace: boolean
-  canAccessPets: boolean
-  canPublishQuestions: boolean
+  canOfferServices: boolean;
+  canSell: boolean;
+  canPostPets: boolean;
+  canPostZoneUpdates: boolean;
+  canAccessMarketplace: boolean;
+  canAccessPets: boolean;
+  canPublishQuestions: boolean;
 }
 
 export interface UserProfile {
-  name: string
-  email: string
-  whatsapp: string
-  avatarInitials: string
-  avatarUrl?: string
-  bio: string
-  zone: string
-  neighborhood: string
-  memberSince: string
+  name: string;
+  email: string;
+  whatsapp: string;
+  avatarInitials: string;
+  avatarUrl?: string;
+  bio: string;
+  zone: string;
+  neighborhood: string;
+  memberSince: string;
 }
 
 export interface ProfessionalProfileData {
-  category: string
-  subcategories: string[]
-  description: string
-  matricula: string
-  serviceArea: string
-  galleryCount: number
+  category: string;
+  subcategories: string[];
+  description: string;
+  matricula: string;
+  serviceArea: string;
+  galleryCount: number;
 }
 
 export interface BusinessProfileData {
-  businessName: string
-  description: string
-  whatsapp: string
-  bannerImage: string
-  products: BusinessProduct[]
+  businessName: string;
+  description: string;
+  whatsapp: string;
+  bannerImage: string;
+  products: BusinessProduct[];
 }
 
 export interface BusinessProduct {
-  id: string
-  title: string
-  price: string
-  description: string
-  image: string
+  id: string;
+  title: string;
+  price: string;
+  description: string;
+  image: string;
 }
 
 export interface CommercialActivity {
-  marketplaceListingsCount: number
-  serviceListingsCount: number
-  hasEntrepreneurProfile: boolean
-  hasBusinessProfile: boolean
+  marketplaceListingsCount: number;
+  serviceListingsCount: number;
+  hasEntrepreneurProfile: boolean;
+  hasBusinessProfile: boolean;
 }
 
-export type SavedItemType = "service" | "marketplace" | "zone_update" | "commerce" | "ayuda"
+export type SavedItemType =
+  | "commerce"
+  | "product"
+  | "service"
+  | "marketplace_item"
+  | "zone_update"
+  | "ayuda";
 
 export interface SavedItem {
-  id: string
-  type: SavedItemType
-  title: string
-  subtitle: string
-  savedAt: string
+  id: string;
+  type: SavedItemType;
+  title: string;
+  subtitle: string;
+  savedAt: string;
+  targetId?: string;
+  href?: string;
+  activity?: string;
 }
 
 export interface AuthState {
-  accountType: AccountType
-  capabilities: UserCapabilities
-  profile: UserProfile
-  professionalProfile: ProfessionalProfileData | null
-  businessProfile: BusinessProfileData | null
-  savedItems: SavedItem[]
-  hasCommerceProfile: boolean
-  managesCommerceIds: string[]
-  commercialActivity: CommercialActivity
+  accountType: AccountType;
+  capabilities: UserCapabilities;
+  profile: UserProfile;
+  professionalProfile: ProfessionalProfileData | null;
+  businessProfile: BusinessProfileData | null;
+  savedItems: SavedItem[];
+  hasCommerceProfile: boolean;
+  managesCommerceIds: string[];
+  commercialActivity: CommercialActivity;
 }
 
 interface AuthContextType {
-  auth: AuthState
-  setAccountType: (type: AccountType) => void
-  setDemoPersona: (persona: DemoPersona) => void
-  setCapability: (key: keyof UserCapabilities, value: boolean) => void
-  updateProfile: (profile: Partial<UserProfile>) => void
-  updateProfessionalProfile: (data: Partial<ProfessionalProfileData>) => void
-  updateBusinessProfile: (data: Partial<BusinessProfileData>) => void
-  updateCommercialActivity: (data: Partial<CommercialActivity>) => void
-  addProduct: (product: Omit<BusinessProduct, "id">) => void
-  removeProduct: (id: string) => void
-  updateProduct: (id: string, data: Partial<BusinessProduct>) => void
-  saveItem: (item: Omit<SavedItem, "id" | "savedAt">) => void
-  removeSavedItem: (id: string) => void
-  isSaved: (title: string) => boolean
+  auth: AuthState;
+  setAccountType: (type: AccountType) => void;
+  setDemoPersona: (persona: DemoPersona) => void;
+  setCapability: (key: keyof UserCapabilities, value: boolean) => void;
+  updateProfile: (profile: Partial<UserProfile>) => void;
+  updateProfessionalProfile: (data: Partial<ProfessionalProfileData>) => void;
+  updateBusinessProfile: (data: Partial<BusinessProfileData>) => void;
+  updateCommercialActivity: (data: Partial<CommercialActivity>) => void;
+  addProduct: (product: Omit<BusinessProduct, "id">) => void;
+  removeProduct: (id: string) => void;
+  updateProduct: (id: string, data: Partial<BusinessProduct>) => void;
+  saveItem: (item: Omit<SavedItem, "id" | "savedAt">) => void;
+  removeSavedItem: (id: string) => void;
+  isSaved: (title: string, type?: SavedItemType, targetId?: string) => boolean;
 }
 
 const defaultResident: AuthState = {
@@ -145,9 +157,46 @@ const defaultResident: AuthState = {
     ],
   },
   savedItems: [
-    { id: "s1", type: "service", title: "Pinturas Express", subtitle: "Pintura · 4.9 estrellas", savedAt: "hace 2 días" },
-    { id: "s2", type: "marketplace", title: "Bicicleta Trek Marlin 7", subtitle: "$450.000 · Diego P.", savedAt: "hace 3 días" },
-    { id: "s3", type: "commerce", title: "Almacén Don Carlos", subtitle: "Almacén · Hudson", savedAt: "hace 1 semana" },
+    {
+      id: "s1",
+      type: "service",
+      targetId: "2",
+      title: "Pinturas Express",
+      subtitle: "Pintura · 4.9 estrellas",
+      savedAt: "hace 2 días",
+      href: "/dashboard/services/2",
+      activity: "Respondió hace 15 min",
+    },
+    {
+      id: "s2",
+      type: "marketplace_item",
+      targetId: "2",
+      title: "Bicicleta Trek Marlin 7",
+      subtitle: "$450.000 · Diego P.",
+      savedAt: "hace 3 días",
+      href: "/dashboard/marketplace/2",
+      activity: "5 vecinos interesados",
+    },
+    {
+      id: "s3",
+      type: "commerce",
+      targetId: "1",
+      title: "Almacén Don Carlos",
+      subtitle: "Almacén · Hudson",
+      savedAt: "hace 1 semana",
+      href: "/dashboard/comercios/1",
+      activity: "Nuevo producto agregado",
+    },
+    {
+      id: "s4",
+      type: "product",
+      targetId: "1-p1",
+      title: "Mesa de comedor",
+      subtitle: "Mikage Deco · $420.000",
+      savedAt: "hace 4 días",
+      href: "/dashboard/comercios/1",
+      activity: "Tiene promoción activa",
+    },
   ],
   hasCommerceProfile: true,
   managesCommerceIds: ["1"],
@@ -157,7 +206,7 @@ const defaultResident: AuthState = {
     hasEntrepreneurProfile: true,
     hasBusinessProfile: false,
   },
-}
+};
 
 const defaultExternal: AuthState = {
   accountType: "external_professional",
@@ -200,62 +249,136 @@ const defaultExternal: AuthState = {
     hasEntrepreneurProfile: false,
     hasBusinessProfile: false,
   },
-}
+};
 
-
-
-export type DemoPersona = "resident_owner" | "service_provider" | "resident_business" | "external_business"
+export type DemoPersona =
+  | "resident_owner"
+  | "service_provider"
+  | "resident_business"
+  | "external_business";
 
 const demoPersonas: Record<DemoPersona, AuthState> = {
-  resident_owner: { ...defaultResident, professionalProfile: null, businessProfile: null, hasCommerceProfile: false, managesCommerceIds: [], commercialActivity: { marketplaceListingsCount: 1, serviceListingsCount: 0, hasEntrepreneurProfile: false, hasBusinessProfile: false } },
-  service_provider: { ...defaultExternal, accountType: "external_professional", capabilities: { ...defaultExternal.capabilities, canOfferServices: true }, businessProfile: null, hasCommerceProfile: false, managesCommerceIds: [], commercialActivity: { marketplaceListingsCount: 0, serviceListingsCount: 2, hasEntrepreneurProfile: false, hasBusinessProfile: false } },
-  resident_business: { ...defaultResident, capabilities: { ...defaultResident.capabilities, canSell: true, canOfferServices: false }, professionalProfile: null, hasCommerceProfile: true, managesCommerceIds: ["1"], commercialActivity: { marketplaceListingsCount: 3, serviceListingsCount: 0, hasEntrepreneurProfile: true, hasBusinessProfile: true } },
-  external_business: { ...defaultExternal, accountType: "external_business", capabilities: { ...defaultExternal.capabilities, canOfferServices: false, canSell: false, canAccessMarketplace: false }, professionalProfile: null, businessProfile: { businessName: "Ferretería Norte", description: "Negocio externo con entregas en la zona.", whatsapp: "+54 11 2222-3333", bannerImage: "", products: [] }, hasCommerceProfile: true, managesCommerceIds: ["2"], commercialActivity: { marketplaceListingsCount: 0, serviceListingsCount: 0, hasEntrepreneurProfile: false, hasBusinessProfile: true } },
-}
-const AuthContext = createContext<AuthContextType | null>(null)
+  resident_owner: {
+    ...defaultResident,
+    professionalProfile: null,
+    businessProfile: null,
+    hasCommerceProfile: false,
+    managesCommerceIds: [],
+    commercialActivity: {
+      marketplaceListingsCount: 1,
+      serviceListingsCount: 0,
+      hasEntrepreneurProfile: false,
+      hasBusinessProfile: false,
+    },
+  },
+  service_provider: {
+    ...defaultExternal,
+    accountType: "external_professional",
+    capabilities: { ...defaultExternal.capabilities, canOfferServices: true },
+    businessProfile: null,
+    hasCommerceProfile: false,
+    managesCommerceIds: [],
+    commercialActivity: {
+      marketplaceListingsCount: 0,
+      serviceListingsCount: 2,
+      hasEntrepreneurProfile: false,
+      hasBusinessProfile: false,
+    },
+  },
+  resident_business: {
+    ...defaultResident,
+    capabilities: {
+      ...defaultResident.capabilities,
+      canSell: true,
+      canOfferServices: false,
+    },
+    professionalProfile: null,
+    hasCommerceProfile: true,
+    managesCommerceIds: ["1"],
+    commercialActivity: {
+      marketplaceListingsCount: 3,
+      serviceListingsCount: 0,
+      hasEntrepreneurProfile: true,
+      hasBusinessProfile: true,
+    },
+  },
+  external_business: {
+    ...defaultExternal,
+    accountType: "external_business",
+    capabilities: {
+      ...defaultExternal.capabilities,
+      canOfferServices: false,
+      canSell: false,
+      canAccessMarketplace: false,
+    },
+    professionalProfile: null,
+    businessProfile: {
+      businessName: "Ferretería Norte",
+      description: "Negocio externo con entregas en la zona.",
+      whatsapp: "+54 11 2222-3333",
+      bannerImage: "",
+      products: [],
+    },
+    hasCommerceProfile: true,
+    managesCommerceIds: ["2"],
+    commercialActivity: {
+      marketplaceListingsCount: 0,
+      serviceListingsCount: 0,
+      hasEntrepreneurProfile: false,
+      hasBusinessProfile: true,
+    },
+  },
+};
+const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [auth, setAuth] = useState<AuthState>(() => {
     try {
-      const stored = window.localStorage.getItem("vecindo_account_type") as AccountType | null
-      if (stored === "external_professional") return defaultExternal
-      if (stored === "external_business") return demoPersonas.external_business
-      return defaultResident
+      const stored = window.localStorage.getItem(
+        "vecindo_account_type",
+      ) as AccountType | null;
+      if (stored === "external_professional") return defaultExternal;
+      if (stored === "external_business") return demoPersonas.external_business;
+      return defaultResident;
     } catch {
-      return defaultResident
+      return defaultResident;
     }
-  })
+  });
 
   const setAccountType = (type: AccountType) => {
-    if (type === "resident") setAuth(defaultResident)
-    else if (type === "external_business") setAuth(demoPersonas.external_business)
-    else setAuth(defaultExternal)
+    if (type === "resident") setAuth(defaultResident);
+    else if (type === "external_business")
+      setAuth(demoPersonas.external_business);
+    else setAuth(defaultExternal);
 
     try {
-      window.localStorage.setItem("vecindo_account_type", type)
+      window.localStorage.setItem("vecindo_account_type", type);
     } catch {}
-  }
+  };
 
   const setDemoPersona = (persona: DemoPersona) => {
-    setAuth(demoPersonas[persona])
+    setAuth(demoPersonas[persona]);
     try {
-      window.localStorage.setItem("vecindo_account_type", demoPersonas[persona].accountType)
+      window.localStorage.setItem(
+        "vecindo_account_type",
+        demoPersonas[persona].accountType,
+      );
     } catch {}
-  }
+  };
 
   const setCapability = (key: keyof UserCapabilities, value: boolean) => {
     setAuth((prev) => {
       const next = {
         ...prev,
         capabilities: { ...prev.capabilities, [key]: value },
-      }
+      };
 
       if (key === "canOfferServices" && !value) {
-        next.professionalProfile = null
+        next.professionalProfile = null;
         next.commercialActivity = {
           ...next.commercialActivity,
           serviceListingsCount: 0,
-        }
+        };
       }
 
       if (key === "canOfferServices" && value && !next.professionalProfile) {
@@ -266,16 +389,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           matricula: "",
           serviceArea: prev.profile.zone,
           galleryCount: 0,
-        }
+        };
       }
 
       if (key === "canSell" && !value) {
-        next.businessProfile = null
+        next.businessProfile = null;
         next.commercialActivity = {
           ...next.commercialActivity,
           marketplaceListingsCount: 0,
           hasBusinessProfile: false,
-        }
+        };
       }
 
       if (key === "canSell" && value && !next.businessProfile) {
@@ -285,28 +408,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           whatsapp: prev.profile.whatsapp,
           bannerImage: "",
           products: [],
-        }
+        };
       }
 
-      return next
-    })
-  }
+      return next;
+    });
+  };
 
   const updateProfile = (profile: Partial<UserProfile>) => {
     setAuth((prev) => ({
       ...prev,
       profile: { ...prev.profile, ...profile },
-    }))
-  }
+    }));
+  };
 
-  const updateProfessionalProfile = (data: Partial<ProfessionalProfileData>) => {
+  const updateProfessionalProfile = (
+    data: Partial<ProfessionalProfileData>,
+  ) => {
     setAuth((prev) => ({
       ...prev,
       professionalProfile: prev.professionalProfile
         ? { ...prev.professionalProfile, ...data }
         : null,
-    }))
-  }
+    }));
+  };
 
   const updateBusinessProfile = (data: Partial<BusinessProfileData>) => {
     setAuth((prev) => ({
@@ -318,8 +443,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ...prev.commercialActivity,
         hasBusinessProfile: true,
       },
-    }))
-  }
+    }));
+  };
 
   const updateCommercialActivity = (data: Partial<CommercialActivity>) => {
     setAuth((prev) => ({
@@ -328,8 +453,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ...prev.commercialActivity,
         ...data,
       },
-    }))
-  }
+    }));
+  };
 
   const addProduct = (product: Omit<BusinessProduct, "id">) => {
     setAuth((prev) => ({
@@ -337,16 +462,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       businessProfile: prev.businessProfile
         ? {
             ...prev.businessProfile,
-            products: [...prev.businessProfile.products, { ...product, id: Date.now().toString() }],
+            products: [
+              ...prev.businessProfile.products,
+              { ...product, id: Date.now().toString() },
+            ],
           }
         : null,
       commercialActivity: {
         ...prev.commercialActivity,
-        marketplaceListingsCount: prev.commercialActivity.marketplaceListingsCount + 1,
+        marketplaceListingsCount:
+          prev.commercialActivity.marketplaceListingsCount + 1,
         hasBusinessProfile: true,
       },
-    }))
-  }
+    }));
+  };
 
   const removeProduct = (id: string) => {
     setAuth((prev) => ({
@@ -359,10 +488,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         : null,
       commercialActivity: {
         ...prev.commercialActivity,
-        marketplaceListingsCount: Math.max(0, prev.commercialActivity.marketplaceListingsCount - 1),
+        marketplaceListingsCount: Math.max(
+          0,
+          prev.commercialActivity.marketplaceListingsCount - 1,
+        ),
       },
-    }))
-  }
+    }));
+  };
 
   const updateProduct = (id: string, data: Partial<BusinessProduct>) => {
     setAuth((prev) => ({
@@ -370,29 +502,50 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       businessProfile: prev.businessProfile
         ? {
             ...prev.businessProfile,
-            products: prev.businessProfile.products.map((p) => (p.id === id ? { ...p, ...data } : p)),
+            products: prev.businessProfile.products.map((p) =>
+              p.id === id ? { ...p, ...data } : p,
+            ),
           }
         : null,
-    }))
-  }
+    }));
+  };
 
   const saveItem = (item: Omit<SavedItem, "id" | "savedAt">) => {
-    setAuth((prev) => ({
-      ...prev,
-      savedItems: [{ ...item, id: Date.now().toString(), savedAt: "ahora" }, ...prev.savedItems],
-    }))
-  }
+    setAuth((prev) => {
+      const alreadySaved = prev.savedItems.some((saved) => {
+        if (item.targetId && saved.targetId) {
+          return saved.type === item.type && saved.targetId === item.targetId;
+        }
+
+        return saved.type === item.type && saved.title === item.title;
+      });
+
+      if (alreadySaved) return prev;
+
+      return {
+        ...prev,
+        savedItems: [
+          { ...item, id: Date.now().toString(), savedAt: "ahora" },
+          ...prev.savedItems,
+        ],
+      };
+    });
+  };
 
   const removeSavedItem = (id: string) => {
     setAuth((prev) => ({
       ...prev,
       savedItems: prev.savedItems.filter((s) => s.id !== id),
-    }))
-  }
+    }));
+  };
 
-  const isSaved = (title: string) => {
-    return auth.savedItems.some((s) => s.title === title)
-  }
+  const isSaved = (title: string, type?: SavedItemType, targetId?: string) => {
+    return auth.savedItems.some((saved) => {
+      if (type && saved.type !== type) return false;
+      if (targetId && saved.targetId) return saved.targetId === targetId;
+      return saved.title === title;
+    });
+  };
 
   return (
     <AuthContext.Provider
@@ -415,11 +568,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     >
       {children}
     </AuthContext.Provider>
-  )
+  );
 }
 
 export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error("useAuth debe usarse dentro de AuthProvider")
-  return ctx
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth debe usarse dentro de AuthProvider");
+  return ctx;
 }

@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useEffect, useMemo, useState } from "react"
-import { ActivityChips } from "@/components/activity/activity-chips"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { ActivityChips } from "@/components/activity/activity-chips";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowLeft,
   Bookmark,
@@ -25,80 +25,86 @@ import {
   Share2,
   Minus,
   Plus,
-} from "lucide-react"
-import { useAuth } from "@/lib/auth-context"
-import { useCommerceAnalytics } from "@/hooks/use-commerce-analytics"
-import type { CommerceItem, CommerceProduct, CommerceReview } from "@/lib/commerces-data"
-import { ProductDetailDrawer } from "@/components/business/product-detail-drawer"
-import { getCommerceProductInsights, getCommerceProfileInsights } from "@/lib/activity-insights"
+} from "lucide-react";
+import { useAuth } from "@/lib/auth-context";
+import { useCommerceAnalytics } from "@/hooks/use-commerce-analytics";
+import type {
+  CommerceItem,
+  CommerceProduct,
+  CommerceReview,
+} from "@/lib/commerces-data";
+import { ProductDetailDrawer } from "@/components/business/product-detail-drawer";
+import {
+  getCommerceProductInsights,
+  getCommerceProfileInsights,
+} from "@/lib/activity-insights";
 
 type Props = {
-  commerce: CommerceItem
-  activeTab?: "comercios" | "emprendimientos"
-}
+  commerce: CommerceItem;
+  activeTab?: "comercios" | "emprendimientos";
+};
 
 function formatARS(value: number) {
   return new Intl.NumberFormat("es-AR", {
     style: "currency",
     currency: "ARS",
     maximumFractionDigits: 0,
-  }).format(value)
+  }).format(value);
 }
 
 export default function CommerceProfileClient({ commerce, activeTab }: Props) {
-  const { saveItem, isSaved, auth } = useAuth()
-  const {
-    trackProfileView,
-    trackWhatsAppClick,
-    trackCallClick,
-    trackSave,
-  } = useCommerceAnalytics()
+  const { saveItem, isSaved, auth } = useAuth();
+  const { trackProfileView, trackWhatsAppClick, trackCallClick, trackSave } =
+    useCommerceAnalytics();
 
-  const [reviewRating, setReviewRating] = useState(0)
-  const [reviewText, setReviewText] = useState("")
-  const [reviewSubmitted, setReviewSubmitted] = useState(false)
-  const [reviews, setReviews] = useState<CommerceReview[]>(commerce.reviews ?? [])
-  const [cart, setCart] = useState<Record<string, number>>({})
-  const [copied, setCopied] = useState(false)
-  const [selectedProduct, setSelectedProduct] = useState<CommerceProduct | null>(null)
-  const [detailOpen, setDetailOpen] = useState(false)
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+  const [reviews, setReviews] = useState<CommerceReview[]>(
+    commerce.reviews ?? [],
+  );
+  const [cart, setCart] = useState<Record<string, number>>({});
+  const [copied, setCopied] = useState(false);
+  const [selectedProduct, setSelectedProduct] =
+    useState<CommerceProduct | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
 
   useEffect(() => {
-    trackProfileView(commerce.id)
-  }, [commerce.id, trackProfileView])
+    trackProfileView(commerce.id);
+  }, [commerce.id, trackProfileView]);
 
-  const commerceInsights = getCommerceProfileInsights(commerce.id)
-  const saved = isSaved(commerce.name)
-  const isCommerce = commerce.type === "commerce"
-  const cameFromEntrepreneurTab = activeTab === "emprendimientos"
+  const commerceInsights = getCommerceProfileInsights(commerce.id);
+  const saved = isSaved(commerce.name, "commerce", commerce.id);
+  const isCommerce = commerce.type === "commerce";
+  const cameFromEntrepreneurTab = activeTab === "emprendimientos";
 
   const backHref = cameFromEntrepreneurTab
     ? "/dashboard/comercios?tipo=emprendimientos"
-    : "/dashboard/comercios"
+    : "/dashboard/comercios";
 
   const backLabel = cameFromEntrepreneurTab
     ? "Volver a Emprendimientos locales"
-    : "Volver a Comercios"
+    : "Volver a Comercios";
 
   const waUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-    `Hola ${commerce.name}, los contacto desde VEZI.`
-  )}`
+    `Hola ${commerce.name}, los contacto desde VEZI.`,
+  )}`;
 
   const openStatus = useMemo(() => {
-    const normalized = commerce.hours.toLowerCase()
+    const normalized = commerce.hours.toLowerCase();
 
-    if (normalized.includes("cerrado")) return "Cerrado"
-    if (normalized.includes("pedido")) return "Atención por pedidos"
-    if (normalized.includes("whatsapp")) return "Atención por WhatsApp"
+    if (normalized.includes("cerrado")) return "Cerrado";
+    if (normalized.includes("pedido")) return "Atención por pedidos";
+    if (normalized.includes("whatsapp")) return "Atención por WhatsApp";
 
-    return "Abierto hoy"
-  }, [commerce.hours])
+    return "Abierto hoy";
+  }, [commerce.hours]);
 
   const averageRating = useMemo(() => {
-    if (!reviews.length) return 0
-    const total = reviews.reduce((acc, review) => acc + review.rating, 0)
-    return total / reviews.length
-  }, [reviews])
+    if (!reviews.length) return 0;
+    const total = reviews.reduce((acc, review) => acc + review.rating, 0);
+    return total / reviews.length;
+  }, [reviews]);
 
   const cartItems = useMemo(() => {
     return (commerce.products ?? [])
@@ -107,28 +113,30 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
         product,
         quantity: cart[product.id] ?? 0,
         total: product.price * (cart[product.id] ?? 0),
-      }))
-  }, [cart, commerce.products])
+      }));
+  }, [cart, commerce.products]);
 
   const total = useMemo(
     () => cartItems.reduce((acc, item) => acc + item.total, 0),
-    [cartItems]
-  )
+    [cartItems],
+  );
 
   const cartCount = useMemo(
     () => cartItems.reduce((acc, item) => acc + item.quantity, 0),
-    [cartItems]
-  )
+    [cartItems],
+  );
 
   const cartSummary = useMemo(() => {
-    return cartItems.map((item) => `• ${item.product.name} x${item.quantity}`).join("\n")
-  }, [cartItems])
+    return cartItems
+      .map((item) => `• ${item.product.name} x${item.quantity}`)
+      .join("\n");
+  }, [cartItems]);
 
   const cartWhatsappUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
     cartItems.length > 0
       ? `Hola ${commerce.name}, quiero pedir:\n${cartSummary}\n\nTotal estimado: ${formatARS(total)}`
-      : `Hola ${commerce.name}, quiero hacer una consulta desde VEZI.`
-  )}`
+      : `Hola ${commerce.name}, quiero hacer una consulta desde VEZI.`,
+  )}`;
 
   const trustBullets = useMemo(() => {
     return isCommerce
@@ -141,57 +149,76 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           "Atención directa por WhatsApp",
           "Pedidos o encargos coordinados",
           "Entrega o retiro a convenir",
-        ]
-  }, [isCommerce])
+        ];
+  }, [isCommerce]);
 
   const addressLabel = isCommerce
     ? commerce.address
-    : "Sin local físico · entrega/retiro coordinado"
+    : "Sin local físico · entrega/retiro coordinado";
 
   const deliveryLabel = isCommerce
     ? "Retiro en local / coordinación"
-    : "Entrega o retiro coordinado"
+    : "Entrega o retiro coordinado";
 
   const adjustCart = (productId: string, delta: number) => {
     setCart((prev) => {
-      const nextQty = Math.max((prev[productId] ?? 0) + delta, 0)
+      const nextQty = Math.max((prev[productId] ?? 0) + delta, 0);
 
       if (nextQty === 0) {
-        const { [productId]: _, ...rest } = prev
-        return rest
+        const { [productId]: _, ...rest } = prev;
+        return rest;
       }
 
       return {
         ...prev,
         [productId]: nextQty,
-      }
-    })
-  }
+      };
+    });
+  };
 
   const handleAddToCart = (productId: string) => {
-    adjustCart(productId, 1)
-  }
+    adjustCart(productId, 1);
+  };
 
   const openProductDetail = (product: CommerceProduct) => {
-    setSelectedProduct(product)
-    setDetailOpen(true)
-  }
+    setSelectedProduct(product);
+    setDetailOpen(true);
+  };
 
   const handleConfirmFromDetail = (productId: string, quantity: number) => {
-    setCart((prev) => ({ ...prev, [productId]: (prev[productId] ?? 0) + quantity }))
-  }
+    setCart((prev) => ({
+      ...prev,
+      [productId]: (prev[productId] ?? 0) + quantity,
+    }));
+  };
 
   const handleSave = () => {
-    trackSave(commerce.id)
+    trackSave(commerce.id);
     saveItem({
       type: "commerce",
+      targetId: commerce.id,
       title: commerce.name,
       subtitle: `${commerce.category} · ${commerce.location}`,
-    })
-  }
+      href: `/dashboard/comercios/${commerce.id}${cameFromEntrepreneurTab ? "?tipo=emprendimientos" : ""}`,
+      activity: commerceInsights[0]?.label ?? "Nuevo producto agregado",
+    });
+  };
+
+  const handleSaveProduct = (product: CommerceProduct) => {
+    saveItem({
+      type: "product",
+      targetId: `${commerce.id}-${product.id}`,
+      title: product.name,
+      subtitle: `${commerce.name} · ${formatARS(product.price)}`,
+      href: `/dashboard/comercios/${commerce.id}${cameFromEntrepreneurTab ? "?tipo=emprendimientos" : ""}`,
+      activity:
+        getCommerceProductInsights(product.id)[0]?.label ??
+        "Popular esta semana",
+    });
+  };
 
   const handleSubmitReview = () => {
-    if (reviewRating === 0 || reviewText.trim() === "") return
+    if (reviewRating === 0 || reviewText.trim() === "") return;
 
     const newReview: CommerceReview = {
       user: auth.profile.name,
@@ -200,18 +227,18 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
       text: reviewText,
       date: "ahora",
       verified: true,
-    }
+    };
 
-    setReviews([newReview, ...reviews])
-    setReviewSubmitted(true)
-    setReviewRating(0)
-    setReviewText("")
-  }
+    setReviews([newReview, ...reviews]);
+    setReviewSubmitted(true);
+    setReviewRating(0);
+    setReviewText("");
+  };
 
   const share = async () => {
-    const url = typeof window !== "undefined" ? window.location.href : ""
+    const url = typeof window !== "undefined" ? window.location.href : "";
 
-    if (!url) return
+    if (!url) return;
 
     if (navigator.share) {
       try {
@@ -219,21 +246,21 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           title: commerce.name,
           text: "Mirá este catálogo en VEZI",
           url,
-        })
-        return
+        });
+        return;
       } catch {
         // fallback to clipboard
       }
     }
 
     try {
-      await navigator.clipboard.writeText(url)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch {
       // no-op
     }
-  }
+  };
 
   return (
     <div className="flex max-w-6xl flex-col gap-5 md:gap-6">
@@ -343,17 +370,26 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                   </div>
 
                   <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-                    <Badge variant="outline" className="gap-1.5 text-muted-foreground">
+                    <Badge
+                      variant="outline"
+                      className="gap-1.5 text-muted-foreground"
+                    >
                       <MapPin className="h-3.5 w-3.5" />
                       {addressLabel}
                     </Badge>
 
-                    <Badge variant="outline" className="gap-1.5 text-muted-foreground">
+                    <Badge
+                      variant="outline"
+                      className="gap-1.5 text-muted-foreground"
+                    >
                       <Clock className="h-3.5 w-3.5" />
                       {commerce.hours}
                     </Badge>
 
-                    <Badge variant="outline" className="gap-1.5 text-muted-foreground">
+                    <Badge
+                      variant="outline"
+                      className="gap-1.5 text-muted-foreground"
+                    >
                       <Truck className="h-3.5 w-3.5" />
                       {deliveryLabel}
                     </Badge>
@@ -369,8 +405,14 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     </Badge>
                   </div>
 
-                  <ActivityChips insights={commerceInsights} limit={3} className="mt-4" />
-                  <p className="mt-4 text-xs text-muted-foreground">{commerce.meta}</p>
+                  <ActivityChips
+                    insights={commerceInsights}
+                    limit={3}
+                    className="mt-4"
+                  />
+                  <p className="mt-4 text-xs text-muted-foreground">
+                    {commerce.meta}
+                  </p>
                 </div>
 
                 <div className="flex flex-wrap gap-2 md:justify-end md:pt-2">
@@ -411,8 +453,14 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     {copied ? "Copiado" : "Compartir"}
                   </Button>
 
-                  <Button variant="outline" className="gap-2" onClick={handleSave}>
-                    <Bookmark className={`h-4 w-4 ${saved ? "fill-current" : ""}`} />
+                  <Button
+                    variant="outline"
+                    className="gap-2"
+                    onClick={handleSave}
+                  >
+                    <Bookmark
+                      className={`h-4 w-4 ${saved ? "fill-current" : ""}`}
+                    />
                     {saved ? "Guardado" : "Guardar"}
                   </Button>
                 </div>
@@ -426,31 +474,52 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-lg font-semibold text-foreground">Catálogo</h2>
+                <h2 className="text-lg font-semibold text-foreground">
+                  Catálogo
+                </h2>
                 <p className="text-sm text-muted-foreground">
-                  Productos disponibles con pedido directo y coordinación por WhatsApp.
+                  Productos disponibles con pedido directo y coordinación por
+                  WhatsApp.
                 </p>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
-                <ActivityChips insights={[{ label: commerceInsights[1].label.replace("abrieron catálogo", "abrieron este catálogo"), tone: "violet" }]} />
-                <Badge variant="secondary">{commerce.products.length} productos</Badge>
+                <ActivityChips
+                  insights={[
+                    {
+                      label: commerceInsights[1].label.replace(
+                        "abrieron catálogo",
+                        "abrieron este catálogo",
+                      ),
+                      tone: "violet",
+                    },
+                  ]}
+                />
+                <Badge variant="secondary">
+                  {commerce.products.length} productos
+                </Badge>
               </div>
             </div>
 
             <div className="mt-4 grid gap-4 md:grid-cols-2">
               {commerce.products.map((product) => {
-                const qty = cart[product.id] ?? 0
+                const qty = cart[product.id] ?? 0;
                 const productWhatsappUrl = `https://wa.me/${commerce.whatsapp.replace(
                   /[^0-9]/g,
-                  ""
+                  "",
                 )}?text=${encodeURIComponent(
                   `Hola ${commerce.name}, me interesa "${product.name}" (${formatARS(
-                    product.price
-                  )}) desde VEZI.`
-                )}`
+                    product.price,
+                  )}) desde VEZI.`,
+                )}`;
 
-                const stop = (e: React.MouseEvent | React.PointerEvent) => e.stopPropagation()
+                const productSaved = isSaved(
+                  product.name,
+                  "product",
+                  `${commerce.id}-${product.id}`,
+                );
+                const stop = (e: React.MouseEvent | React.PointerEvent) =>
+                  e.stopPropagation();
 
                 return (
                   <article
@@ -461,8 +530,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     onClick={() => openProductDetail(product)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault()
-                        openProductDetail(product)
+                        e.preventDefault();
+                        openProductDetail(product);
                       }
                     }}
                     className="cursor-pointer rounded-2xl border border-border bg-background p-4 text-left transition hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30"
@@ -474,16 +543,54 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     />
 
                     <div className="mt-3 flex items-start justify-between gap-3">
-                      <h3 className="font-semibold text-foreground">{product.name}</h3>
-                      <span className="text-sm font-semibold text-foreground">
-                        {formatARS(product.price)}
-                      </span>
+                      <div className="min-w-0">
+                        <h3 className="font-semibold text-foreground">
+                          {product.name}
+                        </h3>
+                        {productSaved && (
+                          <Badge
+                            variant="outline"
+                            className="mt-1 gap-1 border-emerald-200 text-[10px] text-emerald-700"
+                          >
+                            <Bookmark className="h-3 w-3" />
+                            Guardado
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex shrink-0 items-start gap-2">
+                        <span className="text-sm font-semibold text-foreground">
+                          {formatARS(product.price)}
+                        </span>
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="-mt-2 h-8 w-8 text-muted-foreground hover:text-emerald-700"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSaveProduct(product);
+                          }}
+                          aria-label={
+                            productSaved
+                              ? `Producto ${product.name} guardado`
+                              : `Guardar ${product.name}`
+                          }
+                        >
+                          <Bookmark
+                            className={`h-4 w-4 ${productSaved ? "fill-current text-emerald-700" : ""}`}
+                          />
+                        </Button>
+                      </div>
                     </div>
 
                     <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
                       {product.shortDescription}
                     </p>
-                    <ActivityChips insights={getCommerceProductInsights(product.id)} limit={2} className="mt-3" />
+                    <ActivityChips
+                      insights={getCommerceProductInsights(product.id)}
+                      limit={2}
+                      className="mt-3"
+                    />
 
                     <div className="mt-4 flex items-center justify-between gap-3">
                       <div
@@ -496,22 +603,24 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                           aria-label="Restar"
                           className="px-3 py-2"
                           onClick={(e) => {
-                            e.stopPropagation()
-                            adjustCart(product.id, -1)
+                            e.stopPropagation();
+                            adjustCart(product.id, -1);
                           }}
                         >
                           <Minus className="h-4 w-4" />
                         </button>
 
-                        <span className="min-w-8 text-center text-sm">{qty}</span>
+                        <span className="min-w-8 text-center text-sm">
+                          {qty}
+                        </span>
 
                         <button
                           type="button"
                           aria-label="Sumar"
                           className="px-3 py-2"
                           onClick={(e) => {
-                            e.stopPropagation()
-                            adjustCart(product.id, 1)
+                            e.stopPropagation();
+                            adjustCart(product.id, 1);
                           }}
                         >
                           <Plus className="h-4 w-4" />
@@ -521,8 +630,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                       <Button
                         size="sm"
                         onClick={(e) => {
-                          e.stopPropagation()
-                          handleAddToCart(product.id)
+                          e.stopPropagation();
+                          handleAddToCart(product.id);
                         }}
                       >
                         Agregar
@@ -535,8 +644,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                         variant="outline"
                         className="gap-1.5"
                         onClick={(e) => {
-                          e.stopPropagation()
-                          handleAddToCart(product.id)
+                          e.stopPropagation();
+                          handleAddToCart(product.id);
                         }}
                       >
                         <ShoppingCart className="h-3.5 w-3.5" />
@@ -553,8 +662,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => {
-                            e.stopPropagation()
-                            trackWhatsAppClick(commerce.id)
+                            e.stopPropagation();
+                            trackWhatsAppClick(commerce.id);
                           }}
                         >
                           <MessageSquare className="h-3.5 w-3.5" />
@@ -563,13 +672,15 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                       </Button>
                     </div>
                   </article>
-                )
+                );
               })}
             </div>
           </div>
 
           <div className="rounded-3xl border border-border bg-card p-6 lg:hidden">
-            <h2 className="text-base font-semibold text-foreground">Pedido rápido</h2>
+            <h2 className="text-base font-semibold text-foreground">
+              Pedido rápido
+            </h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {cartCount > 0
                 ? `${cartCount} producto(s) agregado(s). Enviá tu pedido directo al comercio.`
@@ -641,7 +752,9 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-muted-foreground">{review.date}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {review.date}
+                          </p>
                         </div>
                       </div>
 
@@ -659,7 +772,9 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                       </div>
                     </div>
 
-                    <p className="mt-3 text-sm text-muted-foreground">{review.text}</p>
+                    <p className="mt-3 text-sm text-muted-foreground">
+                      {review.text}
+                    </p>
                   </div>
                 ))
               ) : (
@@ -671,7 +786,9 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           </div>
 
           <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-base font-semibold text-foreground">Dejá tu reseña</h2>
+            <h2 className="text-base font-semibold text-foreground">
+              Dejá tu reseña
+            </h2>
 
             <div className="mt-4 flex items-center gap-2">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -702,7 +819,9 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             <div className="mt-4 flex items-center gap-3">
               <Button onClick={handleSubmitReview}>Enviar reseña</Button>
               {reviewSubmitted && (
-                <span className="text-sm text-emerald-600">Tu reseña fue enviada.</span>
+                <span className="text-sm text-emerald-600">
+                  Tu reseña fue enviada.
+                </span>
               )}
             </div>
           </div>
@@ -710,7 +829,9 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
         <aside className="hidden space-y-6 lg:block">
           <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-base font-semibold text-foreground">Pedido rápido</h2>
+            <h2 className="text-base font-semibold text-foreground">
+              Pedido rápido
+            </h2>
 
             <p className="mt-2 text-sm text-muted-foreground">
               {cartCount > 0
@@ -756,7 +877,9 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
           </div>
 
           <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-base font-semibold text-foreground">Señales de confianza</h2>
+            <h2 className="text-base font-semibold text-foreground">
+              Señales de confianza
+            </h2>
 
             <div className="mt-4 space-y-3">
               {trustBullets.map((bullet) => (
@@ -775,11 +898,23 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
         product={selectedProduct}
         open={detailOpen}
         onOpenChange={setDetailOpen}
-        initialQuantity={selectedProduct ? cart[selectedProduct.id] ?? 0 : 0}
+        initialQuantity={selectedProduct ? (cart[selectedProduct.id] ?? 0) : 0}
         onConfirm={handleConfirmFromDetail}
         onWhatsAppClick={() => trackWhatsAppClick(commerce.id)}
         formatPrice={formatARS}
+        saved={
+          selectedProduct
+            ? isSaved(
+                selectedProduct.name,
+                "product",
+                `${commerce.id}-${selectedProduct.id}`,
+              )
+            : false
+        }
+        onSave={
+          selectedProduct ? () => handleSaveProduct(selectedProduct) : undefined
+        }
       />
     </div>
-  )
+  );
 }

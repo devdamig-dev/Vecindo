@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { useParams } from "next/navigation"
-import { ActivityChips } from "@/components/activity/activity-chips"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { listings } from "@/components/marketplace/marketplace-grid"
-import { getMarketplaceActivityInsights } from "@/lib/activity-insights"
-import { useAuth } from "@/lib/auth-context"
+import { useState } from "react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { ActivityChips } from "@/components/activity/activity-chips";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { listings } from "@/components/marketplace/marketplace-grid";
+import { getMarketplaceActivityInsights } from "@/lib/activity-insights";
+import { useAuth } from "@/lib/auth-context";
 import {
   ArrowLeft,
   ChevronLeft,
@@ -22,94 +22,109 @@ import {
   Flag,
   ShieldCheck,
   Eye,
-} from "lucide-react"
+} from "lucide-react";
 
 function getConditionBadgeClass(condition: string) {
-  const normalized = condition.toLowerCase()
+  const normalized = condition.toLowerCase();
 
   if (normalized.includes("como nueva")) {
-    return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+    return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100";
   }
 
   if (normalized.includes("excelente")) {
-    return "bg-sky-100 text-sky-700 hover:bg-sky-100"
+    return "bg-sky-100 text-sky-700 hover:bg-sky-100";
   }
 
   if (normalized.includes("bueno")) {
-    return "bg-amber-100 text-amber-700 hover:bg-amber-100"
+    return "bg-amber-100 text-amber-700 hover:bg-amber-100";
   }
 
-  return "bg-muted text-muted-foreground hover:bg-muted"
+  return "bg-muted text-muted-foreground hover:bg-muted";
 }
 
 function getStatusBadgeClass(status: string) {
-  const normalized = status.toLowerCase()
+  const normalized = status.toLowerCase();
 
   if (normalized.includes("disponible")) {
-    return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+    return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100";
   }
 
   if (normalized.includes("reservado")) {
-    return "bg-amber-100 text-amber-700 hover:bg-amber-100"
+    return "bg-amber-100 text-amber-700 hover:bg-amber-100";
   }
 
   if (normalized.includes("vendido")) {
-    return "bg-muted text-muted-foreground hover:bg-muted"
+    return "bg-muted text-muted-foreground hover:bg-muted";
   }
 
-  return "bg-muted text-muted-foreground hover:bg-muted"
+  return "bg-muted text-muted-foreground hover:bg-muted";
 }
 
 export default function MarketplaceDetailPage() {
-  const { id } = useParams<{ id: string }>()
-  const listing = listings.find((l) => l.id === id)
-  const [currentImage, setCurrentImage] = useState(0)
-  const { saveItem, isSaved } = useAuth()
+  const { id } = useParams<{ id: string }>();
+  const listing = listings.find((l) => l.id === id);
+  const [currentImage, setCurrentImage] = useState(0);
+  const { saveItem, isSaved } = useAuth();
 
   if (!listing) {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center justify-center px-4 py-16 text-center">
-        <h1 className="mb-2 text-xl font-bold text-foreground">Publicación no encontrada</h1>
+        <h1 className="mb-2 text-xl font-bold text-foreground">
+          Publicación no encontrada
+        </h1>
         <p className="mb-6 text-sm text-muted-foreground">
           El artículo que buscás no existe o ya no está disponible.
         </p>
-        <Link href="/dashboard/marketplace" className="text-sm text-emerald-700 hover:underline">
+        <Link
+          href="/dashboard/marketplace"
+          className="text-sm text-emerald-700 hover:underline"
+        >
           Volver al Mercado
         </Link>
       </div>
-    )
+    );
   }
 
-  const saved = isSaved(listing.title)
-  const isSold = listing.status === "Vendido"
-  const isReserved = listing.status === "Reservado"
+  const saved = isSaved(listing.title, "marketplace_item", listing.id);
+  const isSold = listing.status === "Vendido";
+  const isReserved = listing.status === "Reservado";
 
   const whatsappUrl = `https://wa.me/${listing.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-    `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VECINDO.`
-  )}`
+    `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VECINDO.`,
+  )}`;
 
   const sellerListings = listings.filter(
-    (l) => l.sellerId === listing.sellerId && l.id !== listing.id
-  )
-  const activityInsights = getMarketplaceActivityInsights(listing.id, listing.status)
+    (l) => l.sellerId === listing.sellerId && l.id !== listing.id,
+  );
+  const activityInsights = getMarketplaceActivityInsights(
+    listing.id,
+    listing.status,
+  );
 
   const nextImage = () => {
-    setCurrentImage((prev) => (prev + 1) % listing.images.length)
-  }
+    setCurrentImage((prev) => (prev + 1) % listing.images.length);
+  };
 
   const prevImage = () => {
-    setCurrentImage((prev) => (prev - 1 + listing.images.length) % listing.images.length)
-  }
+    setCurrentImage(
+      (prev) => (prev - 1 + listing.images.length) % listing.images.length,
+    );
+  };
 
   const handleSave = () => {
-    if (saved) return
+    if (saved) return;
 
     saveItem({
-      type: "marketplace",
+      type: "marketplace_item",
+      targetId: listing.id,
       title: listing.title,
       subtitle: `${listing.price} · ${listing.seller}`,
-    })
-  }
+      href: `/dashboard/marketplace/${listing.id}`,
+      activity: isReserved
+        ? "Volvió a tener consultas"
+        : "5 vecinos interesados",
+    });
+  };
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6">
@@ -184,7 +199,11 @@ export default function MarketplaceDetailPage() {
                   }`}
                 >
                   <div className="aspect-square bg-muted">
-                    <img src={img} alt="" className="h-full w-full object-cover" />
+                    <img
+                      src={img}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
                   </div>
                 </button>
               ))}
@@ -192,7 +211,9 @@ export default function MarketplaceDetailPage() {
           )}
 
           <div className="rounded-2xl border border-border bg-card p-5">
-            <h2 className="mb-2 text-lg font-semibold text-foreground">Descripción</h2>
+            <h2 className="mb-2 text-lg font-semibold text-foreground">
+              Descripción
+            </h2>
             <p className="text-sm leading-relaxed text-muted-foreground">
               {listing.fullDescription}
             </p>
@@ -226,10 +247,14 @@ export default function MarketplaceDetailPage() {
                       <h3 className="truncate text-sm font-medium text-foreground transition-colors group-hover:text-emerald-700">
                         {item.title}
                       </h3>
-                      <p className="mt-0.5 text-sm font-bold text-emerald-700">{item.price}</p>
+                      <p className="mt-0.5 text-sm font-bold text-emerald-700">
+                        {item.price}
+                      </p>
                       <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
                         <Clock className="h-3 w-3" />
-                        {getMarketplaceActivityInsights(item.id)[0].label.replace("Publicado ", "")}
+                        {getMarketplaceActivityInsights(
+                          item.id,
+                        )[0].label.replace("Publicado ", "")}
                       </div>
                     </div>
                   </Link>
@@ -243,7 +268,9 @@ export default function MarketplaceDetailPage() {
           <div className="rounded-2xl border border-emerald-200 bg-card p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h1 className="text-2xl font-bold text-foreground">{listing.title}</h1>
+                <h1 className="text-2xl font-bold text-foreground">
+                  {listing.title}
+                </h1>
                 <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5">
                     <MapPin className="h-4 w-4" />
@@ -254,7 +281,11 @@ export default function MarketplaceDetailPage() {
                     {activityInsights[0].label.replace("Publicado ", "")}
                   </span>
                 </div>
-                <ActivityChips insights={activityInsights.slice(1)} limit={3} className="mt-3" />
+                <ActivityChips
+                  insights={activityInsights.slice(1)}
+                  limit={3}
+                  className="mt-3"
+                />
               </div>
 
               <span className="text-2xl font-bold text-emerald-700 sm:text-3xl">
@@ -271,7 +302,9 @@ export default function MarketplaceDetailPage() {
                 </Avatar>
 
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-foreground">{listing.seller}</p>
+                  <p className="font-semibold text-foreground">
+                    {listing.seller}
+                  </p>
                   <p className="mt-1 flex items-center gap-1 text-xs text-emerald-700">
                     <ShieldCheck className="h-3.5 w-3.5" />
                     Vecino de {listing.zone}
@@ -291,23 +324,36 @@ export default function MarketplaceDetailPage() {
                   {isSold
                     ? "Producto no disponible"
                     : isReserved
-                    ? "Consultar si sigue disponible"
-                    : "Contactar por WhatsApp"}
+                      ? "Consultar si sigue disponible"
+                      : "Contactar por WhatsApp"}
                 </a>
               </Button>
 
               <div className="grid grid-cols-3 gap-2">
-                <Button variant="outline" className="gap-2" onClick={handleSave} disabled={saved}>
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={handleSave}
+                  disabled={saved}
+                >
                   <Bookmark
                     className={`h-4 w-4 ${saved ? "fill-emerald-700 text-emerald-700" : ""}`}
                   />
                 </Button>
 
-                <Button variant="outline" size="icon" className="text-muted-foreground">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="text-muted-foreground"
+                >
                   <Share2 className="h-4 w-4" />
                 </Button>
 
-                <Button variant="outline" size="icon" className="text-muted-foreground">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="text-muted-foreground"
+                >
                   <Flag className="h-4 w-4" />
                 </Button>
               </div>
@@ -315,7 +361,9 @@ export default function MarketplaceDetailPage() {
           </div>
 
           <div className="rounded-2xl border border-border bg-card p-5">
-            <h2 className="mb-3 text-sm font-semibold text-foreground">Información útil</h2>
+            <h2 className="mb-3 text-sm font-semibold text-foreground">
+              Información útil
+            </h2>
 
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
@@ -335,11 +383,12 @@ export default function MarketplaceDetailPage() {
 
           <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-center">
             <p className="text-xs text-muted-foreground">
-              Transacción entre vecinos. Vecindo no interviene en pagos ni entregas.
+              Transacción entre vecinos. Vecindo no interviene en pagos ni
+              entregas.
             </p>
           </div>
         </aside>
       </div>
     </div>
-  )
+  );
 }

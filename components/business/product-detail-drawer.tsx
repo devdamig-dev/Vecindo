@@ -1,22 +1,31 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { Drawer, DrawerContent, DrawerClose } from "@/components/ui/drawer"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Minus, Plus, MessageSquare, ShoppingCart, X } from "lucide-react"
-import type { CommerceItem, CommerceProduct } from "@/lib/commerces-data"
+import { useEffect, useState } from "react";
+import { Drawer, DrawerContent, DrawerClose } from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Bookmark,
+  Minus,
+  Plus,
+  MessageSquare,
+  ShoppingCart,
+  X,
+} from "lucide-react";
+import type { CommerceItem, CommerceProduct } from "@/lib/commerces-data";
 
 type Props = {
-  commerce: CommerceItem
-  product: CommerceProduct | null
-  initialQuantity: number
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onConfirm: (productId: string, quantity: number) => void
-  onWhatsAppClick?: () => void
-  formatPrice: (value: number) => string
-}
+  commerce: CommerceItem;
+  product: CommerceProduct | null;
+  initialQuantity: number;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onConfirm: (productId: string, quantity: number) => void;
+  onWhatsAppClick?: () => void;
+  formatPrice: (value: number) => string;
+  saved?: boolean;
+  onSave?: () => void;
+};
 
 export function ProductDetailDrawer({
   commerce,
@@ -27,25 +36,27 @@ export function ProductDetailDrawer({
   onConfirm,
   onWhatsAppClick,
   formatPrice,
+  saved = false,
+  onSave,
 }: Props) {
-  const [quantity, setQuantity] = useState(initialQuantity || 1)
+  const [quantity, setQuantity] = useState(initialQuantity || 1);
 
   useEffect(() => {
     if (open) {
-      setQuantity(initialQuantity > 0 ? initialQuantity : 1)
+      setQuantity(initialQuantity > 0 ? initialQuantity : 1);
     }
-  }, [open, initialQuantity])
+  }, [open, initialQuantity]);
 
-  if (!product) return null
+  if (!product) return null;
 
   const productWhatsappUrl = `https://wa.me/${commerce.whatsapp.replace(
     /[^0-9]/g,
-    ""
+    "",
   )}?text=${encodeURIComponent(
     `Hola ${commerce.name}, me interesa "${product.name}" x${quantity} (${formatPrice(
-      product.price * quantity
-    )}) desde VEZI.`
-  )}`
+      product.price * quantity,
+    )}) desde VEZI.`,
+  )}`;
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -75,6 +86,15 @@ export function ProductDetailDrawer({
                   <h2 className="text-xl font-semibold text-foreground">
                     {product.name}
                   </h2>
+                  {saved && (
+                    <Badge
+                      variant="outline"
+                      className="mt-2 gap-1 border-emerald-200 text-emerald-700"
+                    >
+                      <Bookmark className="h-3.5 w-3.5" />
+                      Guardado
+                    </Badge>
+                  )}
                 </div>
                 <span className="shrink-0 text-lg font-semibold text-foreground">
                   {formatPrice(product.price)}
@@ -86,7 +106,9 @@ export function ProductDetailDrawer({
               </p>
 
               <div className="flex items-center justify-between rounded-2xl border border-border bg-muted/40 px-4 py-3">
-                <span className="text-sm font-medium text-foreground">Cantidad</span>
+                <span className="text-sm font-medium text-foreground">
+                  Cantidad
+                </span>
                 <div className="flex items-center rounded-lg border border-border bg-background">
                   <button
                     type="button"
@@ -125,9 +147,21 @@ export function ProductDetailDrawer({
               <Button
                 variant="outline"
                 className="gap-1.5"
+                onClick={onSave}
+                disabled={!onSave}
+              >
+                <Bookmark
+                  className={`h-4 w-4 ${saved ? "fill-current" : ""}`}
+                />
+                {saved ? "Guardado" : "Guardar"}
+              </Button>
+
+              <Button
+                variant="outline"
+                className="gap-1.5"
                 onClick={() => {
-                  onConfirm(product.id, quantity)
-                  onOpenChange(false)
+                  onConfirm(product.id, quantity);
+                  onOpenChange(false);
                 }}
               >
                 <ShoppingCart className="h-4 w-4" />
@@ -153,5 +187,5 @@ export function ProductDetailDrawer({
         </div>
       </DrawerContent>
     </Drawer>
-  )
+  );
 }
