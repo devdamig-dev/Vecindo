@@ -4,8 +4,8 @@ import type { ActivityInsight, ActivityTone } from "@/lib/activity-insights"
 
 const toneClasses: Record<ActivityTone, string> = {
   emerald: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  sky: "border-sky-200 bg-sky-50 text-sky-700",
-  violet: "border-violet-200 bg-violet-50 text-violet-700",
+  sky: "border-[#cddbd6] bg-[#eef4f1] text-[#476d66]",
+  violet: "border-[#d8d2e7] bg-[#f2eff8] text-[#6f628f]",
   amber: "border-amber-200 bg-amber-50 text-amber-700",
   slate: "border-border bg-muted/40 text-muted-foreground",
 }

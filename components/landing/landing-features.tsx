@@ -1,61 +1,60 @@
-import { Search, Star, ShoppingBag, PawPrint, MessageCircle, ShieldCheck } from "lucide-react"
+import { MapPin, MessageCircle, Search, ShieldCheck, ShoppingBag, Sparkles } from "lucide-react"
 
 export function LandingFeatures() {
   const features = [
     {
       icon: Search,
-      title: "Directorio de Servicios",
-      description: "Encuentra electricistas, plomeros, tutores y mas, todos verificados por tu comunidad.",
-    },
-    {
-      icon: Star,
-      title: "Reputacion Estructurada",
-      description: "Resenas y calificaciones transparentes de vecinos reales y verificados en los que confias.",
-    },
-    {
-      icon: MessageCircle,
-      title: "Preguntas a la Comunidad",
-      description: "Hace preguntas y obtene respuestas de residentes de tu zona. Consejos reales, confianza real.",
+      title: "Exploración primero",
+      description: "Buscá por rubro, producto o intención y descubrí opciones cercanas con una lectura rápida.",
     },
     {
       icon: ShoppingBag,
-      title: "Mercado Local",
-      description: "Compra y vende dentro de tu comunidad. Articulos, muebles, vehiculos, solo entre vecinos.",
-    },
-    {
-      icon: PawPrint,
-      title: "Mascotas y Alertas",
-      description: "Alertas de mascotas perdidas, listados de adopcion y servicios de cuidadores de confianza.",
+      title: "Catálogos visuales",
+      description: "Productos con imagen, precio y pedido directo, sin convertir la experiencia en un ecommerce complejo.",
     },
     {
       icon: ShieldCheck,
-      title: "Acceso Verificado",
-      description: "Cada usuario es un residente verificado. Sin extraños, sin spam, sin desconocidos.",
+      title: "Confianza clara",
+      description: "Ubicación, horarios, reseñas y señales simples para decidir con tranquilidad.",
+    },
+    {
+      icon: MessageCircle,
+      title: "Contacto comercial",
+      description: "El camino natural es hablar por WhatsApp, consultar y coordinar con cada comercio.",
+    },
+    {
+      icon: MapPin,
+      title: "Cerca de tu zona",
+      description: "La ubicación acompaña la decisión sin volver protagonista a municipios o trámites.",
+    },
+    {
+      icon: Sparkles,
+      title: "Presencia premium",
+      description: "Cada perfil funciona como una mini marca: portada, catálogo, confianza y acción.",
     },
   ]
 
   return (
-    <section id="features" className="py-20 md:py-28">
-      <div className="mx-auto max-w-6xl px-6">
-        <div className="mx-auto mb-16 max-w-2xl text-center">
-          <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
-            Todo lo que tu comunidad necesita
+    <section id="features" className="bg-[#fbfaf6] py-20 md:py-28">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="mb-14 max-w-2xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-primary">Cómo se descubre</p>
+          <h2 className="mt-4 text-balance font-serif text-4xl leading-tight tracking-[-0.03em] text-stone-950 md:text-5xl">
+            Menos módulos. Más foco en encontrar comercios que valen la pena.
           </h2>
-          <p className="mt-4 text-pretty text-muted-foreground">
-            Una plataforma para servicios, comercio y comunidad, organizada por zona, impulsada por la confianza.
-          </p>
         </div>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="group rounded-xl border border-border bg-card p-6 transition-all hover:border-primary/30 hover:shadow-sm"
+              className="group rounded-[2rem] border border-stone-200/70 bg-white p-7 shadow-[0_18px_50px_rgba(44,39,31,0.045)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(44,39,31,0.08)]"
             >
-              <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+              <div className="mb-7 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#e9efe6] text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
                 <feature.icon className="h-5 w-5" />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-foreground">{feature.title}</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">{feature.description}</p>
+              <h3 className="text-xl font-semibold tracking-tight text-stone-950">{feature.title}</h3>
+              <p className="mt-3 text-sm leading-6 text-stone-600">{feature.description}</p>
             </div>
           ))}
         </div>

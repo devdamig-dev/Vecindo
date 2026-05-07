@@ -12,13 +12,13 @@ const dmSerif = DM_Serif_Display({
 })
 
 export const metadata: Metadata = {
-  title: "VEZI - Servicios de Confianza para tu Comunidad",
+  title: "NIAR - Descubrimiento comercial local",
   description:
-    "Plataforma privada de reputacion y servicios para comunidades cerradas. Encontra profesionales verificados, conecta con vecinos y construi confianza.",
+    "La forma moderna de descubrir comercio local: comercios, catálogos visuales y contacto directo por WhatsApp.",
 }
 
 export const viewport: Viewport = {
-  themeColor: "#2d6a4f",
+  themeColor: "#6f8b73",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,

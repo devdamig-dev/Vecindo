@@ -81,7 +81,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
     : "Volver a Comercios"
 
   const waUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-    `Hola ${commerce.name}, los contacto desde VEZI.`
+    `Hola ${commerce.name}, los contacto desde NIAR.`
   )}`
 
   const openStatus = useMemo(() => {
@@ -127,7 +127,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   const cartWhatsappUrl = `https://wa.me/${commerce.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
     cartItems.length > 0
       ? `Hola ${commerce.name}, quiero pedir:\n${cartSummary}\n\nTotal estimado: ${formatARS(total)}`
-      : `Hola ${commerce.name}, quiero hacer una consulta desde VEZI.`
+      : `Hola ${commerce.name}, quiero hacer una consulta desde NIAR.`
   )}`
 
   const trustBullets = useMemo(() => {
@@ -217,7 +217,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
       try {
         await navigator.share({
           title: commerce.name,
-          text: "Mirá este catálogo en VEZI",
+          text: "Mirá este catálogo en NIAR",
           url,
         })
         return
@@ -236,7 +236,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
   }
 
   return (
-    <div className="flex max-w-6xl flex-col gap-5 md:gap-6">
+    <div className="flex max-w-7xl flex-col gap-5 md:gap-6">
       <Link
         href={backHref}
         className="flex w-fit items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
@@ -245,26 +245,26 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
         {backLabel}
       </Link>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-6">
-          <div className="overflow-hidden rounded-3xl border border-border bg-card">
-            <div className="relative h-52 overflow-hidden md:h-64">
+          <div className="overflow-hidden rounded-[2.25rem] border border-stone-200/80 bg-white shadow-[0_24px_80px_rgba(44,39,31,0.08)]">
+            <div className="relative h-72 overflow-hidden md:h-[420px]">
               <img
                 src={commerce.bannerUrl}
                 alt={commerce.name}
                 className="h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/58 via-stone-950/12 to-transparent" />
             </div>
 
-            <div className="relative px-4 pb-6 pt-0 sm:px-6 md:px-8">
-              <div className="-mt-10">
-                <Avatar className="h-20 w-20 border-4 border-card shadow-sm md:h-24 md:w-24">
+            <div className="relative px-5 pb-8 pt-0 sm:px-7 md:px-10">
+              <div className="-mt-14">
+                <Avatar className="h-24 w-24 border-4 border-white shadow-[0_16px_40px_rgba(44,39,31,0.14)] md:h-28 md:w-28">
                   <AvatarFallback
                     className={
                       isCommerce
-                        ? "bg-sky-100 text-sky-700"
-                        : "bg-amber-100 text-amber-700"
+                        ? "bg-[#e9efe6] text-primary"
+                        : "bg-[#f4eee2] text-stone-700"
                     }
                   >
                     <span className="text-2xl font-bold">{commerce.logo}</span>
@@ -272,14 +272,14 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                 </Avatar>
               </div>
 
-              <div className="mt-4 flex flex-col gap-5 md:grid md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
+              <div className="mt-5 flex flex-col gap-7 md:grid md:grid-cols-[minmax(0,1fr)_auto] md:items-start">
                 <div className="min-w-0">
                   <div className="mb-3 flex flex-wrap items-center gap-2">
                     <Badge
                       className={
                         isCommerce
-                          ? "bg-sky-100 text-sky-700 hover:bg-sky-100"
-                          : "bg-amber-100 text-amber-700 hover:bg-amber-100"
+                          ? "bg-[#e9efe6] text-primary hover:bg-[#e9efe6]"
+                          : "bg-[#f4eee2] text-stone-700 hover:bg-[#f4eee2]"
                       }
                     >
                       {isCommerce ? (
@@ -308,15 +308,15 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     )}
                   </div>
 
-                  <h1 className="max-w-3xl text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+                  <h1 className="max-w-3xl font-serif text-4xl leading-tight tracking-[-0.035em] text-stone-950 md:text-6xl">
                     {commerce.name}
                   </h1>
 
-                  <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground md:text-[15px]">
+                  <p className="mt-4 max-w-3xl text-base leading-8 text-stone-600 md:text-lg">
                     {commerce.description}
                   </p>
 
-                  <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                  <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-stone-600">
                     <span className="inline-flex items-center gap-1.5">
                       <div className="flex items-center gap-0.5">
                         {Array.from({ length: 5 }).map((_, i) => (
@@ -369,7 +369,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     </Badge>
                   </div>
 
-                  <ActivityChips insights={commerceInsights} limit={3} className="mt-4" />
+                  <ActivityChips insights={commerceInsights} limit={2} className="mt-4" />
                   <p className="mt-4 text-xs text-muted-foreground">{commerce.meta}</p>
                 </div>
 
@@ -383,7 +383,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
                   <Button
                     asChild
-                    className="gap-2 bg-emerald-700 text-white hover:bg-emerald-800"
+                    className="gap-2 bg-primary text-primary-foreground shadow-[0_14px_34px_rgba(88,112,91,0.22)] hover:bg-primary/90"
                   >
                     <a
                       href={waUrl}
@@ -422,13 +422,13 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
           <div
             id="catalogo"
-            className="scroll-mt-32 rounded-3xl border border-border bg-card p-6"
+            className="scroll-mt-32 rounded-[2.25rem] border border-stone-200/80 bg-white p-6 shadow-[0_20px_70px_rgba(44,39,31,0.055)] md:p-8"
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-lg font-semibold text-foreground">Catálogo</h2>
+                <h2 className="font-serif text-3xl tracking-[-0.03em] text-stone-950">Catálogo visual</h2>
                 <p className="text-sm text-muted-foreground">
-                  Productos disponibles con pedido directo y coordinación por WhatsApp.
+                  Explorá productos seleccionados y pedí directo por WhatsApp.
                 </p>
               </div>
 
@@ -438,7 +438,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
               </div>
             </div>
 
-            <div className="mt-4 grid gap-4 md:grid-cols-2">
+            <div className="mt-7 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {commerce.products.map((product) => {
                 const qty = cart[product.id] ?? 0
                 const productWhatsappUrl = `https://wa.me/${commerce.whatsapp.replace(
@@ -447,7 +447,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                 )}?text=${encodeURIComponent(
                   `Hola ${commerce.name}, me interesa "${product.name}" (${formatARS(
                     product.price
-                  )}) desde VEZI.`
+                  )}) desde NIAR.`
                 )}`
 
                 const stop = (e: React.MouseEvent | React.PointerEvent) => e.stopPropagation()
@@ -465,29 +465,29 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                         openProductDetail(product)
                       }
                     }}
-                    className="cursor-pointer rounded-2xl border border-border bg-background p-4 text-left transition hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground/30"
+                    className="group cursor-pointer overflow-hidden rounded-[1.75rem] border border-stone-200 bg-white p-3 text-left shadow-[0_14px_45px_rgba(44,39,31,0.045)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_65px_rgba(44,39,31,0.1)] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/35"
                   >
                     <img
                       src={product.imageUrl}
                       alt={product.name}
-                      className="h-40 w-full rounded-xl object-cover"
+                      className="h-56 w-full rounded-[1.35rem] object-cover transition duration-500 group-hover:scale-[1.03]"
                     />
 
-                    <div className="mt-3 flex items-start justify-between gap-3">
-                      <h3 className="font-semibold text-foreground">{product.name}</h3>
-                      <span className="text-sm font-semibold text-foreground">
+                    <div className="mt-4 flex items-start justify-between gap-3">
+                      <h3 className="font-semibold tracking-[-0.02em] text-stone-950">{product.name}</h3>
+                      <span className="text-sm font-semibold tracking-[-0.02em] text-stone-950">
                         {formatARS(product.price)}
                       </span>
                     </div>
 
-                    <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
+                    <p className="mt-2 line-clamp-2 text-sm leading-6 text-stone-600">
                       {product.shortDescription}
                     </p>
                     <ActivityChips insights={getCommerceProductInsights(product.id)} limit={2} className="mt-3" />
 
-                    <div className="mt-4 flex items-center justify-between gap-3">
+                    <div className="mt-5 flex items-center justify-between gap-3">
                       <div
-                        className="flex items-center rounded-lg border border-border"
+                        className="flex items-center rounded-full border border-stone-200 bg-stone-50"
                         onClick={stop}
                         onPointerDown={stop}
                       >
@@ -546,7 +546,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                       <Button
                         size="sm"
                         asChild
-                        className="gap-1.5 bg-emerald-700 text-white hover:bg-emerald-800"
+                        className="gap-1.5 bg-primary text-primary-foreground shadow-[0_14px_34px_rgba(88,112,91,0.22)] hover:bg-primary/90"
                       >
                         <a
                           href={productWhatsappUrl}
@@ -568,8 +568,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-border bg-card p-6 lg:hidden">
-            <h2 className="text-base font-semibold text-foreground">Pedido rápido</h2>
+          <div className="rounded-[2rem] border border-stone-200/80 bg-white p-6 shadow-[0_16px_50px_rgba(44,39,31,0.05)] lg:hidden">
+            <h2 className="text-base font-semibold tracking-[-0.02em] text-stone-950">Pedido rápido</h2>
             <p className="mt-2 text-sm text-muted-foreground">
               {cartCount > 0
                 ? `${cartCount} producto(s) agregado(s). Enviá tu pedido directo al comercio.`
@@ -590,7 +590,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                   </div>
                 ))}
 
-                <div className="border-t border-border pt-2 text-sm font-semibold text-foreground">
+                <div className="border-t border-border pt-2 text-sm font-semibold tracking-[-0.02em] text-stone-950">
                   Total estimado: {formatARS(total)}
                 </div>
               </div>
@@ -598,7 +598,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
             <Button
               asChild
-              className="mt-4 w-full gap-2 bg-emerald-700 text-white hover:bg-emerald-800"
+              className="mt-4 w-full gap-2 bg-primary text-primary-foreground shadow-[0_14px_34px_rgba(88,112,91,0.22)] hover:bg-primary/90"
               disabled={cartCount === 0}
             >
               <a
@@ -613,8 +613,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             </Button>
           </div>
 
-          <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-lg font-semibold text-foreground">Reseñas</h2>
+          <div className="rounded-[2rem] border border-stone-200/80 bg-white p-6 shadow-[0_16px_50px_rgba(44,39,31,0.05)]">
+            <h2 className="text-lg font-semibold tracking-[-0.02em] text-stone-950">Reseñas</h2>
 
             <div className="mt-4 space-y-4">
               {reviews.length > 0 ? (
@@ -670,8 +670,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             </div>
           </div>
 
-          <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-base font-semibold text-foreground">Dejá tu reseña</h2>
+          <div className="rounded-[2rem] border border-stone-200/80 bg-white p-6 shadow-[0_16px_50px_rgba(44,39,31,0.05)]">
+            <h2 className="text-base font-semibold tracking-[-0.02em] text-stone-950">Dejá tu reseña</h2>
 
             <div className="mt-4 flex items-center gap-2">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -709,8 +709,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
         </div>
 
         <aside className="hidden space-y-6 lg:block">
-          <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-base font-semibold text-foreground">Pedido rápido</h2>
+          <div className="rounded-[2rem] border border-stone-200/80 bg-white p-6 shadow-[0_16px_50px_rgba(44,39,31,0.05)]">
+            <h2 className="text-base font-semibold tracking-[-0.02em] text-stone-950">Pedido rápido</h2>
 
             <p className="mt-2 text-sm text-muted-foreground">
               {cartCount > 0
@@ -732,7 +732,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                   </div>
                 ))}
 
-                <div className="border-t border-border pt-2 text-sm font-semibold text-foreground">
+                <div className="border-t border-border pt-2 text-sm font-semibold tracking-[-0.02em] text-stone-950">
                   Total estimado: {formatARS(total)}
                 </div>
               </div>
@@ -740,7 +740,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
             <Button
               asChild
-              className="mt-4 w-full gap-2 bg-emerald-700 text-white hover:bg-emerald-800"
+              className="mt-4 w-full gap-2 bg-primary text-primary-foreground shadow-[0_14px_34px_rgba(88,112,91,0.22)] hover:bg-primary/90"
               disabled={cartCount === 0}
             >
               <a
@@ -755,8 +755,8 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             </Button>
           </div>
 
-          <div className="rounded-3xl border border-border bg-card p-6">
-            <h2 className="text-base font-semibold text-foreground">Señales de confianza</h2>
+          <div className="rounded-[2rem] border border-stone-200/80 bg-white p-6 shadow-[0_16px_50px_rgba(44,39,31,0.05)]">
+            <h2 className="text-base font-semibold tracking-[-0.02em] text-stone-950">Señales de confianza</h2>
 
             <div className="mt-4 space-y-3">
               {trustBullets.map((bullet) => (
