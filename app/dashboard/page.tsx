@@ -7,6 +7,7 @@ import {
   Handshake,
   Heart,
   Megaphone,
+  Radio,
   MessageCircleQuestion,
   PackageOpen,
   ShoppingBag,
@@ -29,6 +30,7 @@ import {
   getZonalActivitySignals,
 } from "@/lib/activity-insights";
 import { getUserPrimaryRole, type UserPrimaryRole } from "@/lib/commercial";
+import { getFeaturedCommercialPosts } from "@/lib/commercial-feed";
 
 type HomeRole = UserPrimaryRole;
 
@@ -332,6 +334,53 @@ function ReturnToSaved({ items }: { items: SavedItem[] }) {
   );
 }
 
+
+function CommercialPulse() {
+  const posts = getFeaturedCommercialPosts(3);
+
+  return (
+    <section className="rounded-3xl border border-violet-100 bg-violet-50/70 p-4 shadow-[0_10px_28px_rgba(76,29,149,0.05)]">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <div>
+          <p className="text-sm font-semibold text-foreground">Movimiento comercial cerca</p>
+          <p className="text-xs text-muted-foreground">
+            Promos, lanzamientos y negocios activos sin mezclar con Mercado.
+          </p>
+        </div>
+        <Link
+          href="/dashboard/espacio-comercial"
+          className="inline-flex items-center gap-1 rounded-full bg-violet-600 px-3 py-1.5 text-[11px] font-semibold text-white transition-transform hover:-translate-y-0.5"
+        >
+          Ver feed
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
+      </div>
+
+      <div className="grid gap-2 sm:grid-cols-3">
+        {posts.map((post) => (
+          <Link
+            key={post.id}
+            href={post.businessHref}
+            className="group overflow-hidden rounded-2xl border border-violet-100 bg-background transition-colors hover:bg-violet-50"
+          >
+            <div className="aspect-[16/9] overflow-hidden bg-muted">
+              <img src={post.imageUrl} alt={post.title} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+            </div>
+            <div className="p-3">
+              <div className="mb-1 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-violet-700">
+                <Radio className="h-3 w-3" />
+                {post.sponsored ? "Patrocinado" : "Actividad comercial"}
+              </div>
+              <p className="line-clamp-1 text-sm font-semibold text-foreground">{post.title}</p>
+              <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{post.businessName} · {post.zone}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ActivityPanel({ role }: { role: HomeRole }) {
   const isCommercial =
     role === "resident_business" || role === "external_business";
@@ -413,6 +462,7 @@ export default function DashboardPage() {
 
       <section className="flex min-w-0 flex-col gap-6">
         <ZonalMovementStrip role={role} />
+        <CommercialPulse />
         <ActivityPanel role={role} />
         <RecentAyudaWidget />
         <ReturnToSaved items={auth.savedItems} />
