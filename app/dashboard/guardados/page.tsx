@@ -33,6 +33,11 @@ const typeLabels: Record<
     plural: "Publicaciones de Mercado",
     icon: ShoppingBag,
   },
+  commercial_post: {
+    label: "Comercial",
+    plural: "Publicaciones comerciales",
+    icon: Sparkles,
+  },
   zone_update: {
     label: "Novedad",
     plural: "Novedades guardadas",
@@ -46,6 +51,7 @@ const sectionOrder: SavedItemType[] = [
   "product",
   "service",
   "marketplace_item",
+  "commercial_post",
   "ayuda",
   "zone_update",
 ];
@@ -56,6 +62,7 @@ const filterOptions: { key: SavedItemType | "all"; label: string }[] = [
   { key: "product", label: "Productos" },
   { key: "service", label: "Servicios" },
   { key: "marketplace_item", label: "Mercado" },
+  { key: "commercial_post", label: "Comercial" },
   { key: "ayuda", label: "Ayuda" },
 ];
 
@@ -64,6 +71,7 @@ const fallbackActivity: Record<SavedItemType, string> = {
   product: "Volvió a estar disponible",
   service: "Responde rápido",
   marketplace_item: "Guardado por 3 personas",
+  commercial_post: "Promo activa en tu zona",
   ayuda: "3 vecinos también lo siguen",
   zone_update: "Actualizado recientemente",
 };

@@ -19,27 +19,19 @@ import {
   Globe,
   Instagram,
   MessageSquare,
-  Package,
   Pencil,
   Phone,
   Plus,
+  Megaphone,
+  Rocket,
   Settings,
   Sparkles,
   Store,
   Wrench,
 } from "lucide-react"
-import { getCommerceGrowthInsights, getCommerceProductInsights } from "@/lib/activity-insights"
+import { getCommerceGrowthInsights } from "@/lib/activity-insights"
+import { getCommercialPostsByBusinessId } from "@/lib/commercial-feed"
 
-type ListingType = "product" | "service"
-
-type RecentListing = {
-  id: string
-  title: string
-  type: ListingType
-  status: string
-  price: string
-  href: string
-}
 
 const fallbackCommercialProfile = {
   type: "entrepreneur" as "entrepreneur" | "business",
@@ -52,33 +44,6 @@ const fallbackCommercialProfile = {
   instagram: "@mikage.deco",
   isProfileComplete: false,
 }
-
-const recentListings: RecentListing[] = [
-  {
-    id: "1",
-    title: "Mesa de comedor de hierro y tapa simil mármol",
-    type: "product",
-    status: "Disponible",
-    price: "$420.000",
-    href: "/dashboard/marketplace/1",
-  },
-  {
-    id: "2",
-    title: "Rack TV minimalista en madera",
-    type: "product",
-    status: "Reservado",
-    price: "$210.000",
-    href: "/dashboard/marketplace/2",
-  },
-  {
-    id: "3",
-    title: "Asesoramiento en diseño de espacios",
-    type: "service",
-    status: "Activo",
-    price: "Servicio",
-    href: "/dashboard/services",
-  },
-]
 
 function getProfileTypeBadge(type: "entrepreneur" | "business") {
   if (type === "entrepreneur") {
@@ -94,28 +59,6 @@ function getProfileTypeBadge(type: "entrepreneur" | "business") {
     className: "bg-violet-100 text-violet-700 hover:bg-violet-100",
     icon: Store,
   }
-}
-
-function getListingTypeLabel(type: ListingType) {
-  return type === "product" ? "Producto" : "Servicio"
-}
-
-function getListingStatusClass(status: string) {
-  const normalized = status.toLowerCase()
-
-  if (normalized.includes("disponible") || normalized.includes("activo")) {
-    return "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
-  }
-
-  if (normalized.includes("reservado")) {
-    return "bg-amber-100 text-amber-700 hover:bg-amber-100"
-  }
-
-  if (normalized.includes("vendido")) {
-    return "bg-muted text-muted-foreground hover:bg-muted"
-  }
-
-  return "bg-muted text-muted-foreground hover:bg-muted"
 }
 
 export default function ComercialPage() {
@@ -149,11 +92,22 @@ export default function ComercialPage() {
 
   const activity = auth?.commercialActivity
   const commerceGrowthInsights = getCommerceGrowthInsights(commercialProfile.name)
+  const managedBusinessId = auth?.managesCommerceIds?.[0] ?? (commercialProfile.name.toLowerCase().includes("mikage") ? "4" : "2")
+  const myCommercialPosts = getCommercialPostsByBusinessId(managedBusinessId)
+  const commercialPostStats = myCommercialPosts.reduce(
+    (totals, post) => ({
+      impressions: totals.impressions + post.analytics.impressions,
+      interests: totals.interests + post.analytics.interests,
+      saves: totals.saves + post.analytics.saves,
+      shares: totals.shares + post.analytics.shares,
+    }),
+    { impressions: 0, interests: 0, saves: 0, shares: 0 },
+  )
   const stats = [
     {
-      label: "Productos publicados",
-      value: String(activity?.marketplaceListingsCount ?? 0),
-      icon: Package,
+      label: "Publicaciones comerciales",
+      value: String(myCommercialPosts.length),
+      icon: Megaphone,
     },
     {
       label: "Servicios vinculados",
@@ -161,13 +115,13 @@ export default function ComercialPage() {
       icon: Wrench,
     },
     {
-      label: "Pedidos iniciados",
-      value: commerceGrowthInsights[2].label.split(" ")[0],
+      label: "Interés en publicaciones",
+      value: String(commercialPostStats.interests),
       icon: MessageSquare,
     },
     {
-      label: "Visibilidad semanal",
-      value: commerceGrowthInsights[0].label.split(" ")[0],
+      label: "Vistas del feed",
+      value: String(commercialPostStats.impressions),
       icon: BarChart3,
     },
   ]
@@ -262,9 +216,9 @@ export default function ComercialPage() {
               </Link>
             </Button>
             <Button asChild>
-              <Link href="/dashboard/marketplace/new">
+              <Link href="/dashboard/comercial#crear-publicacion">
                 <Plus className="h-4 w-4" />
-                Agregar producto
+                Crear publicación comercial
               </Link>
             </Button>
 
@@ -294,32 +248,39 @@ export default function ComercialPage() {
                 <div>
                   <h2 className="font-semibold text-foreground">Mis publicaciones</h2>
                   <p className="text-sm text-muted-foreground">
-                    Productos y servicios vinculados a tu actividad comercial.
+                    Novedades, promociones y contenidos profesionales que alimentan el feed comercial.
                   </p>
                 </div>
 
                 <Button asChild variant="outline" size="sm">
-                  <Link href="/dashboard/marketplace">Ver todas</Link>
+                  <Link href="/dashboard/espacio-comercial">Ver feed</Link>
                 </Button>
               </div>
 
               <div className="flex flex-col divide-y divide-border">
-                {recentListings.map((item) => (
-                  <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
+                {myCommercialPosts.map((post) => (
+                  <div key={post.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
                     <div className="min-w-0 flex-1">
                       <div className="mb-2 flex flex-wrap items-center gap-2">
-                        <Badge variant="secondary">{getListingTypeLabel(item.type)}</Badge>
-                        <Badge className={getListingStatusClass(item.status)}>{item.status}</Badge>
+                        <Badge variant="secondary">Publicación comercial</Badge>
+                        <Badge className={post.sponsored ? "bg-amber-100 text-amber-700 hover:bg-amber-100" : "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"}>{post.sponsored ? "Promocionada" : "Activa"}</Badge>
+                        <Badge className="bg-violet-100 text-violet-700 hover:bg-violet-100">{post.category}</Badge>
                       </div>
 
-                      <p className="truncate font-medium text-foreground">{item.title}</p>
-                      <p className="mt-1 text-sm text-muted-foreground">{item.price}</p>
-                      <ActivityChips insights={getCommerceProductInsights(item.id)} limit={2} className="mt-2" />
+                      <p className="font-medium text-foreground">{post.title}</p>
+                      <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{post.description}</p>
+                      <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                        <span>{post.analytics.impressions} vistas</span>
+                        <span>•</span>
+                        <span>{post.analytics.interests} intereses</span>
+                        <span>•</span>
+                        <span>{post.analytics.saves} guardados</span>
+                      </div>
                     </div>
 
                     <Button asChild variant="ghost" size="sm">
-                      <Link href={item.href}>
-                        Ver
+                      <Link href="/dashboard/espacio-comercial">
+                        Ver rendimiento
                         <ChevronRight className="h-4 w-4" />
                       </Link>
                     </Button>
@@ -340,22 +301,22 @@ export default function ComercialPage() {
                   </Button>
 
                   <Button asChild variant="outline" className="justify-between">
-                    <Link href="/dashboard/profile">
-                      Editar perfil
+                    <Link href="/dashboard/comercial#crear-publicacion">
+                      Crear publicación comercial
                       <ChevronRight className="h-4 w-4" />
                     </Link>
                   </Button>
 
                   <Button asChild variant="outline" className="justify-between">
-                    <Link href="/dashboard/marketplace/new">
-                      Agregar producto
+                    <Link href="/dashboard/suscripciones">
+                      Promocionar publicación
                       <ChevronRight className="h-4 w-4" />
                     </Link>
                   </Button>
 
                   <Button asChild variant="outline" className="justify-between">
-                    <Link href="/dashboard/marketplace">
-                      Ver catálogo
+                    <Link href="/dashboard/comercial#rendimiento">
+                      Ver rendimiento
                       <ChevronRight className="h-4 w-4" />
                     </Link>
                   </Button>
@@ -369,10 +330,34 @@ export default function ComercialPage() {
                 </div>
               </div>
 
+              <div id="crear-publicacion" className="rounded-2xl border border-violet-200 bg-violet-50 p-5">
+                <div className="flex items-center gap-2 text-violet-700">
+                  <Rocket className="h-5 w-5" />
+                  <h2 className="font-semibold">Crear publicación comercial</h2>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Prepará una promo, novedad, combo o lanzamiento para el feed. Hoy queda simulado/local, pero la entidad ya separa commercial_posts del Marketplace.
+                </p>
+                <div className="mt-4 grid gap-2">
+                  <Button asChild className="justify-between bg-violet-600 text-white hover:bg-violet-700">
+                    <Link href="/dashboard/espacio-comercial">
+                      Crear publicación comercial
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" className="justify-between">
+                    <Link href="/dashboard/suscripciones">
+                      Promocionar publicación
+                      <Megaphone className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+
               <div className="rounded-xl border border-border bg-muted/40 px-4 py-3">
                 <p className="text-sm font-medium text-foreground">Sugerencia</p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Mantené productos y servicios activos para mejorar visibilidad y generar más consultas.
+                  Alterná promociones, novedades y lanzamientos para mantener vivo el feed comercial de la zona.
                 </p>
               </div>
             </div>
@@ -472,7 +457,7 @@ export default function ComercialPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="estadisticas" className="space-y-4">
+        <TabsContent id="rendimiento" value="estadisticas" className="space-y-4">
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             {stats.map((item) => (
               <div key={item.label} className="rounded-xl border border-border bg-card p-4">

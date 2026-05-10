@@ -66,6 +66,7 @@ export type SavedItemType =
   | "product"
   | "service"
   | "marketplace_item"
+  | "commercial_post"
   | "zone_update"
   | "ayuda";
 
