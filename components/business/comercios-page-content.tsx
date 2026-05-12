@@ -13,12 +13,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Bookmark,
+  Clock,
   Package,
   Store,
   Sparkles,
   MapPin,
   MessageSquare,
   Lock,
+  Truck,
 } from "lucide-react";
 import ComerciosZoneMap from "@/components/business/comercios-zone-map";
 import type { CommerceItem } from "@/lib/commerces-data";
@@ -39,6 +41,17 @@ function getDescription(item: CommerceItem) {
     "Perfil comercial de la zona."
   );
 }
+
+const commerceCategoryChips = [
+  "Gastronomía",
+  "Deco",
+  "Moda",
+  "Fitness",
+  "Tecnología",
+  "Servicios",
+  "Hogar",
+  "Mascotas",
+];
 
 function getFirstBadge(item: CommerceItem) {
   if (Array.isArray((item as any).badges) && (item as any).badges.length > 0) {
@@ -137,15 +150,35 @@ function CommercialListCard({
           </p>
         </div>
 
-        <div className="text-xs text-slate-500">
+        <div className="flex flex-wrap gap-2 text-[11px] font-medium text-slate-500">
           {isCommerce ? (
-            <p>
-              {(item as any).location || "Zona visible"} · Dirección visible
-            </p>
+            <>
+              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1">
+                <MapPin className="h-3 w-3" />
+                {(item as any).location || "Zona visible"}
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">
+                <Clock className="h-3 w-3" />
+                Abierto ahora
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1">
+                <Truck className="h-3 w-3" />
+                Delivery
+              </span>
+            </>
           ) : (
-            <p>
-              {(item as any).location || "Zona visible"} · Entregas coordinadas
-            </p>
+            <>
+              <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-2.5 py-1 text-violet-700">
+                <Sparkles className="h-3 w-3" />
+                Diseño local
+              </span>
+              <span className="rounded-full bg-white px-2.5 py-1">
+                Productos destacados
+              </span>
+              <span className="rounded-full bg-white px-2.5 py-1">
+                Entregas coordinadas
+              </span>
+            </>
           )}
         </div>
 
@@ -229,13 +262,26 @@ export default function ComerciosPageContent({
             </h2>
             <p className="max-w-3xl text-sm text-slate-600">
               {isCommerceTab
-                ? "Negocios, marcas y locales de la zona con catálogo activo, ubicación visible y pedido simple por WhatsApp."
-                : "Marcas y proyectos de vecinos con catálogo público, atención directa y pedidos coordinados sin necesidad de local físico."}
+                ? "Locales útiles cerca tuyo: ubicación, rubro, horarios, delivery y pedido simple."
+                : "Marcas de vecinos para descubrir productos, identidad y lanzamientos locales."}
             </p>
-            <ActivityChips
-              insights={getCommerceGrowthInsights("commercial-directory")}
-              limit={3}
-            />
+            {isCommerceTab ? (
+              <div className="flex flex-wrap gap-2">
+                {commerceCategoryChips.map((chip) => (
+                  <span
+                    key={chip}
+                    className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-violet-700"
+                  >
+                    {chip}
+                  </span>
+                ))}
+              </div>
+            ) : (
+              <ActivityChips
+                insights={getCommerceGrowthInsights("commercial-directory")}
+                limit={3}
+              />
+            )}
           </div>
         </div>
       </div>
