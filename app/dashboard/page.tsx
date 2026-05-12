@@ -4,31 +4,22 @@ import Link from "next/link";
 import {
   ArrowRight,
   Bookmark,
-  Handshake,
   Heart,
   Megaphone,
   Radio,
-  MessageCircleQuestion,
-  PackageOpen,
   ShoppingBag,
   Sparkles,
   Store,
-  TrendingUp,
   Wrench,
   type LucideIcon,
 } from "lucide-react";
 import { ActivityChips } from "@/components/activity/activity-chips";
-import { RecentAyudaWidget } from "@/components/ayuda/recent-ayuda-widget";
 import { ModuleCard } from "@/components/dashboard/module-card";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 import { SearchBar } from "@/components/dashboard/search-bar";
-import { SectionHeader } from "@/components/dashboard/section-header";
 import { ZoneUpdatesCarousel } from "@/components/zone-updates/zone-updates-carousel";
 import { useAuth, type SavedItem } from "@/lib/auth-context";
-import {
-  getHomeActivitySignals,
-  getZonalActivitySignals,
-} from "@/lib/activity-insights";
+import { getHomeActivitySignals } from "@/lib/activity-insights";
 import { getUserPrimaryRole, type UserPrimaryRole } from "@/lib/commercial";
 import { getFeaturedCommercialPosts } from "@/lib/commercial-feed";
 
@@ -48,14 +39,6 @@ type RoleNudge = {
   title: string;
   insight: string;
   cta: string;
-  href: string;
-  icon: LucideIcon;
-};
-
-type Opportunity = {
-  title: string;
-  subtitle: string;
-  meta: string;
   href: string;
   icon: LucideIcon;
 };
@@ -134,74 +117,6 @@ const roleNudges: Record<HomeRole, RoleNudge> = {
   },
 };
 
-const opportunities: Record<HomeRole, Opportunity[]> = {
-  resident: [
-    {
-      title: "Feria de emprendedores",
-      subtitle: "Productos locales con promos de la semana.",
-      meta: "Mercado",
-      href: "/dashboard/marketplace",
-      icon: ShoppingBag,
-    },
-    {
-      title: "Pedido de ayuda activo",
-      subtitle: "Una vecina busca difusión para mascota perdida.",
-      meta: "Ayuda",
-      href: "/dashboard/ayuda",
-      icon: Heart,
-    },
-  ],
-  service_provider: [
-    {
-      title: "Consulta de la zona",
-      subtitle: "Un vecino busca presupuesto para arreglos del hogar.",
-      meta: "Hace 1 h",
-      href: "/dashboard/services",
-      icon: MessageCircleQuestion,
-    },
-    {
-      title: "Comercio renovando equipamiento",
-      subtitle: "Posible alianza para mantenimiento recurrente.",
-      meta: "Espacio comercial",
-      href: "/dashboard/espacio-comercial",
-      icon: Handshake,
-    },
-  ],
-  resident_business: [
-    {
-      title: "Producto con potencial",
-      subtitle: "Tu catálogo puede aparecer entre destacados del barrio.",
-      meta: "Mi negocio",
-      href: "/dashboard/comercial",
-      icon: PackageOpen,
-    },
-    {
-      title: "Proveedor recomendado",
-      subtitle: "Prestadores con buena respuesta para comercios locales.",
-      meta: "Servicios",
-      href: "/dashboard/services",
-      icon: Wrench,
-    },
-  ],
-  external_business: [
-    {
-      title: "Patrocinio sugerido",
-      subtitle:
-        "Cerca tuyo puede reforzar tu presencia durante los próximos días.",
-      meta: "Crecimiento",
-      href: "/dashboard/espacio-comercial",
-      icon: Megaphone,
-    },
-    {
-      title: "Optimizar catálogo",
-      subtitle: "Sumá productos de entrada para convertir más visitas.",
-      meta: "Mi negocio",
-      href: "/dashboard/comercial",
-      icon: PackageOpen,
-    },
-  ],
-};
-
 function MainModules() {
   return (
     <div className="grid grid-cols-2 gap-3.5 md:gap-4">
@@ -217,7 +132,7 @@ function RoleNudgeCard({ role }: { role: HomeRole }) {
   const Icon = nudge.icon;
 
   return (
-    <section className="rounded-3xl border border-primary/10 bg-card/90 p-3.5 shadow-[0_8px_24px_rgba(15,23,42,0.04)]">
+    <section className="rounded-3xl border border-primary/10 bg-card/80 p-3 shadow-[0_8px_22px_rgba(15,23,42,0.035)]">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
           <Icon className="h-5 w-5" />
@@ -229,7 +144,7 @@ function RoleNudgeCard({ role }: { role: HomeRole }) {
           <p className="mt-0.5 text-sm font-semibold text-foreground">
             {nudge.title}
           </p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
             {nudge.insight}
           </p>
         </div>
@@ -240,45 +155,6 @@ function RoleNudgeCard({ role }: { role: HomeRole }) {
           {nudge.cta}
           <ArrowRight className="h-3.5 w-3.5" />
         </Link>
-      </div>
-    </section>
-  );
-}
-
-function ZonalMovementStrip({ role }: { role: HomeRole }) {
-  const signals = getZonalActivitySignals(role);
-
-  return (
-    <section className="rounded-3xl border border-border/70 bg-card/95 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.04)]">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div>
-          <p className="text-sm font-semibold text-foreground">
-            Actividad zonal
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Tendencias suaves del barrio, sin ruido ni métricas invasivas.
-          </p>
-        </div>
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-          <TrendingUp className="h-4 w-4" />
-        </div>
-      </div>
-
-      <div className="grid gap-2 sm:grid-cols-3">
-        {signals.map((signal) => (
-          <div
-            key={`${signal.eyebrow}-${signal.label}`}
-            className="rounded-2xl border border-border/60 bg-muted/20 p-3"
-          >
-            <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
-              {signal.eyebrow}
-            </p>
-            <ActivityChips insights={[signal]} className="mt-2" />
-            <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
-              {signal.description}
-            </p>
-          </div>
-        ))}
       </div>
     </section>
   );
@@ -334,7 +210,6 @@ function ReturnToSaved({ items }: { items: SavedItem[] }) {
   );
 }
 
-
 function CommercialPulse() {
   const posts = getFeaturedCommercialPosts(3);
 
@@ -342,7 +217,9 @@ function CommercialPulse() {
     <section className="rounded-3xl border border-violet-100 bg-violet-50/70 p-4 shadow-[0_10px_28px_rgba(76,29,149,0.05)]">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm font-semibold text-foreground">Movimiento comercial cerca</p>
+          <p className="text-sm font-semibold text-foreground">
+            Movimiento comercial cerca
+          </p>
           <p className="text-xs text-muted-foreground">
             Promos, lanzamientos y negocios activos sin mezclar con Mercado.
           </p>
@@ -364,74 +241,26 @@ function CommercialPulse() {
             className="group overflow-hidden rounded-2xl border border-violet-100 bg-background transition-colors hover:bg-violet-50"
           >
             <div className="aspect-[16/9] overflow-hidden bg-muted">
-              <img src={post.imageUrl} alt={post.title} className="h-full w-full object-cover transition-transform group-hover:scale-105" />
+              <img
+                src={post.imageUrl}
+                alt={post.title}
+                className="h-full w-full object-cover transition-transform group-hover:scale-105"
+              />
             </div>
             <div className="p-3">
               <div className="mb-1 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-violet-700">
                 <Radio className="h-3 w-3" />
                 {post.sponsored ? "Patrocinado" : "Actividad comercial"}
               </div>
-              <p className="line-clamp-1 text-sm font-semibold text-foreground">{post.title}</p>
-              <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">{post.businessName} · {post.zone}</p>
+              <p className="line-clamp-1 text-sm font-semibold text-foreground">
+                {post.title}
+              </p>
+              <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
+                {post.businessName} · {post.zone}
+              </p>
             </div>
           </Link>
         ))}
-      </div>
-    </section>
-  );
-}
-
-function ActivityPanel({ role }: { role: HomeRole }) {
-  const isCommercial =
-    role === "resident_business" || role === "external_business";
-
-  return (
-    <section className="rounded-3xl border border-border/70 bg-card/95 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.05)]">
-      <SectionHeader
-        title={
-          role === "service_provider"
-            ? "Movimiento para tus servicios"
-            : isCommercial
-              ? "Movimiento comercial local"
-              : "Actividad de la zona"
-        }
-        subtitle={
-          role === "service_provider"
-            ? "Señales breves para conectar con vecinos y comercios."
-            : isCommercial
-              ? "Oportunidades puntuales para tu negocio dentro de la vida barrial."
-              : "Destacados comunitarios para seguir el pulso del barrio."
-        }
-      />
-      <div className="grid gap-3 sm:grid-cols-2">
-        {opportunities[role].map((item) => {
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.title}
-              href={item.href}
-              className="group flex items-start gap-3 rounded-2xl border border-border/70 bg-muted/25 p-3 transition-colors hover:bg-muted/50"
-            >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-background text-primary shadow-sm">
-                <Icon className="h-5 w-5" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="truncate text-sm font-semibold text-foreground">
-                    {item.title}
-                  </p>
-                  <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
-                    {item.meta}
-                  </span>
-                </div>
-                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                  {item.subtitle}
-                </p>
-              </div>
-              <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-            </Link>
-          );
-        })}
       </div>
     </section>
   );
@@ -451,20 +280,17 @@ export default function DashboardPage() {
 
       <RecentActivity />
 
-      <section className="flex min-w-0 flex-col gap-4">
-        <RoleNudgeCard role={role} />
+      <section className="flex min-w-0 flex-col gap-3">
         <ActivityChips
           insights={getHomeActivitySignals(role)}
           limit={3}
           className="px-1"
         />
+        <RoleNudgeCard role={role} />
       </section>
 
-      <section className="flex min-w-0 flex-col gap-6">
-        <ZonalMovementStrip role={role} />
+      <section className="flex min-w-0 flex-col gap-5">
         <CommercialPulse />
-        <ActivityPanel role={role} />
-        <RecentAyudaWidget />
         <ReturnToSaved items={auth.savedItems} />
       </section>
     </div>
