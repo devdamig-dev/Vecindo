@@ -50,8 +50,8 @@ function BottomNavLink({ item }: { item: PrimaryNavItem }) {
       href={item.href}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[12px] font-medium text-slate-500 transition-all duration-200",
-        isActive && cn(getActiveClass(item.module), getGlowClass(item.module), "scale-[1.08] -translate-y-[1px] font-semibold"),
+        "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[12px] font-medium text-slate-500 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-muted/60 hover:text-slate-700 active:scale-95",
+        isActive && cn(getActiveClass(item.module), getGlowClass(item.module), "scale-[1.08] -translate-y-[2px] font-semibold"),
       )}
     >
       <Icon className="h-4 w-4" />
@@ -62,7 +62,7 @@ function BottomNavLink({ item }: { item: PrimaryNavItem }) {
 
 export function BottomNav({ homeHref }: Props) {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/70 bg-card/95 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-10px_30px_rgba(2,6,23,0.08)] backdrop-blur">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-card/95 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-14px_34px_rgba(2,6,23,0.075)] backdrop-blur-xl">
       <div className="relative mx-auto grid max-w-2xl grid-cols-5 items-end px-3">
         <div className="col-span-2 grid grid-cols-2">
           {primaryNavItems.slice(0, 2).map((item) => (
