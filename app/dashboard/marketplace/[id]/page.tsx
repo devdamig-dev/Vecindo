@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { listings } from "@/components/marketplace/marketplace-grid";
 import { getMarketplaceActivityInsights } from "@/lib/activity-insights";
 import { useAuth } from "@/lib/auth-context";
+import { canAccessMarketplace } from "@/lib/commercial";
 import {
   ArrowLeft,
   ChevronLeft,
@@ -22,6 +23,7 @@ import {
   Flag,
   ShieldCheck,
   Eye,
+  Lock,
 } from "lucide-react";
 
 function getConditionBadgeClass(condition: string) {
@@ -64,7 +66,27 @@ export default function MarketplaceDetailPage() {
   const { id } = useParams<{ id: string }>();
   const listing = listings.find((l) => l.id === id);
   const [currentImage, setCurrentImage] = useState(0);
-  const { saveItem, isSaved } = useAuth();
+  const { saveItem, isSaved, auth } = useAuth();
+  const canAccess = canAccessMarketplace(auth);
+
+  if (!canAccess) {
+    return (
+      <div className="mx-auto flex max-w-md flex-col items-center justify-center px-4 py-16 text-center">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+          <Lock className="h-5 w-5" />
+        </div>
+        <h1 className="mb-2 text-xl font-bold text-foreground">
+          Mercado está disponible para residentes
+        </h1>
+        <p className="mb-6 text-sm text-muted-foreground">
+          Este detalle pertenece al intercambio comunitario entre vecinos.
+        </p>
+        <Button asChild className="rounded-full bg-violet-600 text-white hover:bg-violet-700">
+          <Link href="/dashboard/espacio-comercial">Ir a Espacio comercial</Link>
+        </Button>
+      </div>
+    );
+  }
 
   if (!listing) {
     return (

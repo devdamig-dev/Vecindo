@@ -71,10 +71,18 @@ function CommercialPreviewCard({
   return (
     <Link
       href={href}
-      className="group rounded-[24px] border border-violet-100 bg-card p-4 transition-all hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-sm"
+      className={`group rounded-[24px] border p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm active:scale-[0.99] ${
+        isCommerce
+          ? "border-sky-100 bg-sky-50/45 hover:border-sky-200"
+          : "border-amber-100 bg-gradient-to-br from-amber-50/70 via-card to-violet-50/50 hover:border-amber-200"
+      }`}
     >
       <div className="flex items-start gap-3">
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-violet-100 text-violet-700">
+        <div
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${
+            isCommerce ? "bg-sky-100 text-sky-700" : "bg-amber-100 text-amber-700"
+          }`}
+        >
           {isCommerce ? (
             <Store className="h-5 w-5" />
           ) : (
@@ -87,6 +95,15 @@ function CommercialPreviewCard({
               {title}
             </h3>
             <Badge variant="secondary">{badge}</Badge>
+            <Badge
+              className={
+                isCommerce
+                  ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                  : "bg-violet-100 text-violet-700 hover:bg-violet-100"
+              }
+            >
+              {isCommerce ? "Local físico" : "Marca local"}
+            </Badge>
           </div>
           <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
             {description}
@@ -99,7 +116,7 @@ function CommercialPreviewCard({
           <>
             <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1">
               <MapPin className="h-3 w-3" />
-              {location}
+              Pin · {location} · a 1,4 km
             </span>
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">
               <Clock className="h-3 w-3" />
@@ -107,22 +124,23 @@ function CommercialPreviewCard({
             </span>
             <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1">
               <Truck className="h-3 w-3" />
-              Delivery
+              Delivery / retiro
             </span>
           </>
         ) : (
           <>
             <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-2.5 py-1 text-violet-700">
               <Sparkles className="h-3 w-3" />
-              Producto local
+              Identidad propia
             </span>
-            <span className="rounded-full bg-muted px-2.5 py-1">{meta}</span>
+            <span className="rounded-full bg-white/80 px-2.5 py-1">Productos con autoría</span>
+            <span className="rounded-full bg-white/80 px-2.5 py-1">{meta}</span>
           </>
         )}
       </div>
 
       <div className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-violet-700">
-        {isCommerce ? "Ver comercio" : "Descubrir marca"}
+        {isCommerce ? "Ver local y ubicación" : "Descubrir productos"}
         <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
       </div>
     </Link>
@@ -139,7 +157,7 @@ export default function EspacioComercialPage() {
   const role = getUserPrimaryRole(auth);
 
   return (
-    <div className="flex max-w-full flex-col gap-5">
+    <div className="flex max-w-full flex-col gap-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div className="space-y-1">
           <div className="inline-flex items-center gap-2 rounded-full bg-violet-100 px-3 py-1 text-xs font-medium text-violet-700">
@@ -194,7 +212,7 @@ export default function EspacioComercialPage() {
 
       <CommercialFeed />
 
-      <section className="space-y-3">
+      <section className="space-y-3.5">
         <div className="flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-foreground">
@@ -215,7 +233,7 @@ export default function EspacioComercialPage() {
         </div>
       </section>
 
-      <section className="space-y-3">
+      <section className="space-y-3.5">
         <div className="flex items-center justify-between gap-3">
           <div>
             <h2 className="text-lg font-semibold text-foreground">
@@ -272,9 +290,9 @@ export default function EspacioComercialPage() {
           ) : (
             <div className="flex flex-wrap gap-2">
               <Button asChild variant="outline">
-                <Link href="/dashboard/marketplace">
+                <Link href={auth.capabilities.canAccessMarketplace ? "/dashboard/marketplace" : "/dashboard/services/new"}>
                   <Package className="mr-2 h-4 w-4" />
-                  Mercado
+                  {auth.capabilities.canAccessMarketplace ? "Mercado" : "Servicios"}
                 </Link>
               </Button>
               <Button asChild variant="outline">

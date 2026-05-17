@@ -16,11 +16,14 @@ import {
 import { ActivityChips } from "@/components/activity/activity-chips";
 import { ModuleCard } from "@/components/dashboard/module-card";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
-import { SearchBar } from "@/components/dashboard/search-bar";
 import { ZoneUpdatesCarousel } from "@/components/zone-updates/zone-updates-carousel";
 import { useAuth, type SavedItem } from "@/lib/auth-context";
 import { getHomeActivitySignals } from "@/lib/activity-insights";
-import { getUserPrimaryRole, type UserPrimaryRole } from "@/lib/commercial";
+import {
+  canAccessMarketplace,
+  getUserPrimaryRole,
+  type UserPrimaryRole,
+} from "@/lib/commercial";
 import { getFeaturedCommercialPosts } from "@/lib/commercial-feed";
 
 type HomeRole = UserPrimaryRole;
@@ -117,13 +120,35 @@ const roleNudges: Record<HomeRole, RoleNudge> = {
   },
 };
 
-function MainModules() {
+function MainModules({ showMarketplace }: { showMarketplace: boolean }) {
+  const modules = showMarketplace
+    ? mainModules
+    : mainModules.filter((action) => action.href !== "/dashboard/marketplace");
+
   return (
     <div className="grid grid-cols-2 gap-3.5 md:gap-4">
-      {mainModules.map((action) => (
+      {modules.map((action) => (
         <ModuleCard key={action.href} {...action} />
       ))}
     </div>
+  );
+}
+
+function MarketplaceResidentNotice() {
+  return (
+    <section className="rounded-3xl border border-emerald-100 bg-emerald-50/70 p-4 shadow-[0_10px_28px_rgba(16,185,129,0.045)]">
+      <div className="flex items-start gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700 shadow-sm">
+          <ShoppingBag className="h-5 w-5" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-foreground">Mercado es comunitario</p>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+            Mercado está disponible para residentes de la comunidad. Como prestador externo podés seguir usando Servicios y Espacio comercial.
+          </p>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -269,14 +294,15 @@ function CommercialPulse() {
 export default function DashboardPage() {
   const { auth } = useAuth();
   const role = getUserPrimaryRole(auth);
+  const showMarketplace = canAccessMarketplace(auth);
 
   return (
     <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden pb-4">
       <ZoneUpdatesCarousel zoneId="berazategui" />
 
-      <SearchBar />
+      <MainModules showMarketplace={showMarketplace} />
 
-      <MainModules />
+      {!showMarketplace && <MarketplaceResidentNotice />}
 
       <RecentActivity />
 

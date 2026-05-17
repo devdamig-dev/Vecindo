@@ -85,15 +85,15 @@ function CommercialListCard({
     <article
       className={`rounded-[28px] border p-5 transition hover:-translate-y-0.5 hover:shadow-sm ${
         isCommerce
-          ? "border-violet-200 bg-violet-50/40"
-          : "border-violet-200 bg-violet-50/40"
+          ? "border-sky-100 bg-sky-50/45"
+          : "border-amber-100 bg-gradient-to-br from-amber-50/70 via-card to-violet-50/45"
       }`}
     >
       <div
         className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl ${
           isCommerce
-            ? "bg-violet-100 text-violet-700"
-            : "bg-violet-100 text-violet-700"
+            ? "bg-sky-100 text-sky-700"
+            : "bg-amber-100 text-amber-700"
         }`}
       >
         {isCommerce ? (
@@ -123,7 +123,7 @@ function CommercialListCard({
                   : "bg-amber-100 text-amber-700 hover:bg-amber-100"
               }
             >
-              {isCommerce ? "Catálogo activo" : "Catálogo activo"}
+              {isCommerce ? "Local físico" : "Marca creativa"}
             </Badge>
 
             <Badge
@@ -155,7 +155,7 @@ function CommercialListCard({
             <>
               <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1">
                 <MapPin className="h-3 w-3" />
-                {(item as any).location || "Zona visible"}
+                {(item as any).location || "Zona visible"} · a 1,4 km
               </span>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">
                 <Clock className="h-3 w-3" />
@@ -163,7 +163,7 @@ function CommercialListCard({
               </span>
               <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1">
                 <Truck className="h-3 w-3" />
-                Delivery
+                Delivery / retiro
               </span>
             </>
           ) : (
@@ -241,8 +241,8 @@ export default function ComerciosPageContent({
           <div
             className={`mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl ${
               isCommerceTab
-                ? "bg-violet-100 text-violet-700"
-                : "bg-violet-100 text-violet-700"
+                ? "bg-sky-100 text-sky-700"
+                : "bg-amber-100 text-amber-700"
             }`}
           >
             {isCommerceTab ? (
@@ -255,7 +255,7 @@ export default function ComerciosPageContent({
           <div className="space-y-3">
             <h2
               className={`text-[1.35rem] font-semibold tracking-tight ${
-                isCommerceTab ? "text-violet-900" : "text-violet-900"
+                isCommerceTab ? "text-sky-950" : "text-amber-950"
               }`}
             >
               {isCommerceTab ? "Comercios" : "Emprendimientos locales"}
@@ -270,7 +270,7 @@ export default function ComerciosPageContent({
                 {commerceCategoryChips.map((chip) => (
                   <span
                     key={chip}
-                    className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-violet-700"
+                    className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-sky-700"
                   >
                     {chip}
                   </span>
@@ -337,12 +337,14 @@ export default function ComerciosPageContent({
             </div>
           ) : (
             <div className="flex flex-wrap gap-2">
-              <Button asChild>
-                <Link href="/dashboard/marketplace">
-                  <Package className="mr-2 h-4 w-4" />
-                  Publicar en Mercado
-                </Link>
-              </Button>
+              {isResident(auth) && (
+                <Button asChild>
+                  <Link href="/dashboard/marketplace">
+                    <Package className="mr-2 h-4 w-4" />
+                    Publicar en Mercado
+                  </Link>
+                </Button>
+              )}
               <Button asChild variant="outline">
                 <Link href="/dashboard/services/new">Ofrecer servicios</Link>
               </Button>

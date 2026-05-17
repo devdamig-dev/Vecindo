@@ -4,15 +4,16 @@ import Link from "next/link"
 import { useMemo, useState } from "react"
 import { MarketplaceGrid, listings } from "@/components/marketplace/marketplace-grid"
 import { useAuth } from "@/lib/auth-context"
-import { canPublishMarketplaceItem } from "@/lib/commercial"
+import { canAccessMarketplace, canPublishMarketplaceItem } from "@/lib/commercial"
 import { MarketplaceFilters } from "@/components/marketplace/marketplace-filters"
 import { Button } from "@/components/ui/button"
-import { Plus, ShieldCheck, Store } from "lucide-react"
+import { Lock, Plus, ShieldCheck, Store, Users } from "lucide-react"
 import { SectionIntroBanner } from "@/components/ui/section-intro-banner"
 
 export default function MarketplacePage() {
   const { auth } = useAuth()
   const canPublish = canPublishMarketplaceItem(auth)
+  const canAccess = canAccessMarketplace(auth)
   const [query, setQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState("Todos")
 
@@ -30,6 +31,44 @@ export default function MarketplacePage() {
       return matchesCategory && matchesQuery
     })
   }, [query, activeCategory])
+
+  if (!canAccess) {
+    return (
+      <div className="flex max-w-full flex-col gap-6">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+            <Lock className="h-3.5 w-3.5" /> Mercado comunitario
+          </div>
+          <h1 className="text-2xl font-bold text-foreground">Mercado</h1>
+          <p className="max-w-2xl text-sm text-muted-foreground">
+            Mercado está disponible para residentes de la comunidad: productos, confianza vecinal e intercambio entre vecinos.
+          </p>
+        </div>
+
+        <div className="rounded-[28px] border border-emerald-100 bg-emerald-50/75 p-5 shadow-[0_14px_34px_rgba(16,185,129,0.055)]">
+          <div className="flex items-start gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700 shadow-sm">
+              <Users className="h-5 w-5" />
+            </div>
+            <div className="min-w-0 space-y-2">
+              <h2 className="text-base font-semibold text-foreground">Exclusivo para residentes</h2>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Los prestadores externos no navegan el feed completo de Mercado. Podés mantener tu presencia en Servicios y Espacio comercial.
+              </p>
+              <div className="flex flex-wrap gap-2 pt-1">
+                <Button asChild variant="outline" className="rounded-full border-sky-200 text-sky-700 hover:bg-sky-50">
+                  <Link href="/dashboard/services">Ir a Servicios</Link>
+                </Button>
+                <Button asChild className="rounded-full bg-violet-600 text-white hover:bg-violet-700">
+                  <Link href="/dashboard/espacio-comercial">Ver Espacio comercial</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex max-w-full flex-col gap-6">

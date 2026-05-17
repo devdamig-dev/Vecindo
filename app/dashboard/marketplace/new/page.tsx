@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { FormEvent, useMemo, useState } from "react"
-import { ArrowLeft, CheckCircle2, ImagePlus } from "lucide-react"
+import { ArrowLeft, CheckCircle2, ImagePlus, Lock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -14,6 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useAuth } from "@/lib/auth-context"
+import { canPublishMarketplaceItem } from "@/lib/commercial"
 
 const categoryOptions = ["Tecnología", "Hogar", "Muebles", "Ropa", "Deportes", "Mascotas", "Otros"] as const
 const productStates = ["nuevo", "usado", "reservado"] as const
@@ -21,6 +23,8 @@ const productStates = ["nuevo", "usado", "reservado"] as const
 type ProductState = (typeof productStates)[number]
 
 export default function NewMarketplaceProductPage() {
+  const { auth } = useAuth()
+  const canPublish = canPublishMarketplaceItem(auth)
   const [title, setTitle] = useState("")
   const [category, setCategory] = useState("")
   const [condition, setCondition] = useState<ProductState | "">("")
@@ -58,6 +62,32 @@ export default function NewMarketplaceProductPage() {
 
   const handleMockImage = () => {
     setMockImage("https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=400&fit=crop")
+  }
+
+  if (!canPublish) {
+    return (
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-5">
+        <Link href="/dashboard/marketplace" className="inline-flex w-fit items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground">
+          <ArrowLeft className="h-4 w-4" /> Volver a Mercado
+        </Link>
+        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/75 p-5">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700 shadow-sm">
+              <Lock className="h-5 w-5" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-foreground">Mercado es para residentes</h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Solo residentes de la comunidad pueden publicar productos en Mercado.
+              </p>
+              <Button asChild className="mt-4 rounded-full bg-violet-600 text-white hover:bg-violet-700">
+                <Link href="/dashboard/espacio-comercial">Ir a Espacio comercial</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
