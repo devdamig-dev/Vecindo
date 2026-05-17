@@ -4,7 +4,16 @@ import Link from "next/link";
 import { ActivityChips } from "@/components/activity/activity-chips";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark, Star, ShieldCheck, MapPin, Users, Zap } from "lucide-react";
+import {
+  Bookmark,
+  Star,
+  ShieldCheck,
+  MapPin,
+  Users,
+  Zap,
+  BriefcaseBusiness,
+  MessageCircle,
+} from "lucide-react";
 import { getProfessionalCardInsights } from "@/lib/activity-insights";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
@@ -130,7 +139,7 @@ export function ServicesList({ professionals }: ServicesListProps) {
         return (
           <article
             key={pro.id}
-            className="group flex flex-col gap-3 rounded-xl border border-border bg-card p-5 transition-all hover:border-sky-300 hover:shadow-sm sm:flex-row sm:items-start"
+            className="group flex flex-col gap-3 rounded-[26px] border border-sky-100/80 bg-card p-5 shadow-[0_12px_30px_rgba(14,165,233,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-[0_16px_36px_rgba(14,165,233,0.08)] active:scale-[0.995] sm:flex-row sm:items-start"
           >
             <Link href={`/dashboard/services/${pro.id}`} className="shrink-0">
               <Avatar className="h-14 w-14">
@@ -156,12 +165,16 @@ export function ServicesList({ professionals }: ServicesListProps) {
                 <h3 className="font-semibold text-foreground">{pro.name}</h3>
 
                 {pro.verified && (
-                  <ShieldCheck className="h-4 w-4 text-sky-600" />
+                  <Badge className="gap-1 border-0 bg-sky-500/10 text-[10px] text-sky-700 hover:bg-sky-500/10">
+                    <ShieldCheck className="h-3 w-3" />
+                    Verificado
+                  </Badge>
                 )}
 
                 {pro.isTop && (
-                  <Badge className="border-0 bg-yellow-500/10 text-[10px] text-yellow-700 hover:bg-yellow-500/10">
-                    Destacado
+                  <Badge className="gap-1 border-0 bg-yellow-500/10 text-[10px] text-yellow-700 hover:bg-yellow-500/10">
+                    <Users className="h-3 w-3" />
+                    Recomendado
                   </Badge>
                 )}
 
@@ -179,14 +192,26 @@ export function ServicesList({ professionals }: ServicesListProps) {
                 {pro.description}
               </p>
 
-              <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
-                <span>+{pro.jobs} trabajos</span>
-                <span>•</span>
-                <span>{pro.reviews} vecinos lo recomiendan</span>
+              <div className="mt-3 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2.5 py-1 text-sky-700">
+                  <BriefcaseBusiness className="h-3 w-3" />
+                  +{pro.jobs} trabajos realizados
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">
+                  <Users className="h-3 w-3" />
+                  {pro.reviews} recomendaciones
+                </span>
+                {pro.isFast && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-green-700">
+                    <MessageCircle className="h-3 w-3" />
+                    Responde rápido
+                  </span>
+                )}
               </div>
 
               <ActivityChips
                 insights={getProfessionalCardInsights(pro.id, pro.category)}
+                limit={2}
                 className="mt-2"
               />
 
@@ -211,7 +236,7 @@ export function ServicesList({ professionals }: ServicesListProps) {
                 </span>
               </div>
               <span className="text-xs text-muted-foreground">
-                {pro.reviews} resenas
+                {pro.reviews} reseñas
               </span>
               <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
                 <MapPin className="h-3 w-3" />
@@ -223,7 +248,7 @@ export function ServicesList({ professionals }: ServicesListProps) {
                   className="gap-1 border-sky-200 text-[10px] text-sky-700"
                 >
                   <Users className="h-3 w-3" />
-                  Guardado por vecinos
+                  Confianza vecinal
                 </Badge>
                 {saved && (
                   <Badge

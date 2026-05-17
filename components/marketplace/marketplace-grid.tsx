@@ -257,7 +257,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
         return (
           <article
             key={listing.id}
-            className={`group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md ${
+            className={`group overflow-hidden rounded-[26px] border border-emerald-100/80 bg-card shadow-[0_12px_30px_rgba(16,185,129,0.045)] transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-[0_16px_36px_rgba(16,185,129,0.09)] active:scale-[0.995] ${
               isSold ? "opacity-75" : ""
             }`}
           >
@@ -278,7 +278,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                   </div>
                 )}
 
-                <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+                <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
                   <Badge className="bg-background/90 text-foreground hover:bg-background/90">
                     {listing.category}
                   </Badge>
@@ -290,7 +290,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                   </Badge>
                 </div>
 
-                <div className="absolute bottom-3 left-3 rounded-xl bg-background/95 px-3 py-2 shadow-sm">
+                <div className="absolute bottom-3 left-3 rounded-2xl bg-background/95 px-3 py-2 shadow-sm backdrop-blur">
                   <p className="text-lg font-bold leading-none text-foreground">
                     {listing.price}
                   </p>
@@ -299,6 +299,20 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
             </Link>
 
             <div className="flex flex-1 flex-col p-4">
+              <div className="mb-3 flex flex-wrap gap-1.5 text-[11px] font-semibold">
+                <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">
+                  {activityInsights[0].label}
+                </span>
+                {listing.status === "Reservado" ? (
+                  <span className="rounded-full bg-amber-50 px-2.5 py-1 text-amber-700">
+                    Reservado
+                  </span>
+                ) : (
+                  <span className="rounded-full bg-rose-50 px-2.5 py-1 text-rose-700">
+                    Oportunidad cerca tuyo
+                  </span>
+                )}
+              </div>
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <Link href={detailHref} className="block">
@@ -318,16 +332,16 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                     </span>
                   </div>
 
-                  <div className="mt-2 flex flex-wrap gap-2">
+                  <div className="mt-2 flex flex-wrap gap-1.5">
                     <ActivityChips
                       insights={activityInsights.slice(1)}
-                      limit={2}
+                      limit={1}
                     />
                     <Badge
                       variant="outline"
                       className="border-emerald-200 text-[10px] text-emerald-700"
                     >
-                      Guardado por 3 personas
+                      Cerca tuyo
                     </Badge>
                     {saved && (
                       <Badge
@@ -346,7 +360,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                 {listing.description}
               </p>
 
-              <div className="mt-4 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2">
+              <div className="mt-4 rounded-2xl border border-emerald-100 bg-emerald-50/80 px-3 py-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex min-w-0 items-center gap-2">
                     <Avatar className="h-7 w-7">
@@ -371,7 +385,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                     className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 transition-colors hover:text-emerald-800"
                   >
                     <Eye className="h-3.5 w-3.5" />
-                    Ver más
+                    Detalle
                   </Link>
                 </div>
               </div>

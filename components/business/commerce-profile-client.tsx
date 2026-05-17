@@ -21,6 +21,7 @@ import {
   Star,
   Store,
   Package,
+  Navigation,
   Truck,
   Share2,
   Minus,
@@ -157,8 +158,22 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
     : "Sin local físico · entrega/retiro coordinado";
 
   const deliveryLabel = isCommerce
-    ? "Retiro en local / coordinación"
+    ? "Delivery / retiro en local"
     : "Entrega o retiro coordinado";
+
+  const profileFocus = isCommerce
+    ? {
+        title: "Local para visitar",
+        description: "Dirección visible, horarios claros y retiro en mostrador para resolver compras cerca.",
+        primary: commerce.address,
+        secondary: `${commerce.location} · a 1,4 km aprox.`,
+      }
+    : {
+        title: "Marca para descubrir",
+        description: "Productos con identidad propia, pedidos por encargo y entrega coordinada sin cargar la experiencia de mapa.",
+        primary: commerce.category,
+        secondary: "Producción local · estilo propio",
+      };
 
   const adjustCart = (productId: string, delta: number) => {
     setCart((prev) => {
@@ -407,9 +422,48 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
                   <ActivityChips
                     insights={commerceInsights}
-                    limit={3}
+                    limit={isCommerce ? 2 : 3}
                     className="mt-4"
                   />
+                  <div
+                    className={`mt-4 rounded-[22px] border p-3 ${
+                      isCommerce
+                        ? "border-sky-100 bg-sky-50/70"
+                        : "border-amber-100 bg-gradient-to-br from-amber-50/80 to-violet-50/60"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div
+                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl ${
+                          isCommerce
+                            ? "bg-white text-sky-700"
+                            : "bg-white text-amber-700"
+                        }`}
+                      >
+                        {isCommerce ? (
+                          <Navigation className="h-4 w-4" />
+                        ) : (
+                          <Sparkles className="h-4 w-4" />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-semibold text-foreground">
+                          {profileFocus.title}
+                        </p>
+                        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                          {profileFocus.description}
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-1.5 text-[11px] font-medium text-muted-foreground">
+                          <span className="rounded-full bg-white/80 px-2.5 py-1">
+                            {profileFocus.primary}
+                          </span>
+                          <span className="rounded-full bg-white/80 px-2.5 py-1">
+                            {profileFocus.secondary}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <p className="mt-4 text-xs text-muted-foreground">
                     {commerce.meta}
                   </p>
@@ -876,9 +930,31 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             </Button>
           </div>
 
+          {isCommerce && (
+            <div className="overflow-hidden rounded-3xl border border-sky-100 bg-sky-50/60 p-4">
+              <div className="relative h-28 rounded-[24px] border border-sky-100 bg-white">
+                <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(14,165,233,0.10)_1px,transparent_1px),linear-gradient(rgba(14,165,233,0.10)_1px,transparent_1px)] bg-[size:28px_28px]" />
+                <div className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-sky-600 text-white shadow-lg shadow-sky-500/20">
+                    <MapPin className="h-5 w-5" />
+                  </div>
+                  <span className="mt-2 rounded-full bg-white px-2.5 py-1 text-[11px] font-semibold text-sky-700 shadow-sm">
+                    a 1,4 km
+                  </span>
+                </div>
+              </div>
+              <h2 className="mt-4 text-base font-semibold text-foreground">
+                Ubicación del local
+              </h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {commerce.address}. {deliveryLabel} y showroom/local físico.
+              </p>
+            </div>
+          )}
+
           <div className="rounded-3xl border border-border bg-card p-6">
             <h2 className="text-base font-semibold text-foreground">
-              Señales de confianza
+              {isCommerce ? "Señales del comercio" : "Señales de identidad"}
             </h2>
 
             <div className="mt-4 space-y-3">
