@@ -157,10 +157,12 @@ export default function EspacioComercialPage() {
         {showMyBusiness && (
           <Button
             asChild
-            className="bg-violet-600 text-white hover:bg-violet-700"
+            size="sm"
+            variant="outline"
+            className="w-fit rounded-full border-violet-200 bg-card/80 px-3.5 text-violet-700 shadow-sm backdrop-blur transition-all hover:bg-violet-50 hover:text-violet-800 active:scale-[0.98]"
           >
             <Link href="/dashboard/comercial">
-              <Briefcase className="mr-2 h-4 w-4" />
+              <Briefcase className="mr-2 h-3.5 w-3.5" />
               Mi negocio
             </Link>
           </Button>
@@ -240,7 +242,7 @@ export default function EspacioComercialPage() {
         </div>
       </section>
 
-      <div className="rounded-[22px] border border-border bg-card p-4">
+      <div className="rounded-[22px] border border-border/80 bg-card/80 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.035)]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h3 className="font-semibold text-foreground">Publicar o vender</h3>
@@ -253,7 +255,9 @@ export default function EspacioComercialPage() {
             <div className="flex flex-col items-end gap-1">
               <Button
                 asChild
-                className="bg-sidebar-primary text-sidebar-primary-foreground hover:opacity-90"
+                size="sm"
+                variant="outline"
+                className="rounded-full border-violet-200 text-violet-700 hover:bg-violet-50"
               >
                 <Link href="/dashboard/comercial">
                   <Briefcase className="mr-2 h-4 w-4" />

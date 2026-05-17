@@ -235,7 +235,7 @@ export default function ComercialPage() {
       <ActivityChips insights={commerceGrowthInsights} limit={4} className="rounded-2xl border border-violet-100 bg-violet-50/60 p-3" />
 
       <Tabs defaultValue="publicaciones" className="gap-4">
-        <TabsList className="w-full justify-start overflow-x-auto rounded-xl bg-muted p-1 md:w-fit">
+        <TabsList className="scrollbar-hide w-full justify-start overflow-x-auto rounded-xl bg-muted p-1 md:w-fit">
           <TabsTrigger value="publicaciones">Publicaciones</TabsTrigger>
           <TabsTrigger value="perfil">Perfil comercial</TabsTrigger>
           <TabsTrigger value="estadisticas">Estadísticas</TabsTrigger>
