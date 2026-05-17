@@ -12,14 +12,13 @@ import type {
 } from "@/lib/types/commercial-posts";
 import {
   ArrowRight,
+  BadgeCheck,
   Bookmark,
   Heart,
   MapPin,
   Package,
   Share2,
-  ShieldCheck,
   Sparkles,
-  Store,
   Tag,
   TrendingUp,
   Zap,
@@ -90,17 +89,35 @@ function matchesCategory(post: CommercialFeedItem, category: CategoryFilter) {
 
 function getPostTrustSignals(post: CommercialFeedItem) {
   const signals = [
-    { label: post.sponsored ? "Patrocinado" : "Verificado", icon: ShieldCheck, className: "text-emerald-700" },
+    {
+      label:
+        post.businessType === "commerce" ? "Local cercano" : "Marca local",
+      icon: post.businessType === "commerce" ? MapPin : BadgeCheck,
+      className:
+        post.businessType === "commerce" ? "text-sky-700" : "text-amber-700",
+    },
   ];
 
   if (post.timestamp.includes("min") || post.timestamp.includes("1 h")) {
-    signals.push({ label: "Nuevo en tu zona", icon: Sparkles, className: "text-violet-700" });
+    signals.push({
+      label: "Nuevo en tu zona",
+      icon: Sparkles,
+      className: "text-violet-700",
+    });
   }
 
   if (post.likes >= 40 || post.saves >= 18) {
-    signals.push({ label: "Popular en Hudson", icon: TrendingUp, className: "text-amber-700" });
+    signals.push({
+      label: "Popular en Hudson",
+      icon: TrendingUp,
+      className: "text-amber-700",
+    });
   } else if (post.featured || post.sponsored) {
-    signals.push({ label: "Muy visitado", icon: Zap, className: "text-violet-700" });
+    signals.push({
+      label: "Muy visitado",
+      icon: Zap,
+      className: "text-violet-700",
+    });
   }
 
   return signals.slice(0, 3);
@@ -133,9 +150,21 @@ function CommercialPostCard({ post }: { post: CommercialFeedItem }) {
   const signals = getPostTrustSignals(post);
 
   return (
-    <article className="group overflow-hidden rounded-[30px] border border-violet-100/80 bg-card shadow-[0_14px_34px_rgba(76,29,149,0.055)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-[0_18px_42px_rgba(76,29,149,0.09)] active:scale-[0.995]">
+    <article
+      className={`group overflow-hidden rounded-[30px] border bg-card shadow-[0_14px_34px_rgba(76,29,149,0.045)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:shadow-[0_18px_42px_rgba(76,29,149,0.085)] active:scale-[0.995] ${
+        post.businessType === "commerce"
+          ? "border-sky-100/90 hover:border-sky-200"
+          : "border-amber-100/90 hover:border-amber-200"
+      }`}
+    >
       <div className="flex items-center gap-3 px-4 py-4">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-100 bg-violet-50 text-sm font-bold text-violet-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
+        <div
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border text-sm font-bold shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] ${
+            post.businessType === "commerce"
+              ? "border-sky-100 bg-sky-50 text-sky-700"
+              : "border-amber-100 bg-amber-50 text-amber-700"
+          }`}
+        >
           {post.businessLogo}
         </div>
         <div className="min-w-0 flex-1">
@@ -185,12 +214,12 @@ function CommercialPostCard({ post }: { post: CommercialFeedItem }) {
             ))}
           </div>
           <span className="shrink-0 rounded-full bg-black/35 px-2 py-1 text-[10px] font-medium text-white backdrop-blur-md">
-            {post.businessCategory}
+            {post.businessType === "commerce" ? "ir / retirar" : "descubrir"}
           </span>
         </div>
       </div>
 
-      <div className="space-y-4 p-4 pt-4">
+      <div className="space-y-3.5 p-4 pt-4">
         <div>
           <h3 className="text-[17px] font-bold leading-tight text-foreground">
             {post.title}
@@ -224,8 +253,8 @@ function CommercialPostCard({ post }: { post: CommercialFeedItem }) {
           </Link>
         )}
 
-        <div className="flex flex-wrap gap-2">
-          {post.tags.slice(0, 3).map((tag) => (
+        <div className="flex flex-wrap gap-1.5">
+          {post.tags.slice(0, 2).map((tag) => (
             <span
               key={tag}
               className="rounded-full bg-muted/70 px-2.5 py-1 text-[11px] font-medium text-muted-foreground"
@@ -235,7 +264,7 @@ function CommercialPostCard({ post }: { post: CommercialFeedItem }) {
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/70 pt-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/60 pt-3">
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <button
               type="button"
@@ -278,26 +307,19 @@ function CommercialPostCard({ post }: { post: CommercialFeedItem }) {
             </button>
           </div>
 
-          <div className="flex gap-2">
-            <Button asChild variant="outline" size="sm" className="rounded-full">
-              <Link href={post.businessHref}>
-                <Store className="h-4 w-4" />
-                Ver negocio
-              </Link>
-            </Button>
-            {post.cta && (
-              <Button
-                asChild
-                size="sm"
-                className="rounded-full bg-violet-600 text-white shadow-[0_8px_18px_rgba(124,58,237,0.18)] transition-all hover:bg-violet-700 active:scale-[0.98]"
-              >
-                <Link href={post.cta.href}>
-                  {post.cta.label}
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-            )}
-          </div>
+          <Button
+            asChild
+            size="sm"
+            className="rounded-full bg-violet-600 text-white shadow-[0_8px_18px_rgba(124,58,237,0.16)] transition-all hover:bg-violet-700 active:scale-[0.98]"
+          >
+            <Link href={post.cta?.href ?? post.businessHref}>
+              {post.cta?.label ??
+                (post.businessType === "commerce"
+                  ? "Explorar tienda"
+                  : "Ver catálogo")}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </div>
     </article>
@@ -387,7 +409,7 @@ export function CommercialFeed() {
         </div>
       </section>
 
-      <section className="space-y-5">
+      <section className="space-y-4 pb-1">
         {posts.length > 0 ? (
           posts.map((post) => <CommercialPostCard key={post.id} post={post} />)
         ) : (

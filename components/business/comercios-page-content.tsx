@@ -83,10 +83,10 @@ function CommercialListCard({
 
   return (
     <article
-      className={`rounded-[28px] border p-5 transition hover:-translate-y-0.5 hover:shadow-sm ${
+      className={`rounded-[28px] border p-5 shadow-[0_12px_30px_rgba(15,23,42,0.035)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(15,23,42,0.07)] active:scale-[0.995] ${
         isCommerce
-          ? "border-sky-100 bg-sky-50/45"
-          : "border-amber-100 bg-gradient-to-br from-amber-50/70 via-card to-violet-50/45"
+          ? "border-sky-100 bg-sky-50/55"
+          : "border-amber-100 bg-gradient-to-br from-amber-50/70 via-card to-violet-50/50"
       }`}
     >
       <div
@@ -155,7 +155,7 @@ function CommercialListCard({
             <>
               <span className="inline-flex items-center gap-1 rounded-full bg-white px-2.5 py-1">
                 <MapPin className="h-3 w-3" />
-                {(item as any).location || "Zona visible"} · a 1,4 km
+                Pin · {(item as any).location || "Zona visible"} · a 1,4 km
               </span>
               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">
                 <Clock className="h-3 w-3" />
@@ -187,9 +187,11 @@ function CommercialListCard({
           limit={2}
         />
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-t border-white/70 pt-3">
           <Button asChild variant="link" className="h-auto p-0 text-slate-950">
-            <Link href={detailHref}>Ver perfil y catálogo</Link>
+            <Link href={detailHref}>
+              {isCommerce ? "Ver local y catálogo" : "Descubrir marca"}
+            </Link>
           </Button>
           <Button
             type="button"
@@ -233,8 +235,8 @@ export default function ComerciosPageContent({
       <div
         className={`rounded-[28px] border p-5 ${
           isCommerceTab
-            ? "border-violet-200 bg-violet-50/60"
-            : "border-violet-200 bg-violet-50/60"
+            ? "border-sky-100 bg-sky-50/60"
+            : "border-amber-100 bg-gradient-to-br from-amber-50/70 to-violet-50/50"
         }`}
       >
         <div className="flex items-start gap-3">
