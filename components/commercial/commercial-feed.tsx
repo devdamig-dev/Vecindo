@@ -90,17 +90,17 @@ function matchesCategory(post: CommercialFeedItem, category: CategoryFilter) {
 
 function getPostTrustSignals(post: CommercialFeedItem) {
   const signals = [
-    { label: "Verificado", icon: ShieldCheck, className: "text-emerald-700" },
+    { label: post.sponsored ? "Patrocinado" : "Verificado", icon: ShieldCheck, className: "text-emerald-700" },
   ];
 
   if (post.timestamp.includes("min") || post.timestamp.includes("1 h")) {
-    signals.push({ label: "Nuevo", icon: Sparkles, className: "text-violet-700" });
+    signals.push({ label: "Nuevo en tu zona", icon: Sparkles, className: "text-violet-700" });
   }
 
   if (post.likes >= 40 || post.saves >= 18) {
-    signals.push({ label: "Popular", icon: TrendingUp, className: "text-amber-700" });
+    signals.push({ label: "Popular en Hudson", icon: TrendingUp, className: "text-amber-700" });
   } else if (post.featured || post.sponsored) {
-    signals.push({ label: "Muy consultado", icon: Zap, className: "text-violet-700" });
+    signals.push({ label: "Muy visitado", icon: Zap, className: "text-violet-700" });
   }
 
   return signals.slice(0, 3);
@@ -133,8 +133,8 @@ function CommercialPostCard({ post }: { post: CommercialFeedItem }) {
   const signals = getPostTrustSignals(post);
 
   return (
-    <article className="group overflow-hidden rounded-[28px] border border-violet-100/80 bg-card shadow-[0_14px_34px_rgba(76,29,149,0.055)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-[0_18px_42px_rgba(76,29,149,0.09)] active:scale-[0.995]">
-      <div className="flex items-center gap-3 px-4 py-3.5">
+    <article className="group overflow-hidden rounded-[30px] border border-violet-100/80 bg-card shadow-[0_14px_34px_rgba(76,29,149,0.055)] transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-[0_18px_42px_rgba(76,29,149,0.09)] active:scale-[0.995]">
+      <div className="flex items-center gap-3 px-4 py-4">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-violet-100 bg-violet-50 text-sm font-bold text-violet-700 shadow-[inset_0_1px_0_rgba(255,255,255,0.75)]">
           {post.businessLogo}
         </div>
@@ -154,7 +154,7 @@ function CommercialPostCard({ post }: { post: CommercialFeedItem }) {
         </div>
         {(post.sponsored || post.featured) && (
           <Badge className="shrink-0 rounded-full border border-violet-200/70 bg-violet-50 px-2.5 py-1 text-[10px] font-semibold text-violet-700 shadow-none hover:bg-violet-50">
-            {post.sponsored ? "Destacado" : "Recomendado"}
+            {post.sponsored ? "Patrocinado" : "Muy visitado"}
           </Badge>
         )}
       </div>
@@ -190,7 +190,7 @@ function CommercialPostCard({ post }: { post: CommercialFeedItem }) {
         </div>
       </div>
 
-      <div className="space-y-3.5 p-4 pt-3.5">
+      <div className="space-y-4 p-4 pt-4">
         <div>
           <h3 className="text-[17px] font-bold leading-tight text-foreground">
             {post.title}
@@ -235,7 +235,7 @@ function CommercialPostCard({ post }: { post: CommercialFeedItem }) {
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/70 pt-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border/70 pt-4">
           <div className="flex items-center gap-1 text-xs text-muted-foreground">
             <button
               type="button"
@@ -324,7 +324,7 @@ export function CommercialFeed() {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <section className="scrollbar-hide -mx-1 overflow-x-auto px-1 pb-1 pt-0.5">
         <div className="flex min-w-max gap-3.5">
           {feed.stories.map((story) => (
@@ -350,7 +350,7 @@ export function CommercialFeed() {
         </div>
       </section>
 
-      <section className="space-y-2.5">
+      <section className="sticky top-[7.5rem] z-20 -mx-4 space-y-2.5 border-y border-violet-100/70 bg-background/90 px-4 py-3 backdrop-blur-xl sm:-mx-5 sm:px-5">
         <div className="scrollbar-hide flex gap-2 overflow-x-auto pb-1">
           {feedFilters.map(([value, label]) => (
             <button
@@ -387,7 +387,7 @@ export function CommercialFeed() {
         </div>
       </section>
 
-      <section className="space-y-4">
+      <section className="space-y-5">
         {posts.length > 0 ? (
           posts.map((post) => <CommercialPostCard key={post.id} post={post} />)
         ) : (

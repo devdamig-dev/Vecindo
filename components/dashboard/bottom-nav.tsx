@@ -4,8 +4,9 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { HeartHandshake, Store, Wrench, ShoppingBag, type LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/lib/auth-context"
 import { FloatingCenterButton } from "@/components/dashboard/floating-center-button"
-import type { CommercialModule } from "@/lib/commercial"
+import { canAccessModule, type CommercialModule } from "@/lib/commercial"
 
 type Props = {
   homeHref: string
@@ -61,11 +62,17 @@ function BottomNavLink({ item }: { item: PrimaryNavItem }) {
 }
 
 export function BottomNav({ homeHref }: Props) {
+  const { auth } = useAuth()
+  const visibleItems = primaryNavItems.filter((item) => canAccessModule(auth, item.module))
+  const midpoint = Math.ceil(visibleItems.length / 2)
+  const leftItems = visibleItems.slice(0, midpoint)
+  const rightItems = visibleItems.slice(midpoint)
+
   return (
     <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-card/95 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-14px_34px_rgba(2,6,23,0.075)] backdrop-blur-xl">
       <div className="relative mx-auto grid max-w-2xl grid-cols-5 items-end px-3">
-        <div className="col-span-2 grid grid-cols-2">
-          {primaryNavItems.slice(0, 2).map((item) => (
+        <div className={cn("col-span-2 grid", leftItems.length <= 1 ? "grid-cols-1" : "grid-cols-2")}>
+          {leftItems.map((item) => (
             <BottomNavLink key={item.href} item={item} />
           ))}
         </div>
@@ -73,8 +80,8 @@ export function BottomNav({ homeHref }: Props) {
         <div className="relative h-10" aria-hidden />
         <FloatingCenterButton href={homeHref} />
 
-        <div className="col-span-2 grid grid-cols-2">
-          {primaryNavItems.slice(2).map((item) => (
+        <div className={cn("col-span-2 grid", rightItems.length <= 1 ? "grid-cols-1" : "grid-cols-2")}>
+          {rightItems.map((item) => (
             <BottomNavLink key={item.href} item={item} />
           ))}
         </div>
