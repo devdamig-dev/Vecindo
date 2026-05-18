@@ -222,7 +222,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
         return (
           <article
             key={listing.id}
-            className={`group overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-md ${
+            className={`group overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-[0_12px_30px_rgba(16,185,129,0.10)] active:scale-[0.99] ${
               isSold ? "opacity-75" : ""
             }`}
           >
@@ -231,8 +231,9 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                 <img
                   src={listing.images[0]}
                   alt={listing.title}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
                   loading="lazy"
+                  decoding="async"
                 />
 
                 {isSold && (

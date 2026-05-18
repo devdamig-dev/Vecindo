@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BackButton } from "@/components/ui/back-button";
 import { useEffect, useMemo, useState } from "react";
 import { ActivityChips } from "@/components/activity/activity-chips";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -8,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  ArrowLeft,
   Bookmark,
   CheckCircle2,
   Clock,
@@ -279,13 +279,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
   return (
     <div className="flex max-w-6xl flex-col gap-5 md:gap-6">
-      <Link
-        href={backHref}
-        className="flex w-fit items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        {backLabel}
-      </Link>
+      <BackButton label={backLabel} />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-6">
@@ -294,9 +288,10 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
               <img
                 src={commerce.bannerUrl}
                 alt={commerce.name}
-                className="h-full w-full object-cover"
+                decoding="async"
+                className="h-full w-full object-cover transition-transform duration-700 ease-out"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
             </div>
 
             <div className="relative px-4 pb-6 pt-0 sm:px-6 md:px-8">
@@ -593,7 +588,9 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     <img
                       src={product.imageUrl}
                       alt={product.name}
-                      className="h-40 w-full rounded-xl object-cover"
+                      loading="lazy"
+                      decoding="async"
+                      className="h-40 w-full rounded-xl object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
                     />
 
                     <div className="mt-3 flex items-start justify-between gap-3">

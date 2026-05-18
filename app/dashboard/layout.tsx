@@ -7,9 +7,9 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50/50 via-green-50/35 to-green-50/25">
+    <div className="min-h-screen bg-gradient-to-b from-green-50/50 via-green-50/35 to-green-50/20">
       <DashboardHeader />
-      <main className="mx-auto w-full max-w-2xl px-4 pb-28 pt-[7.75rem] sm:px-5">{children}</main>
+      <main className="mx-auto w-full max-w-2xl px-4 pb-28 pt-[7.75rem] sm:px-5 lg:max-w-3xl">{children}</main>
       <BottomNav homeHref="/dashboard" />
     </div>
   )
