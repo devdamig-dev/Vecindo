@@ -192,9 +192,11 @@ function CommercialPostCard({ post }: { post: CommercialFeedItem }) {
         <img
           src={post.imageUrl}
           alt={post.title}
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.025]"
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
         />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/45 via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
         <div className="absolute left-3 top-3">
           <Badge className="rounded-full border border-white/35 bg-background/88 text-[11px] text-foreground shadow-sm backdrop-blur-md hover:bg-background/88">
             <Tag className="mr-1 h-3 w-3" />
@@ -355,12 +357,14 @@ export function CommercialFeed() {
               href={story.href}
               className="group w-[78px] shrink-0 text-center transition-transform duration-200 active:scale-95"
             >
-              <div className="rounded-[24px] bg-gradient-to-br from-violet-500/90 via-fuchsia-500/85 to-amber-300/90 p-[1.5px] shadow-[0_10px_22px_rgba(124,58,237,0.12)] transition-all duration-300 group-hover:shadow-[0_12px_28px_rgba(124,58,237,0.18)]">
-                <div className="overflow-hidden rounded-[22px] border border-background/90 bg-muted">
+              <div className="rounded-[24px] bg-gradient-to-br from-violet-600/85 via-fuchsia-500/80 to-orange-300/85 p-[2px] shadow-[0_8px_20px_rgba(124,58,237,0.14)] transition-all duration-300 group-hover:shadow-[0_10px_26px_rgba(124,58,237,0.22)] group-active:scale-95">
+                <div className="overflow-hidden rounded-[22px] border border-background bg-muted">
                   <img
                     src={story.imageUrl}
                     alt={story.label}
-                    className="h-[78px] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                    className="h-[78px] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08]"
                   />
                 </div>
               </div>

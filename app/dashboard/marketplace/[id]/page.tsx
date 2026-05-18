@@ -7,12 +7,12 @@ import { ActivityChips } from "@/components/activity/activity-chips";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { BackButton } from "@/components/ui/back-button";
 import { listings } from "@/components/marketplace/marketplace-grid";
 import { getMarketplaceActivityInsights } from "@/lib/activity-insights";
 import { useAuth } from "@/lib/auth-context";
 import { canAccessMarketplace } from "@/lib/commercial";
 import {
-  ArrowLeft,
   ChevronLeft,
   ChevronRight,
   MapPin,
@@ -150,13 +150,7 @@ export default function MarketplaceDetailPage() {
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-6">
-      <Link
-        href="/dashboard/marketplace"
-        className="flex w-fit items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Volver al Mercado
-      </Link>
+      <BackButton label="Volver al Mercado" />
 
       <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="flex flex-col gap-4">
@@ -164,7 +158,8 @@ export default function MarketplaceDetailPage() {
             <img
               src={listing.images[currentImage]}
               alt={`${listing.title} - imagen ${currentImage + 1}`}
-              className={`h-full w-full object-cover ${isSold ? "opacity-75" : ""}`}
+              decoding="async"
+              className={`h-full w-full object-cover transition-opacity duration-300 ${isSold ? "opacity-75" : ""}`}
             />
 
             {listing.images.length > 1 && (

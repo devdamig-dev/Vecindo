@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { BackButton } from "@/components/ui/back-button";
 import { useAuth } from "@/lib/auth-context";
 import {
   canAccessMyBusiness,
@@ -83,7 +84,7 @@ function CommercialListCard({
 
   return (
     <article
-      className={`rounded-[28px] border p-5 shadow-[0_12px_30px_rgba(15,23,42,0.035)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_36px_rgba(15,23,42,0.07)] active:scale-[0.995] ${
+      className={`rounded-[28px] border p-5 shadow-[0_10px_28px_rgba(15,23,42,0.03)] transition-all duration-300 hover:-translate-y-[3px] hover:shadow-[0_16px_38px_rgba(15,23,42,0.07)] active:scale-[0.99] ${
         isCommerce
           ? "border-sky-100 bg-sky-50/55"
           : "border-amber-100 bg-gradient-to-br from-amber-50/70 via-card to-violet-50/50"
@@ -232,6 +233,10 @@ export default function ComerciosPageContent({
 
   return (
     <div className="space-y-6">
+      <BackButton
+        label={isCommerceTab ? "Volver al espacio comercial" : "Volver al espacio comercial"}
+      />
+
       <div
         className={`rounded-[28px] border p-5 ${
           isCommerceTab

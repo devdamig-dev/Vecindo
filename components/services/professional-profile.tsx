@@ -3,7 +3,8 @@ import { ActivityChips } from "@/components/activity/activity-chips"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Star, ShieldCheck, MapPin, Phone, Calendar, ArrowLeft, MessageSquare, Zap } from "lucide-react"
+import { BackButton } from "@/components/ui/back-button"
+import { Star, ShieldCheck, MapPin, Phone, Calendar, MessageSquare, Zap } from "lucide-react"
 import { getProfessionalCardInsights, getServiceTrustInsights } from "@/lib/activity-insights"
 
 const proData: Record<string, {
@@ -61,10 +62,7 @@ export function ProfessionalProfile({ id }: { id: string }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <Link href="/dashboard/services" className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground w-fit">
-        <ArrowLeft className="h-4 w-4" />
-        Volver a servicios
-      </Link>
+      <BackButton label="Volver a servicios" />
 
       <div className="rounded-xl border border-border bg-card p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start">

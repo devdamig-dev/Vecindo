@@ -10,8 +10,8 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { getAyudaCommunityInsights } from "@/lib/activity-insights";
 import { ayudaPosts, type AyudaCategory } from "../page";
+import { BackButton } from "@/components/ui/back-button";
 import {
-  ArrowLeft,
   ChevronLeft,
   ChevronRight,
   MapPin,
@@ -117,14 +117,7 @@ export default function AyudaDetailPage() {
 
   return (
     <div className="flex flex-col gap-6 max-w-3xl mx-auto">
-      {/* Back */}
-      <Link
-        href="/dashboard/ayuda"
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        Volver a Ayuda
-      </Link>
+      <BackButton label="Volver a Ayuda" />
 
       {/* Image carousel */}
       {post.images.length > 0 && (
