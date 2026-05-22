@@ -48,36 +48,36 @@ type RoleNudge = {
 
 const mainModules: QuickAction[] = [
   {
-    label: "Mercado",
-    description: "Comprá y vendé en tu zona",
-    icon: ShoppingBag,
-    href: "/dashboard/marketplace",
-    theme: "market",
-    chip: "Comunidad",
-  },
-  {
     label: "Servicios",
-    description: "Ofrecé o encontrá servicios",
+    description: "Encontrá personas confiables para resolver necesidades reales",
     icon: Wrench,
     href: "/dashboard/services",
     theme: "services",
-    chip: "Confiable",
+    chip: "Prioridad",
   },
   {
     label: "Espacio comercial",
-    description: "Negocios y emprendimientos",
+    description: "Descubrí negocios, promos y novedades cerca tuyo",
     icon: Store,
     href: "/dashboard/espacio-comercial",
     theme: "commercial",
-    chip: "Local",
+    chip: "Economía local",
   },
   {
     label: "Ayuda comunitaria",
-    description: "Mascotas, seguridad, colectas y más",
+    description: "Pedidos y recomendaciones entre personas de tu zona",
     icon: Heart,
     href: "/dashboard/ayuda",
     theme: "help",
-    chip: "Solidario",
+    chip: "Comunidad",
+  },
+  {
+    label: "Mercado",
+    description: "Compra/venta casual como complemento",
+    icon: ShoppingBag,
+    href: "/dashboard/marketplace",
+    theme: "market",
+    chip: "Utility",
   },
 ];
 
@@ -131,6 +131,22 @@ function MainModules({ showMarketplace }: { showMarketplace: boolean }) {
         <ModuleCard key={action.href} {...action} />
       ))}
     </div>
+  );
+}
+
+function HomePositioningBanner() {
+  return (
+    <section className="rounded-3xl border border-primary/15 bg-gradient-to-r from-sky-50 via-white to-violet-50 p-4 shadow-[0_12px_28px_rgba(15,23,42,0.05)]">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-primary">
+        Red local VEZI
+      </p>
+      <h1 className="mt-1 text-lg font-semibold text-foreground sm:text-xl">
+        Conectá con servicios, negocios y personas cerca tuyo
+      </h1>
+      <p className="mt-1.5 text-sm text-muted-foreground">
+        Descubrí actividad local, elegí por reputación y resolvé lo cotidiano con confianza.
+      </p>
+    </section>
   );
 }
 
@@ -299,10 +315,13 @@ export default function DashboardPage() {
   return (
     <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden pb-4">
       <ZoneUpdatesCarousel zoneId="berazategui" />
+      <HomePositioningBanner />
 
       <MainModules showMarketplace={showMarketplace} />
 
       {!showMarketplace && <MarketplaceResidentNotice />}
+
+      <CommercialPulse />
 
       <RecentActivity />
 
@@ -316,7 +335,6 @@ export default function DashboardPage() {
       </section>
 
       <section className="flex min-w-0 flex-col gap-5">
-        <CommercialPulse />
         <ReturnToSaved items={auth.savedItems} />
       </section>
     </div>

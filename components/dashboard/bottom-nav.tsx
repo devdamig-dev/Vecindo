@@ -21,10 +21,10 @@ type PrimaryNavItem = {
 }
 
 const primaryNavItems: PrimaryNavItem[] = [
-  { label: "Mercado", href: "/dashboard/marketplace", module: "marketplace", icon: ShoppingBag },
   { label: "Servicios", href: "/dashboard/services", module: "services", icon: Wrench },
   { label: "Espacio comercial", shortLabel: "Espacio", href: "/dashboard/espacio-comercial", module: "commercialSpace", icon: Store },
   { label: "Ayuda", href: "/dashboard/ayuda", module: "help", icon: HeartHandshake },
+  { label: "Mercado", href: "/dashboard/marketplace", module: "marketplace", icon: ShoppingBag },
 ]
 
 function getActiveClass(module: PrimaryNavItem["module"]) {
