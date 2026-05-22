@@ -54,10 +54,10 @@ const iconByModule: Record<CommercialModule, LucideIcon> = {
 
 const mainNavItems: SidebarNavItem[] = [
   { label: "Inicio", href: "/dashboard", module: "home" },
-  { label: "Mercado", href: "/dashboard/marketplace", module: "marketplace" },
   { label: "Servicios", href: "/dashboard/services", module: "services" },
   { label: "Espacio comercial", href: "/dashboard/espacio-comercial", module: "commercialSpace" },
-  { label: "Ayuda comunitaria", href: "/dashboard/ayuda", module: "help" },
+  { label: "Ayuda y comunidad", href: "/dashboard/ayuda", module: "help" },
+  { label: "Mercado", href: "/dashboard/marketplace", module: "marketplace" },
 ]
 
 function getActiveClass(module: CommercialModule) {
@@ -147,7 +147,7 @@ export function DashboardSidebar() {
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-2">
-          <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wide text-sidebar-foreground/45">Ecosistema VEZI</p>
+          <p className="px-3 pb-2 text-[11px] font-semibold uppercase tracking-wide text-sidebar-foreground/45">Red local VEZI</p>
           <ul className="flex flex-col gap-1">
             {mainNavItems.map((item) => (
               <li key={`${item.module}-${item.href}`}>
