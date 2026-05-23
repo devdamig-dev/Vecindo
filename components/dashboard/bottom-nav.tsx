@@ -51,7 +51,7 @@ function BottomNavLink({ item }: { item: PrimaryNavItem }) {
       href={item.href}
       aria-current={isActive ? "page" : undefined}
       className={cn(
-        "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[12px] font-medium text-slate-500 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-muted/60 hover:text-slate-700 active:scale-95",
+        "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[12px] font-medium text-slate-500 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/80 hover:text-slate-700 active:scale-95",
         isActive && cn(getActiveClass(item.module), getGlowClass(item.module), "scale-[1.08] -translate-y-[2px] font-semibold"),
       )}
     >
@@ -69,7 +69,7 @@ export function BottomNav({ homeHref }: Props) {
   const rightItems = visibleItems.slice(midpoint)
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-card/95 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-14px_34px_rgba(2,6,23,0.075)] backdrop-blur-xl">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-gradient-to-t from-white via-white/95 to-white/80 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-14px_34px_rgba(2,6,23,0.075)] backdrop-blur-xl">
       <div className="relative mx-auto grid max-w-2xl grid-cols-5 items-end px-3">
         <div className={cn("col-span-2 grid", leftItems.length <= 1 ? "grid-cols-1" : "grid-cols-2")}>
           {leftItems.map((item) => (

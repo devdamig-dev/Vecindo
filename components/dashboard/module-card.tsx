@@ -14,23 +14,23 @@ type ModuleCardProps = {
 
 const themeStyles = {
   market: {
-    card: "border-emerald-200/70 bg-gradient-to-br from-emerald-50 via-white to-emerald-100/40",
-    iconWrap: "bg-emerald-500 text-white shadow-emerald-400/35",
+    card: "border-emerald-200/80 bg-gradient-to-br from-emerald-100 via-white to-emerald-200/55",
+    iconWrap: "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-emerald-500/40",
     accent: "bg-emerald-500/10 text-emerald-700",
   },
   services: {
-    card: "border-sky-200/70 bg-gradient-to-br from-sky-50 via-white to-sky-100/40",
-    iconWrap: "bg-sky-500 text-white shadow-sky-400/35",
+    card: "border-sky-200/80 bg-gradient-to-br from-sky-100 via-white to-blue-200/55",
+    iconWrap: "bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-sky-500/40",
     accent: "bg-sky-500/10 text-sky-700",
   },
   commercial: {
-    card: "border-violet-200/70 bg-gradient-to-br from-violet-50 via-white to-violet-100/40",
-    iconWrap: "bg-violet-500 text-white shadow-violet-400/35",
+    card: "border-violet-200/80 bg-gradient-to-br from-violet-100 via-fuchsia-50 to-violet-200/55",
+    iconWrap: "bg-gradient-to-br from-violet-500 to-fuchsia-600 text-white shadow-violet-500/40",
     accent: "bg-violet-500/10 text-violet-700",
   },
   help: {
-    card: "border-rose-200/70 bg-gradient-to-br from-rose-50 via-white to-rose-100/40",
-    iconWrap: "bg-rose-500 text-white shadow-rose-400/35",
+    card: "border-rose-200/80 bg-gradient-to-br from-rose-100 via-white to-orange-100/60",
+    iconWrap: "bg-gradient-to-br from-rose-500 to-orange-500 text-white shadow-rose-500/40",
     accent: "bg-rose-500/10 text-rose-700",
   },
 } as const
@@ -42,7 +42,7 @@ export function ModuleCard({ label, description, href, icon: Icon, theme, chip }
     <Link
       href={href}
       className={cn(
-        "group relative flex min-h-[158px] flex-col overflow-hidden rounded-3xl border px-4 pb-4 pt-5 text-left shadow-[0_8px_24px_rgba(15,23,42,0.06)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(15,23,42,0.08)] hover:ring-1 hover:ring-white/70",
+        "group relative flex min-h-[164px] flex-col overflow-hidden rounded-3xl border px-4 pb-4 pt-5 text-left shadow-[0_10px_30px_rgba(15,23,42,0.1)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(15,23,42,0.16)] hover:ring-1 hover:ring-white/90 active:scale-[0.99]",
         styles.card
       )}
     >
