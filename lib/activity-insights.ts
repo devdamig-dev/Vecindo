@@ -151,30 +151,30 @@ export function getAyudaCommunityInsights(id: string, status = "activo", categor
   ]
 }
 
-export type HomeActivityRole = "resident" | "service_provider" | "resident_business" | "external_business"
+export type HomeActivityRole = "universal" | "services" | "hybrid" | "business"
 
 export function getHomeActivitySignals(role: HomeActivityRole): ActivityInsight[] {
   const signals: Record<HomeActivityRole, ActivityInsight[]> = {
-    resident: [
+    universal: [
       { label: "Vecinos buscando electricistas", tone: "sky" },
       { label: "Productos más vistos esta semana", tone: "emerald" },
       { label: "Nuevo emprendimiento en Hudson", tone: "violet" },
       { label: "3 comercios comenzaron promociones hoy", tone: "amber" },
       { label: "Servicios destacados cerca tuyo", tone: "sky" },
     ],
-    service_provider: [
+    services: [
       { label: "34 búsquedas vinculadas a tu rubro", tone: "sky" },
       { label: "Alta demanda en Hudson", tone: "emerald" },
       { label: "Responder rápido mejora tu posición", tone: "slate" },
       { label: "Comercios podrían necesitar mantenimiento", tone: "violet" },
     ],
-    resident_business: [
+    hybrid: [
       { label: "Tu catálogo tuvo movimiento", tone: "violet" },
       { label: "Productos vistos esta semana", tone: "emerald" },
       { label: "Vecinos descubriendo comercios locales", tone: "violet" },
       { label: "Servicios aliados cerca tuyo", tone: "sky" },
     ],
-    external_business: [
+    business: [
       { label: "Cerca tuyo concentra visitas locales", tone: "violet" },
       { label: "Catálogos con fotos reciben más aperturas", tone: "emerald" },
       { label: "Nuevos vecinos explorando comercios", tone: "slate" },
@@ -192,14 +192,14 @@ export function getZonalActivitySignals(role: HomeActivityRole): ZonalActivitySi
     { eyebrow: "Nuevo cerca", label: "Emprendimiento en Hudson", description: "Un catálogo de pastelería se sumó a la zona con pedidos coordinados.", tone: "violet" },
   ]
 
-  if (role === "service_provider") {
+  if (role === "services") {
     return [
       { eyebrow: "Demanda", label: "Consultas de mantenimiento", description: "Vecinos y comercios están buscando respuestas rápidas para arreglos chicos.", tone: "sky" },
       ...common.slice(1),
     ]
   }
 
-  if (role === "resident_business" || role === "external_business") {
+  if (role === "hybrid" || role === "business") {
     return [
       { eyebrow: "Visibilidad", label: "Catálogos con movimiento", description: "Productos con foto clara y retiro simple reciben más aperturas locales.", tone: "violet" },
       { eyebrow: "Cerca tuyo", label: "Comercios recomendados", description: "Los perfiles activos aparecen mejor en recorridos barriales.", tone: "emerald" },

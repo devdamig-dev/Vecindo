@@ -191,7 +191,7 @@ export default function EspacioComercialPage() {
         <div className="rounded-[22px] border border-violet-200 bg-violet-50 px-4 py-3">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-muted-foreground">
-              {role === "service_provider"
+              {role === "services"
                 ? "Preview para detectar comercios cercanos y oportunidades de alianza."
                 : "Preview para ver cómo tu marca puede aparecer en la red local."}
             </p>
@@ -201,7 +201,7 @@ export default function EspacioComercialPage() {
               className="bg-violet-600 text-white hover:bg-violet-700"
             >
               <Link href="/dashboard/suscripciones">
-                {role === "service_provider"
+                {role === "services"
                   ? "Activar Red local"
                   : "Activar acceso"}
               </Link>

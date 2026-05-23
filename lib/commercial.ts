@@ -16,7 +16,7 @@ export type CommercialModule =
   | "profile"
   | "settings"
 
-export type UserPrimaryRole = "resident" | "service_provider" | "external_business" | "resident_business"
+export type UserPrimaryRole = "universal" | "services" | "business" | "hybrid"
 
 export interface VisibleNavItem {
   label: string
@@ -26,25 +26,11 @@ export interface VisibleNavItem {
   priority: "primary" | "secondary"
 }
 
-const COMMUNITY_MODULES: CommercialModule[] = [
-  "home",
-  "marketplace",
-  "services",
-  "commercialSpace",
-  "help",
-  "questions",
-  "saved",
-  "usefulInfo",
-  "subscriptions",
-  "profile",
-  "settings",
-]
-
-const ALWAYS_FULL_MODULES: CommercialModule[] = ["profile", "settings", "subscriptions"]
+const ALWAYS_FULL_MODULES: CommercialModule[] = ["home", "services", "commercialSpace", "help", "questions", "saved", "usefulInfo", "subscriptions", "profile", "settings"]
 
 const MODULE_LABELS: Record<CommercialModule, string> = {
   home: "Inicio",
-  professionalDashboard: "Gestionar servicios",
+  professionalDashboard: "Panel de servicios",
   marketplace: "Mercado",
   services: "Servicios",
   commercialSpace: "Espacio comercial",
@@ -52,7 +38,7 @@ const MODULE_LABELS: Record<CommercialModule, string> = {
   questions: "Comunidad",
   saved: "Guardados",
   usefulInfo: "Información útil",
-  subscriptions: "Suscripciones",
+  subscriptions: "Planes y presencia",
   myBusiness: "Mi negocio",
   serviceManagement: "Gestionar servicios",
   profile: "Mi perfil",
@@ -76,97 +62,77 @@ const MODULE_HREFS: Record<CommercialModule, string> = {
   settings: "/dashboard/settings",
 }
 
+
 export function isResident(auth: AuthState | null | undefined) {
   return auth?.accountType === "resident"
 }
 
 export function hasServiceProviderActivity(auth: AuthState | null | undefined) {
   if (!auth) return false
-
   const serviceListings = auth.commercialActivity?.serviceListingsCount ?? 0
   return auth.capabilities.canOfferServices || Boolean(auth.professionalProfile) || serviceListings > 0
 }
 
 export function hasBusinessActivity(auth: AuthState | null | undefined) {
   if (!auth) return false
-
   const hasBusinessProfile = Boolean(auth.commercialActivity?.hasBusinessProfile || auth.businessProfile)
   const hasEntrepreneurProfile = Boolean(auth.commercialActivity?.hasEntrepreneurProfile)
   const managesCommerce = Array.isArray(auth.managesCommerceIds) && auth.managesCommerceIds.length > 0
-
   return hasBusinessProfile || hasEntrepreneurProfile || managesCommerce || auth.hasCommerceProfile
 }
 
 export function getUserPrimaryRole(auth: AuthState | null | undefined): UserPrimaryRole {
-  if (isResident(auth)) {
-    return hasBusinessActivity(auth) ? "resident_business" : "resident"
-  }
-
-  if (hasBusinessActivity(auth)) return "external_business"
-  return "service_provider"
+  const services = hasServiceProviderActivity(auth)
+  const business = hasBusinessActivity(auth)
+  if (services && business) return "hybrid"
+  if (business) return "business"
+  if (services) return "services"
+  return "universal"
 }
 
 export function hasFullAccessToModule(auth: AuthState | null | undefined, module: CommercialModule) {
   if (!auth) return false
-
   if (ALWAYS_FULL_MODULES.includes(module)) return true
-
-  if (isResident(auth)) {
-    if (COMMUNITY_MODULES.includes(module)) return true
-    if (module === "myBusiness") return hasBusinessActivity(auth)
-    if (module === "serviceManagement" || module === "professionalDashboard") return hasServiceProviderActivity(auth)
-    return false
-  }
-
-  if (hasServiceProviderActivity(auth) && (module === "services" || module === "serviceManagement" || module === "professionalDashboard")) {
-    return true
-  }
-
-  if (hasBusinessActivity(auth) && module === "myBusiness") {
-    return true
-  }
-
+  if (module === "serviceManagement" || module === "professionalDashboard") return hasServiceProviderActivity(auth)
+  if (module === "myBusiness") return hasBusinessActivity(auth)
+  if (module === "marketplace") return Boolean(auth.capabilities.canAccessMarketplace)
   return false
 }
 
-export function hasPreviewAccessToModule(auth: AuthState | null | undefined, module: CommercialModule) {
-  if (!auth || hasFullAccessToModule(auth, module)) return false
-
-  const role = getUserPrimaryRole(auth)
-
-  if (role === "service_provider") {
-    return module === "commercialSpace"
-  }
-
-  if (role === "external_business") {
-    return module === "services" || module === "commercialSpace"
-  }
-
+export function hasPreviewAccessToModule(_auth: AuthState | null | undefined, _module: CommercialModule) {
   return false
 }
 
 export function canAccessModule(auth: AuthState | null | undefined, module: CommercialModule) {
-  return hasFullAccessToModule(auth, module) || hasPreviewAccessToModule(auth, module)
+  return hasFullAccessToModule(auth, module)
 }
 
 export function getVisibleNavItems(auth: AuthState | null | undefined): VisibleNavItem[] {
   if (!auth) return []
 
-  const role = getUserPrimaryRole(auth)
-  const roleModules: CommercialModule[] =
-    role === "resident" || role === "resident_business"
-      ? ["home", "marketplace", "services", "commercialSpace", "help", "questions", "saved", "usefulInfo", "subscriptions", "profile", "settings", "myBusiness", "serviceManagement"]
-      : role === "service_provider"
-        ? ["services", "serviceManagement", "commercialSpace", "subscriptions", "profile", "settings"]
-        : ["myBusiness", "commercialSpace", "services", "serviceManagement", "subscriptions", "profile", "settings"]
+  const orderedModules: CommercialModule[] = [
+    "home",
+    "services",
+    "commercialSpace",
+    "help",
+    "marketplace",
+    "myBusiness",
+    "serviceManagement",
+    "questions",
+    "saved",
+    "usefulInfo",
+    "subscriptions",
+    "profile",
+    "settings",
+  ]
 
-  return roleModules
+  return orderedModules
     .filter((module) => canAccessModule(auth, module))
     .map((module, index) => ({
       label: MODULE_LABELS[module],
       href: MODULE_HREFS[module],
       module,
-      access: hasFullAccessToModule(auth, module) ? "full" : "preview",
+      access: "full",
       priority: index < 4 ? "primary" : "secondary",
     }))
 }
@@ -188,7 +154,6 @@ export function canAccessMyBusiness(auth: AuthState | null | undefined) {
   return hasFullAccessToModule(auth, "myBusiness")
 }
 
-// Compat helper (legacy usage): commercial panel is now only business/entrepreneurship.
 export function hasCommercialActivity(auth: AuthState | null | undefined) {
   return canAccessMyBusiness(auth)
 }
