@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Shield, Eye, EyeOff, Home, Briefcase, ArrowLeft } from "lucide-react"
 import { useAuth } from "@/lib/auth-context"
 
-type Step = "choose" | "resident_register" | "external_register" | "login"
+type Step = "choose" | "quick_register" | "pro_register" | "login"
 
 const neighborhoods = [
   { name: "Los Ombu\u00e9s", zone: "Hudson \u2013 Berazategui" },
@@ -37,7 +37,7 @@ export function LoginForm() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     // Demo routing: Residente entra al panel general; Prestador entra directo a Servicios.
-    if (step === "external_register") {
+    if (step === "pro_register") {
       setAccountType("external_professional")
       router.push("/dashboard/services")
       return
@@ -62,16 +62,16 @@ export function LoginForm() {
 
         <div className="flex flex-col gap-3">
           <button
-            onClick={() => setStep("resident_register")}
+            onClick={() => setStep("quick_register")}
             className="group flex items-start gap-4 rounded-xl border border-border bg-card p-5 text-left transition-all hover:border-primary/40 hover:shadow-sm"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
               <Home className="h-6 w-6" />
             </div>
             <div>
-              <p className="font-semibold text-foreground">Soy Propietario / Residente</p>
+              <p className="font-semibold text-foreground">Quiero descubrir mi zona</p>
               <p className="mt-0.5 text-sm text-muted-foreground">
-                Vivo en un barrio de la zona
+                Busco servicios, negocios y comunidad local
               </p>
               <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
                 <li className="flex items-center gap-1.5">
@@ -91,16 +91,16 @@ export function LoginForm() {
           </button>
 
           <button
-            onClick={() => setStep("external_register")}
+            onClick={() => setStep("pro_register")}
             className="group flex items-start gap-4 rounded-xl border border-border bg-card p-5 text-left transition-all hover:border-primary/40 hover:shadow-sm"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-chart-2/10 text-chart-2 transition-colors group-hover:bg-chart-2 group-hover:text-primary-foreground">
               <Briefcase className="h-6 w-6" />
             </div>
             <div>
-              <p className="font-semibold text-foreground">Soy Prestador de Servicios</p>
+              <p className="font-semibold text-foreground">Quiero ofrecer mis servicios</p>
               <p className="mt-0.5 text-sm text-muted-foreground">
-                Trabajo en la zona y quiero ofrecer mis servicios
+                Tengo una actividad y quiero ganar visibilidad local
               </p>
               <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
                 <li className="flex items-center gap-1.5">
@@ -195,7 +195,7 @@ export function LoginForm() {
     )
   }
 
-  const isResident = step === "resident_register"
+  const isResident = step === "quick_register"
 
   return (
     <div className="w-full max-w-sm">
@@ -205,7 +205,7 @@ export function LoginForm() {
           <span className="text-2xl font-bold tracking-tight text-foreground">VEZI</span>
         </Link>
         <h1 className="text-2xl font-bold text-foreground">
-          {isResident ? "Registro de Residente" : "Registro de Prestador"}
+          {isResident ? "Crear cuenta VEZI" : "Crear perfil profesional"}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {isResident

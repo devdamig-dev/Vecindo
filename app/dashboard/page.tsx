@@ -136,15 +136,17 @@ function MainModules({ showMarketplace }: { showMarketplace: boolean }) {
 
 function HomePositioningBanner() {
   return (
-    <section className="rounded-3xl border border-primary/15 bg-gradient-to-r from-sky-50 via-white to-violet-50 p-4 shadow-[0_12px_28px_rgba(15,23,42,0.05)]">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-primary">
+    <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-[radial-gradient(circle_at_15%_18%,rgba(56,189,248,0.22),transparent_45%),radial-gradient(circle_at_86%_14%,rgba(168,85,247,0.2),transparent_48%),linear-gradient(130deg,rgba(255,255,255,0.92),rgba(248,250,255,0.95))] p-5 shadow-[0_18px_45px_rgba(30,64,175,0.16)]">
+      <div className="pointer-events-none absolute -left-10 top-6 h-28 w-28 rounded-full bg-sky-300/30 blur-2xl" />
+      <div className="pointer-events-none absolute right-2 top-1 h-24 w-24 rounded-full bg-violet-300/30 blur-2xl" />
+      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
         Red local VEZI
       </p>
-      <h1 className="mt-1 text-lg font-semibold text-foreground sm:text-xl">
-        Conectá con servicios, negocios y personas cerca tuyo
+      <h1 className="mt-1.5 text-xl font-semibold leading-tight text-foreground sm:text-2xl">
+        Tu zona, más viva: servicios, comercios y personas en movimiento
       </h1>
-      <p className="mt-1.5 text-sm text-muted-foreground">
-        Descubrí actividad local, elegí por reputación y resolvé lo cotidiano con confianza.
+      <p className="mt-2 text-sm text-slate-600">
+        Encontrá oportunidades reales cerca tuyo con una experiencia social y moderna pensada para abrir todos los días.
       </p>
     </section>
   );
