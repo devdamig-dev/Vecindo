@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/lib/auth-context"
-import { getUserPrimaryRole, getVisibleNavItems, isResident, type CommercialModule } from "@/lib/commercial"
+import { getUserPrimaryRole, getVisibleNavItems, hasBusinessActivity, hasServiceProviderActivity, type CommercialModule } from "@/lib/commercial"
 import {
   MapPinned,
   LayoutDashboard,
@@ -71,10 +71,10 @@ function getActiveClass(module: CommercialModule) {
 }
 
 function getRoleLabel(role: ReturnType<typeof getUserPrimaryRole>) {
-  if (role === "resident_business") return "Residente + negocio"
-  if (role === "resident") return "Residente"
-  if (role === "external_business") return "Comercio externo"
-  return "Prestador de servicios"
+  if (role === "hybrid") return "Servicios + negocio"
+  if (role === "business") return "Negocio activo"
+  if (role === "services") return "Servicios activos"
+  return "Cuenta universal"
 }
 
 function SidebarLink({ item, onNavigate }: { item: SidebarNavItem; onNavigate: () => void }) {
@@ -101,8 +101,9 @@ function SidebarLink({ item, onNavigate }: { item: SidebarNavItem; onNavigate: (
 export function DashboardSidebar() {
   const [open, setOpen] = useState(false)
   const { auth } = useAuth()
-  const residentUser = isResident(auth)
   const role = getUserPrimaryRole(auth)
+  const isServiceMode = hasServiceProviderActivity(auth)
+  const isBusinessMode = hasBusinessActivity(auth)
   const contextualItems = getVisibleNavItems(auth).filter((item) => !mainNavItems.some((mainItem) => mainItem.module === item.module))
 
   return (
@@ -141,7 +142,7 @@ export function DashboardSidebar() {
             <p className="text-sm font-semibold">Hudson – Berazategui</p>
           </div>
           <div className="mt-2 flex items-center gap-2 rounded-xl bg-sidebar-accent/50 px-3 py-2.5">
-            {residentUser ? <ShieldCheck className="h-3.5 w-3.5 text-sidebar-primary" /> : <Briefcase className="h-3.5 w-3.5 text-sidebar-primary" />}
+            {isServiceMode && isBusinessMode ? <Store className="h-3.5 w-3.5 text-sidebar-primary" /> : isServiceMode ? <Briefcase className="h-3.5 w-3.5 text-sidebar-primary" /> : <ShieldCheck className="h-3.5 w-3.5 text-sidebar-primary" />}
             <span className="text-xs font-medium text-sidebar-foreground/80">{getRoleLabel(role)}</span>
           </div>
         </div>

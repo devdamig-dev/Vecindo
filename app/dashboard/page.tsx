@@ -82,7 +82,7 @@ const mainModules: QuickAction[] = [
 ];
 
 const roleNudges: Record<HomeRole, RoleNudge> = {
-  resident: {
+  universal: {
     eyebrow: "Hudson – Berazategui",
     title: "Tu zona está activa",
     insight:
@@ -91,7 +91,7 @@ const roleNudges: Record<HomeRole, RoleNudge> = {
     href: "/dashboard/questions",
     icon: Sparkles,
   },
-  service_provider: {
+  services: {
     eyebrow: "Prestador",
     title: "Servicios con movimiento cerca",
     insight:
@@ -100,7 +100,7 @@ const roleNudges: Record<HomeRole, RoleNudge> = {
     href: "/dashboard/pro",
     icon: Wrench,
   },
-  resident_business: {
+  hybrid: {
     eyebrow: "Comercio vecino",
     title: "Tu negocio convive con la comunidad",
     insight:
@@ -109,11 +109,11 @@ const roleNudges: Record<HomeRole, RoleNudge> = {
     href: "/dashboard/comercial",
     icon: Store,
   },
-  external_business: {
+  business: {
     eyebrow: "Comercio local",
-    title: "Más presencia sin perder el pulso barrial",
+    title: "Presencia local con impacto real",
     insight:
-      "Cerca tuyo concentra comercios y emprendimientos que la zona descubre primero.",
+      "Activá herramientas de negocio y presencia premium para ganar visibilidad en tu zona.",
     cta: "Ir a Mi negocio",
     href: "/dashboard/comercial",
     icon: Megaphone,

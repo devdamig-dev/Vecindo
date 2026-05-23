@@ -6,9 +6,9 @@ import { useAuth } from "@/lib/auth-context"
 import { CreditCard, Check, Star, Store, Search } from "lucide-react"
 
 const plans = [
-  { id: "free", name: "Plan Gratuito", price: "Gratis", period: "", description: "Visibilidad básica para comenzar a ofrecer tus servicios o explorar la plataforma.", features: ["Perfil básico en el directorio", "Contacto por WhatsApp", "Acceso a módulos públicos"], recommended: false, targetRoles: ["resident", "external_professional"], icon: Search },
-  { id: "professional", name: "Profesional Destacado", price: "$4.990", period: "/mes", description: "Destacá tu perfil profesional y llegá a más vecinos de la zona.", features: ["Prioridad en búsqueda de servicios", "Badge destacado", "Panel de estadísticas (demo)", "Posición preferencial"], recommended: true, targetRoles: ["resident", "external_professional"], icon: Star },
-  { id: "commerce", name: "Plan Comercio", price: "$9.990", period: "/mes", description: "Tu negocio visible en la guía comercial y en el mapa de la zona.", features: ["Listado en Espacio comercial", "Presencia en el mapa", "Página pública compartible", "Hasta 50 productos"], recommended: false, targetRoles: ["resident"], icon: Store },
+  { id: "free", name: "Base", price: "Gratis", period: "", description: "Cuenta universal para explorar, publicar y participar en la red local.", features: ["Perfil universal", "Publicaciones limitadas", "Guardados e interacción"], recommended: false, targetRoles: ["resident", "external_professional"], icon: Search },
+  { id: "professional", name: "Servicios Pro", price: "$4.990", period: "/mes", description: "Potenciá tu perfil de servicios con prioridad, reputación y más consultas locales.", features: ["Prioridad en resultados", "Insignia de confianza", "Más visibilidad en Servicios", "Métricas de rendimiento"], recommended: true, targetRoles: ["resident", "external_professional"], icon: Star },
+  { id: "commerce", name: "Negocio + Sponsor", price: "$9.990", period: "/mes", description: "Showroom comercial más posicionamiento premium integrado en VEZI.", features: ["Showroom y catálogo", "Promociones en Espacio comercial", "Destacados en Home y Cerca tuyo", "Boost de alcance local"], recommended: false, targetRoles: ["resident"], icon: Store },
 ]
 
 function getCurrentPlanId(auth: ReturnType<typeof useAuth>["auth"]) {
@@ -29,7 +29,7 @@ export default function SuscripcionesPage() {
     <div className="flex flex-col gap-6">
       <div>
         <div className="flex items-center gap-2"><CreditCard className="h-6 w-6 text-primary" /><h1 className="text-2xl font-bold text-foreground">Suscripciones</h1></div>
-        <p className="mt-1 text-sm text-muted-foreground">Elegí el plan que mejor se adapte a tu uso dentro de VEZI.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Elegí cómo querés activar capacidades y presencia dentro de la red local VEZI.</p>
       </div>
       <div className="rounded-xl border border-primary/20 bg-primary/5 px-5 py-4">
         <p className="text-sm text-foreground"><strong>Tu plan actual:</strong> {currentPlan.name}</p>
