@@ -3,54 +3,50 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/lib/auth-context"
-import { CreditCard, Check, Star, Store, Search } from "lucide-react"
+import { CreditCard, Check, Gem, Rocket, Store } from "lucide-react"
 
 const plans = [
-  { id: "free", name: "Base", price: "Gratis", period: "", description: "Cuenta universal para explorar, publicar y participar en la red local.", features: ["Perfil universal", "Publicaciones limitadas", "Guardados e interacción"], recommended: false, targetRoles: ["resident", "external_professional"], icon: Search },
-  { id: "professional", name: "Servicios Pro", price: "$4.990", period: "/mes", description: "Potenciá tu perfil de servicios con prioridad, reputación y más consultas locales.", features: ["Prioridad en resultados", "Insignia de confianza", "Más visibilidad en Servicios", "Métricas de rendimiento"], recommended: true, targetRoles: ["resident", "external_professional"], icon: Star },
-  { id: "commerce", name: "Negocio + Sponsor", price: "$9.990", period: "/mes", description: "Showroom comercial más posicionamiento premium integrado en VEZI.", features: ["Showroom y catálogo", "Promociones en Espacio comercial", "Destacados en Home y Cerca tuyo", "Boost de alcance local"], recommended: false, targetRoles: ["resident"], icon: Store },
+  { id: "free", name: "Free", price: "Gratis", period: "", description: "Presencia básica para descubrir la zona y participar en la red local.", features: ["Perfil base", "Publicaciones esenciales", "Guardados e interacción"], recommended: false, icon: Rocket },
+  { id: "business", name: "Negocio", price: "$9.990", period: "/mes", description: "Showroom comercial, catálogo y métricas para crecer cerca tuyo.", features: ["Showroom y catálogo", "Promociones", "Métricas de actividad", "Mayor exposición en comercio"], recommended: true, icon: Store },
 ]
 
-function getCurrentPlanId(auth: ReturnType<typeof useAuth>["auth"]) {
-  const hasBusiness = Boolean(auth.commercialActivity?.hasBusinessProfile || auth.businessProfile)
-  const hasServices = (auth.commercialActivity?.serviceListingsCount ?? 0) > 0
-  if (hasBusiness) return "commerce"
-  if (hasServices) return "professional"
-  return "free"
+const sponsorUpgrade = {
+  name: "Sponsor",
+  description: "Upgrade premium adicional para impulsar posicionamiento y visibilidad en toda la app.",
+  features: ["Destacados en Home", "Prioridad en Cerca tuyo", "Mayor alcance en stories", "Posicionamiento preferente"],
 }
 
 export default function SuscripcionesPage() {
   const { auth } = useAuth()
-  const currentPlanId = getCurrentPlanId(auth)
-  const currentPlan = plans.find((p) => p.id === currentPlanId) ?? plans[0]
-  const visiblePlans = plans.filter((p) => p.targetRoles.includes(auth.accountType))
+  const hasBusiness = Boolean(auth.commercialActivity?.hasBusinessProfile || auth.businessProfile)
+  const currentPlanId = hasBusiness ? "business" : "free"
 
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <div className="flex items-center gap-2"><CreditCard className="h-6 w-6 text-primary" /><h1 className="text-2xl font-bold text-foreground">Suscripciones</h1></div>
-        <p className="mt-1 text-sm text-muted-foreground">Elegí cómo querés activar capacidades y presencia dentro de la red local VEZI.</p>
+        <div className="flex items-center gap-2"><CreditCard className="h-6 w-6 text-primary" /><h1 className="text-2xl font-bold">Planes y upgrades</h1></div>
+        <p className="mt-1 text-sm text-muted-foreground">Un único usuario. Activá negocio y luego potenciá alcance con Sponsor.</p>
       </div>
-      <div className="rounded-xl border border-primary/20 bg-primary/5 px-5 py-4">
-        <p className="text-sm text-foreground"><strong>Tu plan actual:</strong> {currentPlan.name}</p>
-        <p className="mt-1 text-xs text-muted-foreground">Durante la etapa beta los planes se muestran como referencia de producto, sin cobro real.</p>
-      </div>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {visiblePlans.map((plan) => {
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        {plans.map((plan) => {
           const isCurrent = plan.id === currentPlanId
-          return (
-            <div key={plan.id} className={`relative flex flex-col rounded-xl border bg-card p-6 transition-all ${isCurrent ? "border-primary shadow-sm" : plan.recommended ? "border-primary/40" : "border-border hover:border-primary/30"}`}>
-              <div className="absolute left-4 top-4 flex gap-2">{plan.recommended && <Badge className="bg-primary text-primary-foreground">Recomendado</Badge>}{isCurrent && <Badge variant="secondary">Plan actual</Badge>}</div>
-              <div className="mb-4 mt-8 flex items-center gap-3"><div className={`flex h-10 w-10 items-center justify-center rounded-lg ${isCurrent || plan.recommended ? "bg-primary text-primary-foreground" : "bg-primary/10 text-primary"}`}><plan.icon className="h-5 w-5" /></div><div><h3 className="font-semibold text-foreground">{plan.name}</h3></div></div>
-              <div className="mb-4 flex items-baseline gap-1"><span className="text-3xl font-bold text-foreground">{plan.price}</span>{plan.period && <span className="text-sm text-muted-foreground">{plan.period}</span>}</div>
-              <p className="mb-5 text-sm text-muted-foreground">{plan.description}</p>
-              <ul className="mb-6 flex flex-1 flex-col gap-2.5">{plan.features.map((feature) => <li key={feature} className="flex items-start gap-2 text-sm"><Check className="mt-0.5 h-4 w-4 shrink-0 text-primary" /><span className="text-foreground">{feature}</span></li>)}</ul>
-              <Button className="w-full" variant={isCurrent || plan.recommended ? "default" : "outline"} disabled={isCurrent}>{isCurrent ? "Plan actual" : "Seleccionar plan"}</Button>
-            </div>
-          )
+          return <div key={plan.id} className={`rounded-2xl border p-6 ${plan.recommended ? "border-primary/40 bg-primary/5" : "bg-card"}`}>
+            <div className="mb-3 flex items-center gap-2">{plan.recommended && <Badge>Recomendado</Badge>}{isCurrent && <Badge variant="secondary">Actual</Badge>}</div>
+            <div className="mb-4 flex items-center gap-3"><div className="rounded-xl bg-primary/10 p-2 text-primary"><plan.icon className="h-5 w-5" /></div><h3 className="text-lg font-semibold">{plan.name}</h3></div>
+            <div className="mb-3"><span className="text-3xl font-bold">{plan.price}</span><span className="text-sm text-muted-foreground"> {plan.period}</span></div>
+            <p className="mb-4 text-sm text-muted-foreground">{plan.description}</p>
+            <ul className="mb-5 space-y-2">{plan.features.map((feature) => <li key={feature} className="flex items-center gap-2 text-sm"><Check className="h-4 w-4 text-primary" />{feature}</li>)}</ul>
+            <Button className="w-full" disabled={isCurrent}>{isCurrent ? "Plan actual" : "Activar plan"}</Button>
+          </div>
         })}
       </div>
-      <p className="text-center text-xs text-muted-foreground">No se requiere tarjeta de crédito. La lógica de pagos se activará en una próxima versión.</p>
+
+      <section className="rounded-3xl border border-violet-300/40 bg-gradient-to-br from-violet-100/80 to-fuchsia-100/70 p-6 shadow-[0_16px_38px_rgba(124,58,237,0.16)]">
+        <div className="mb-4 flex items-center gap-3"><div className="rounded-xl bg-violet-600 p-2 text-white"><Gem className="h-5 w-5" /></div><div><h3 className="text-lg font-semibold">{sponsorUpgrade.name} · Upgrade premium</h3><p className="text-sm text-muted-foreground">{sponsorUpgrade.description}</p></div></div>
+        <div className="grid gap-2 sm:grid-cols-2">{sponsorUpgrade.features.map((f) => <div key={f} className="rounded-xl bg-white/70 px-3 py-2 text-sm">{f}</div>)}</div>
+        <Button className="mt-5">Quiero boost sponsor</Button>
+      </section>
     </div>
   )
 }
