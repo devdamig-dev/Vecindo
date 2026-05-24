@@ -162,7 +162,7 @@ function MarketplaceResidentNotice() {
         <div className="min-w-0">
           <p className="text-sm font-semibold text-foreground">Mercado es comunitario</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Mercado está disponible para residentes de la comunidad. Como prestador externo podés seguir usando Servicios y Espacio comercial.
+            Mercado funciona como espacio secundario para intercambio casual. El foco diario está en Servicios y Espacio comercial.
           </p>
         </div>
       </div>
