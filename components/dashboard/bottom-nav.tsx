@@ -28,17 +28,17 @@ const primaryNavItems: PrimaryNavItem[] = [
 ]
 
 function getActiveClass(module: PrimaryNavItem["module"]) {
-  if (module === "marketplace") return "bg-emerald-500/10 text-emerald-700"
-  if (module === "services") return "bg-sky-500/10 text-sky-700"
-  if (module === "commercialSpace") return "bg-violet-500/10 text-violet-700"
-  return "bg-rose-500/10 text-rose-700"
+  if (module === "marketplace") return "bg-emerald-500/8 text-emerald-700 ring-1 ring-emerald-100"
+  if (module === "services") return "bg-sky-500/8 text-sky-700 ring-1 ring-sky-100"
+  if (module === "commercialSpace") return "bg-violet-500/8 text-violet-700 ring-1 ring-violet-100"
+  return "bg-rose-500/8 text-rose-700 ring-1 ring-rose-100"
 }
 
 function getGlowClass(module: PrimaryNavItem["module"]) {
-  if (module === "marketplace") return "drop-shadow-[0_4px_10px_rgba(16,185,129,0.25)]"
-  if (module === "services") return "drop-shadow-[0_4px_10px_rgba(14,165,233,0.24)]"
-  if (module === "commercialSpace") return "drop-shadow-[0_4px_10px_rgba(139,92,246,0.25)]"
-  return "drop-shadow-[0_4px_10px_rgba(244,63,94,0.24)]"
+  if (module === "marketplace") return "drop-shadow-[0_2px_6px_rgba(16,185,129,0.15)]"
+  if (module === "services") return "drop-shadow-[0_2px_6px_rgba(14,165,233,0.15)]"
+  if (module === "commercialSpace") return "drop-shadow-[0_2px_6px_rgba(139,92,246,0.16)]"
+  return "drop-shadow-[0_2px_6px_rgba(244,63,94,0.15)]"
 }
 
 function BottomNavLink({ item }: { item: PrimaryNavItem }) {
@@ -52,7 +52,7 @@ function BottomNavLink({ item }: { item: PrimaryNavItem }) {
       aria-current={isActive ? "page" : undefined}
       className={cn(
         "flex min-h-14 flex-col items-center justify-center gap-1 rounded-xl text-[12px] font-medium text-slate-500 transition-all duration-300 ease-out hover:-translate-y-0.5 hover:bg-white/80 hover:text-slate-700 active:scale-95",
-        isActive && cn(getActiveClass(item.module), getGlowClass(item.module), "scale-[1.08] -translate-y-[2px] font-semibold"),
+        isActive && cn(getActiveClass(item.module), getGlowClass(item.module), "scale-[1.03] -translate-y-[1px] font-semibold"),
       )}
     >
       <Icon className="h-4 w-4" />
@@ -69,7 +69,7 @@ export function BottomNav({ homeHref }: Props) {
   const rightItems = visibleItems.slice(midpoint)
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-border/60 bg-gradient-to-t from-white via-white/95 to-white/80 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-14px_34px_rgba(2,6,23,0.075)] backdrop-blur-xl">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200/70 bg-gradient-to-t from-white via-white/95 to-white/90 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-10px_24px_rgba(15,23,42,0.06)] backdrop-blur-xl">
       <div className="relative mx-auto grid max-w-2xl grid-cols-5 items-end px-3">
         <div className={cn("col-span-2 grid", leftItems.length <= 1 ? "grid-cols-1" : "grid-cols-2")}>
           {leftItems.map((item) => (

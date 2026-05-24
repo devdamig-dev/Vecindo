@@ -17,8 +17,8 @@ export function FloatingCenterButton({ href }: Props) {
     <Link
       href={href}
       className={cn(
-        "absolute left-1/2 top-0 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-background bg-primary text-primary-foreground shadow-[0_12px_24px_rgba(16,185,129,0.35)] transition-all duration-200 hover:scale-[1.03]",
-        isActive && "ring-2 ring-primary/30"
+        "absolute left-1/2 top-0 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-4 border-white bg-gradient-to-br from-sky-600 to-violet-600 text-white shadow-[0_10px_24px_rgba(59,130,246,0.28)] transition-all duration-200 hover:scale-[1.03]",
+        isActive && "ring-2 ring-sky-300/55"
       )}
       aria-label="Ir a inicio de VEZI"
     >
