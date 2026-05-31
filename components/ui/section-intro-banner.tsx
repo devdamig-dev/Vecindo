@@ -17,7 +17,7 @@ interface SectionIntroBannerProps {
 const variantStyles = {
   services: "bg-sky-800 text-white",
   community: "bg-violet-800 text-white",
-  marketplace: "bg-emerald-800 text-white",
+  marketplace: "bg-slate-800 text-white",
   ayuda: "bg-rose-700 text-white",
 }
 

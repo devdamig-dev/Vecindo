@@ -28,14 +28,14 @@ const primaryNavItems: PrimaryNavItem[] = [
 ]
 
 function getActiveClass(module: PrimaryNavItem["module"]) {
-  if (module === "marketplace") return "bg-emerald-500/8 text-emerald-700 ring-1 ring-emerald-100"
+  if (module === "marketplace") return "bg-slate-100/70 text-slate-700 ring-1 ring-slate-200"
   if (module === "services") return "bg-sky-500/8 text-sky-700 ring-1 ring-sky-100"
   if (module === "commercialSpace") return "bg-violet-500/8 text-violet-700 ring-1 ring-violet-100"
   return "bg-rose-500/8 text-rose-700 ring-1 ring-rose-100"
 }
 
 function getGlowClass(module: PrimaryNavItem["module"]) {
-  if (module === "marketplace") return "drop-shadow-[0_2px_6px_rgba(16,185,129,0.15)]"
+  if (module === "marketplace") return "drop-shadow-[0_2px_6px_rgba(100,116,139,0.12)]"
   if (module === "services") return "drop-shadow-[0_2px_6px_rgba(14,165,233,0.15)]"
   if (module === "commercialSpace") return "drop-shadow-[0_2px_6px_rgba(139,92,246,0.16)]"
   return "drop-shadow-[0_2px_6px_rgba(244,63,94,0.15)]"

@@ -17,11 +17,11 @@ function getCurrentPlan(auth: ReturnType<typeof useAuth>["auth"]) {
   const hasServices = (auth.commercialActivity?.serviceListingsCount ?? 0) > 0
   if (hasBusiness) return { name: "Plan Comercio", limit: "Hasta 50 productos", accent: "amber" as const }
   if (hasServices) return { name: "Profesional Destacado", limit: "Perfil + servicios activos", accent: "sky" as const }
-  return { name: "Plan Gratuito", limit: "Base para empezar", accent: "emerald" as const }
+  return { name: "Plan Gratuito", limit: "Base para empezar", accent: "slate" as const }
 }
 
-function PlanCard({ planName, limit, accent }: { planName: string; limit: string; accent: "amber" | "sky" | "emerald" }) {
-  const classes = accent === "amber" ? "border-amber-200 bg-amber-50" : accent === "sky" ? "border-sky-200 bg-sky-50" : "border-emerald-200 bg-emerald-50"
+function PlanCard({ planName, limit, accent }: { planName: string; limit: string; accent: "amber" | "sky" | "slate" }) {
+  const classes = accent === "amber" ? "border-amber-200 bg-amber-50" : accent === "sky" ? "border-sky-200 bg-sky-50" : "border-slate-200 bg-slate-50"
   return (
     <div className={`rounded-xl border p-4 ${classes}`}>
       <div className="flex flex-wrap items-center gap-2">

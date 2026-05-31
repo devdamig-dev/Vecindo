@@ -89,7 +89,7 @@ export function ProductDetailDrawer({
                   {saved && (
                     <Badge
                       variant="outline"
-                      className="mt-2 gap-1 border-emerald-200 text-emerald-700"
+                      className="mt-2 gap-1 border-slate-200 text-slate-600"
                     >
                       <Bookmark className="h-3.5 w-3.5" />
                       Guardado
@@ -170,7 +170,7 @@ export function ProductDetailDrawer({
 
               <Button
                 asChild
-                className="flex-1 gap-1.5 bg-emerald-700 text-white hover:bg-emerald-800"
+                className="flex-1 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90"
               >
                 <a
                   href={productWhatsappUrl}

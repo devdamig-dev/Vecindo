@@ -179,7 +179,7 @@ export function ServicesList({ professionals }: ServicesListProps) {
                 )}
 
                 {pro.isFast && (
-                  <Badge className="border-0 bg-green-500/10 text-[10px] text-green-700 hover:bg-green-500/10">
+                  <Badge className="border-0 bg-sky-500/10 text-[10px] text-sky-700 hover:bg-sky-500/10">
                     <Zap className="mr-1 h-3 w-3" />
                     Respuesta rápida
                   </Badge>
@@ -197,12 +197,12 @@ export function ServicesList({ professionals }: ServicesListProps) {
                   <BriefcaseBusiness className="h-3 w-3" />
                   +{pro.jobs} trabajos realizados
                 </span>
-                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">
+                <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2.5 py-1 text-sky-700">
                   <Users className="h-3 w-3" />
                   {pro.reviews} recomendaciones
                 </span>
                 {pro.isFast && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 text-green-700">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2.5 py-1 text-sky-700">
                     <MessageCircle className="h-3 w-3" />
                     Responde rápido
                   </span>
@@ -253,7 +253,7 @@ export function ServicesList({ professionals }: ServicesListProps) {
                 {saved && (
                   <Badge
                     variant="outline"
-                    className="gap-1 border-emerald-200 text-[10px] text-emerald-700"
+                    className="gap-1 border-sky-200 text-[10px] text-sky-700"
                   >
                     <Bookmark className="h-3 w-3" />
                     Guardado

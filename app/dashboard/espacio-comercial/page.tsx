@@ -98,7 +98,7 @@ function CommercialPreviewCard({
             <Badge
               className={
                 isCommerce
-                  ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                  ? "bg-sky-100 text-sky-700 hover:bg-sky-100"
                   : "bg-violet-100 text-violet-700 hover:bg-violet-100"
               }
             >

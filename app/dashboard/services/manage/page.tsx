@@ -14,7 +14,7 @@ export default function ServiceManagementPage() {
     return (
       <div className="space-y-4">
         <h1 className="text-2xl font-bold">Gestión de servicios</h1>
-        <p className="text-sm text-muted-foreground">Este panel es solo para prestadores de servicio.</p>
+        <p className="text-sm text-muted-foreground">Este panel es solo para quienes ofrecen servicios en VEZI.</p>
         <Button asChild><Link href="/dashboard/services">Ir a Servicios</Link></Button>
       </div>
     )

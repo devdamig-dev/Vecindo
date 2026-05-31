@@ -36,24 +36,24 @@ export default function MarketplacePage() {
     return (
       <div className="flex max-w-full flex-col gap-6">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+          <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
             <Lock className="h-3.5 w-3.5" /> Mercado comunitario
           </div>
           <h1 className="text-2xl font-bold text-foreground">Mercado</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
-            Mercado está disponible para residentes de la comunidad: productos, confianza vecinal e intercambio entre vecinos.
+            Mercado es el espacio de intercambio comunitario entre miembros de la red VEZI.
           </p>
         </div>
 
-        <div className="rounded-[28px] border border-emerald-100 bg-emerald-50/75 p-5 shadow-[0_14px_34px_rgba(16,185,129,0.055)]">
+        <div className="rounded-[28px] border border-slate-200 bg-slate-50/75 p-5 shadow-[0_14px_34px_rgba(15,23,42,0.04)]">
           <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700 shadow-sm">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-slate-600 shadow-sm">
               <Users className="h-5 w-5" />
             </div>
             <div className="min-w-0 space-y-2">
-              <h2 className="text-base font-semibold text-foreground">Exclusivo para residentes</h2>
+              <h2 className="text-base font-semibold text-foreground">Mercado es para miembros de la comunidad</h2>
               <p className="text-sm leading-relaxed text-muted-foreground">
-                Los prestadores externos no navegan el feed completo de Mercado. Podés mantener tu presencia en Servicios y Espacio comercial.
+                Tu perfil está orientado a Servicios y Espacio comercial. Desde ahí podés potenciar tu presencia en la red local.
               </p>
               <div className="flex flex-wrap gap-2 pt-1">
                 <Button asChild variant="outline" className="rounded-full border-sky-200 text-sky-700 hover:bg-sky-50">
@@ -74,14 +74,14 @@ export default function MarketplacePage() {
     <div className="flex max-w-full flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+          <div className="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
             <Store className="h-3.5 w-3.5" /> Mercado de tu zona
           </div>
           <h1 className="text-2xl font-bold text-foreground">Mercado</h1>
           <p className="max-w-2xl text-sm text-muted-foreground">Comprá y vendé entre vecinos de la zona. Sin comisiones, sin intermediarios y con contacto directo por WhatsApp.</p>
         </div>
         {canPublish && (
-          <Button asChild size="sm" className="gap-1.5 bg-emerald-600 text-white hover:bg-emerald-700">
+          <Button asChild size="sm" className="gap-1.5 bg-foreground text-background hover:bg-foreground/90">
             <Link href="/dashboard/marketplace/new">
               <Plus className="h-4 w-4" /> Publicar producto
             </Link>
@@ -105,12 +105,12 @@ export default function MarketplacePage() {
         }}
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-emerald-200 bg-emerald-100 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
         <div className="flex items-start gap-2">
-          <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+          <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-slate-500" />
           <p className="text-sm text-muted-foreground">VEZI conecta vecinos. La compra se realiza directamente entre usuarios.</p>
         </div>
-        <div className="text-xs font-medium text-emerald-700">Contacto directo sin intermediarios</div>
+        <div className="text-xs font-medium text-slate-600">Contacto directo sin intermediarios</div>
       </div>
 
       <MarketplaceFilters query={query} onQueryChange={setQuery} activeCategory={activeCategory} onCategoryChange={setActiveCategory} />

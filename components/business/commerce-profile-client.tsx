@@ -337,7 +337,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                     {saved && (
                       <Badge
                         variant="outline"
-                        className="gap-1 border-emerald-200 text-emerald-700"
+                        className="gap-1 border-slate-200 text-slate-600"
                       >
                         <Bookmark className="h-3.5 w-3.5" />
                         Guardado
@@ -474,7 +474,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
                   <Button
                     asChild
-                    className="gap-2 bg-emerald-700 text-white hover:bg-emerald-800"
+                    className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     <a
                       href={waUrl}
@@ -601,7 +601,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                         {productSaved && (
                           <Badge
                             variant="outline"
-                            className="mt-1 gap-1 border-emerald-200 text-[10px] text-emerald-700"
+                            className="mt-1 gap-1 border-slate-200 text-[10px] text-slate-600"
                           >
                             <Bookmark className="h-3 w-3" />
                             Guardado
@@ -616,7 +616,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                           type="button"
                           size="icon"
                           variant="ghost"
-                          className="-mt-2 h-8 w-8 text-muted-foreground hover:text-emerald-700"
+                          className="-mt-2 h-8 w-8 text-muted-foreground hover:text-primary"
                           onClick={(e) => {
                             e.stopPropagation();
                             handleSaveProduct(product);
@@ -628,7 +628,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                           }
                         >
                           <Bookmark
-                            className={`h-4 w-4 ${productSaved ? "fill-current text-emerald-700" : ""}`}
+                            className={`h-4 w-4 ${productSaved ? "fill-current text-primary" : ""}`}
                           />
                         </Button>
                       </div>
@@ -706,7 +706,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                       <Button
                         size="sm"
                         asChild
-                        className="gap-1.5 bg-emerald-700 text-white hover:bg-emerald-800"
+                        className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90"
                       >
                         <a
                           href={productWhatsappUrl}
@@ -760,7 +760,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
             <Button
               asChild
-              className="mt-4 w-full gap-2 bg-emerald-700 text-white hover:bg-emerald-800"
+              className="mt-4 w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
               disabled={cartCount === 0}
             >
               <a
@@ -797,7 +797,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                               {review.user}
                             </p>
                             {review.verified && (
-                              <span className="inline-flex items-center gap-1 text-xs text-emerald-600">
+                              <span className="inline-flex items-center gap-1 text-xs text-success">
                                 <CheckCircle2 className="h-3.5 w-3.5" />
                                 Verificado
                               </span>
@@ -870,7 +870,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             <div className="mt-4 flex items-center gap-3">
               <Button onClick={handleSubmitReview}>Enviar reseña</Button>
               {reviewSubmitted && (
-                <span className="text-sm text-emerald-600">
+                <span className="text-sm text-success">
                   Tu reseña fue enviada.
                 </span>
               )}
@@ -912,7 +912,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
 
             <Button
               asChild
-              className="mt-4 w-full gap-2 bg-emerald-700 text-white hover:bg-emerald-800"
+              className="mt-4 w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90"
               disabled={cartCount === 0}
             >
               <a
@@ -957,7 +957,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
             <div className="mt-4 space-y-3">
               {trustBullets.map((bullet) => (
                 <div key={bullet} className="flex items-start gap-2">
-                  <ShieldCheck className="mt-0.5 h-4 w-4 text-emerald-600" />
+                  <ShieldCheck className="mt-0.5 h-4 w-4 text-success" />
                   <p className="text-sm text-muted-foreground">{bullet}</p>
                 </div>
               ))}

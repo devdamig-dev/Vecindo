@@ -154,9 +154,9 @@ function HomePositioningBanner() {
 
 function MarketplaceResidentNotice() {
   return (
-    <section className="rounded-3xl border border-emerald-100 bg-emerald-50/70 p-4 shadow-[0_10px_28px_rgba(16,185,129,0.045)]">
+    <section className="rounded-3xl border border-slate-200 bg-slate-50/70 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.035)]">
       <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700 shadow-sm">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-slate-500 shadow-sm">
           <ShoppingBag className="h-5 w-5" />
         </div>
         <div className="min-w-0">
@@ -243,7 +243,7 @@ function ReturnToSaved({ items }: { items: SavedItem[] }) {
             <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
               {item.subtitle}
             </p>
-            <p className="mt-2 text-[11px] text-emerald-700">
+            <p className="mt-2 text-[11px] text-primary">
               {item.activity ?? "Tiene movimiento reciente"}
             </p>
           </Link>

@@ -19,7 +19,7 @@ const categoryConfig: Record<AyudaCategory, { icon: typeof PawPrint; color: stri
   mascotas: { icon: PawPrint, color: "text-amber-600" },
   donaciones: { icon: Gift, color: "text-pink-600" },
   objetos: { icon: Key, color: "text-blue-600" },
-  personal: { icon: Users, color: "text-green-600" },
+  personal: { icon: Users, color: "text-violet-600" },
   urgente: { icon: AlertTriangle, color: "text-destructive" },
 }
 

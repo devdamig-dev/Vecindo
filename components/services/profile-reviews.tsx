@@ -45,7 +45,7 @@ export function ProfileReviews() {
       <div className="flex items-center justify-between border-b border-border px-5 py-4">
         <div>
           <h2 className="font-semibold text-foreground">Resenas</h2>
-          <p className="text-xs text-muted-foreground">{reviews.length} resenas de residentes verificados</p>
+          <p className="text-xs text-muted-foreground">{reviews.length} reseñas de vecinos</p>
         </div>
         <Button variant="outline" size="sm" onClick={() => setShowForm(!showForm)}>
           {showForm ? "Cancelar" : "Escribir Resena"}

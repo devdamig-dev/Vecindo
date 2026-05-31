@@ -26,7 +26,7 @@ export default async function ProfessionalPage({ params }: { params: Promise<{ i
         <a
           href="https://wa.me/5491123456789"
           target="_blank"
-          className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
+          className="bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:bg-primary/90"
         >
           Escribir por WhatsApp
         </a>

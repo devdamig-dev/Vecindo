@@ -72,7 +72,7 @@ export default function MarketplaceDetailPage() {
   if (!canAccess) {
     return (
       <div className="mx-auto flex max-w-md flex-col items-center justify-center px-4 py-16 text-center">
-        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+        <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-600">
           <Lock className="h-5 w-5" />
         </div>
         <h1 className="mb-2 text-xl font-bold text-foreground">
@@ -99,7 +99,7 @@ export default function MarketplaceDetailPage() {
         </p>
         <Link
           href="/dashboard/marketplace"
-          className="text-sm text-emerald-700 hover:underline"
+          className="text-sm text-primary hover:underline"
         >
           Volver al Mercado
         </Link>
@@ -112,7 +112,7 @@ export default function MarketplaceDetailPage() {
   const isReserved = listing.status === "Reservado";
 
   const whatsappUrl = `https://wa.me/${listing.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-    `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VECINDO.`,
+    `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VEZI.`,
   )}`;
 
   const sellerListings = listings.filter(
@@ -211,8 +211,8 @@ export default function MarketplaceDetailPage() {
                   onClick={() => setCurrentImage(i)}
                   className={`overflow-hidden rounded-xl border-2 transition-colors ${
                     i === currentImage
-                      ? "border-emerald-500"
-                      : "border-transparent hover:border-emerald-200"
+                      ? "border-primary"
+                      : "border-transparent hover:border-primary/30"
                   }`}
                 >
                   <div className="aspect-square bg-muted">
@@ -249,7 +249,7 @@ export default function MarketplaceDetailPage() {
                   <Link
                     key={item.id}
                     href={`/dashboard/marketplace/${item.id}`}
-                    className="group flex gap-3 rounded-xl border border-border p-3 transition-colors hover:border-emerald-300"
+                    className="group flex gap-3 rounded-xl border border-border p-3 transition-colors hover:border-primary/30"
                   >
                     <div className="h-16 w-16 shrink-0 overflow-hidden rounded-md bg-muted">
                       <img
@@ -261,10 +261,10 @@ export default function MarketplaceDetailPage() {
                     </div>
 
                     <div className="min-w-0 flex-1">
-                      <h3 className="truncate text-sm font-medium text-foreground transition-colors group-hover:text-emerald-700">
+                      <h3 className="truncate text-sm font-medium text-foreground transition-colors group-hover:text-primary">
                         {item.title}
                       </h3>
-                      <p className="mt-0.5 text-sm font-bold text-emerald-700">
+                      <p className="mt-0.5 text-sm font-bold text-foreground">
                         {item.price}
                       </p>
                       <div className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
@@ -282,7 +282,7 @@ export default function MarketplaceDetailPage() {
         </div>
 
         <aside className="flex flex-col gap-4">
-          <div className="rounded-2xl border border-emerald-200 bg-card p-5">
+          <div className="rounded-2xl border border-border bg-card p-5">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-bold text-foreground">
@@ -305,15 +305,15 @@ export default function MarketplaceDetailPage() {
                 />
               </div>
 
-              <span className="text-2xl font-bold text-emerald-700 sm:text-3xl">
+              <span className="text-2xl font-bold text-foreground sm:text-3xl">
                 {listing.price}
               </span>
             </div>
 
-            <div className="mt-5 rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+            <div className="mt-5 rounded-xl border border-slate-100 bg-slate-50 p-4">
               <div className="flex items-center gap-3">
                 <Avatar className="h-12 w-12">
-                  <AvatarFallback className="bg-emerald-100 text-sm font-bold text-emerald-700">
+                  <AvatarFallback className="bg-slate-100 text-sm font-bold text-slate-600">
                     {listing.initials}
                   </AvatarFallback>
                 </Avatar>
@@ -322,7 +322,7 @@ export default function MarketplaceDetailPage() {
                   <p className="font-semibold text-foreground">
                     {listing.seller}
                   </p>
-                  <p className="mt-1 flex items-center gap-1 text-xs text-emerald-700">
+                  <p className="mt-1 flex items-center gap-1 text-xs text-slate-600">
                     <ShieldCheck className="h-3.5 w-3.5" />
                     Vecino de {listing.zone}
                   </p>
@@ -333,7 +333,7 @@ export default function MarketplaceDetailPage() {
             <div className="mt-5 flex flex-col gap-2">
               <Button
                 asChild
-                className="w-full gap-2 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50"
+                className="w-full gap-2 bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50"
                 disabled={isSold}
               >
                 <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
@@ -354,7 +354,7 @@ export default function MarketplaceDetailPage() {
                   disabled={saved}
                 >
                   <Bookmark
-                    className={`h-4 w-4 ${saved ? "fill-emerald-700 text-emerald-700" : ""}`}
+                    className={`h-4 w-4 ${saved ? "fill-primary text-primary" : ""}`}
                   />
                 </Button>
 
@@ -398,9 +398,9 @@ export default function MarketplaceDetailPage() {
             </ul>
           </div>
 
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-center">
+          <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center">
             <p className="text-xs text-muted-foreground">
-              Transacción entre vecinos. Vecindo no interviene en pagos ni
+              Transacción entre vecinos. VEZI no interviene en pagos ni
               entregas.
             </p>
           </div>

@@ -63,7 +63,7 @@ const mainNavItems: SidebarNavItem[] = [
 function getActiveClass(module: CommercialModule) {
   if (module === "services" || module === "serviceManagement" || module === "professionalDashboard") return "bg-sky-600 text-white"
   if (module === "questions") return "bg-violet-600 text-white"
-  if (module === "marketplace") return "bg-emerald-600 text-white"
+  if (module === "marketplace") return "bg-slate-600 text-white"
   if (module === "help") return "bg-rose-600 text-white"
   if (module === "commercialSpace") return "bg-amber-600 text-white"
   if (module === "myBusiness") return "bg-sidebar-primary text-sidebar-primary-foreground"

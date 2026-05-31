@@ -71,7 +71,7 @@ const categoryConfig: Record<
   personal: {
     label: "Personal",
     icon: Users,
-    color: "bg-green-500/10 text-green-600",
+    color: "bg-violet-500/10 text-violet-600",
   },
   urgente: {
     label: "Urgente",
@@ -356,7 +356,7 @@ export default function AyudaPage() {
           {filtered.map((post) => {
             const cat = categoryConfig[post.category];
             const CatIcon = cat.icon;
-            const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VECINDO.`)}`;
+            const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VEZI.`)}`;
             const saved = isSaved(post.title, "ayuda", post.id);
             const communityInsights = getAyudaCommunityInsights(
               post.id,

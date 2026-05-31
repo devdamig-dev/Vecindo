@@ -43,8 +43,8 @@ export function getMarketplaceActivityInsights(id: string, status = "Disponible"
 
   return [
     { label: status === "Reservado" ? "Reservado" : `Publicado hace ${hoursAgo} hs`, tone: status === "Reservado" ? "amber" : "slate" },
-    { label: plural(views, "visualización", "visualizaciones"), tone: "emerald" },
-    { label: `${interested} vecinos interesados`, tone: "emerald" },
+    { label: plural(views, "visualización", "visualizaciones"), tone: "slate" },
+    { label: `${interested} vecinos interesados`, tone: "slate" },
     { label: `Guardado por ${saved} personas`, tone: "slate" },
     contextual,
   ]
