@@ -70,15 +70,15 @@ export default function NewMarketplaceProductPage() {
         <Link href="/dashboard/marketplace" className="inline-flex w-fit items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground">
           <ArrowLeft className="h-4 w-4" /> Volver a Mercado
         </Link>
-        <div className="rounded-2xl border border-emerald-100 bg-emerald-50/75 p-5">
+        <div className="rounded-2xl border border-slate-200 bg-slate-50/75 p-5">
           <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-emerald-700 shadow-sm">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-slate-500 shadow-sm">
               <Lock className="h-5 w-5" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">Mercado es para residentes</h1>
+              <h1 className="text-xl font-bold text-foreground">Mercado es para miembros de la comunidad</h1>
               <p className="mt-1 text-sm text-muted-foreground">
-                Solo residentes de la comunidad pueden publicar productos en Mercado.
+                Publicar en Mercado requiere una cuenta activa dentro de la red local VEZI.
               </p>
               <Button asChild className="mt-4 rounded-full bg-violet-600 text-white hover:bg-violet-700">
                 <Link href="/dashboard/espacio-comercial">Ir a Espacio comercial</Link>
@@ -101,12 +101,12 @@ export default function NewMarketplaceProductPage() {
       </div>
 
       {isPublished ? (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-100 p-4">
+        <div className="rounded-2xl border border-success/30 bg-success/5 p-4">
           <div className="flex items-start gap-2">
-            <CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-700" />
+            <CheckCircle2 className="mt-0.5 h-5 w-5 text-success" />
             <div>
-              <p className="font-semibold text-emerald-800">Tu producto fue publicado en Mercado</p>
-              <p className="text-sm text-emerald-700">Podés volver y revisar cómo se vería tu publicación en el listado.</p>
+              <p className="font-semibold text-foreground">Tu producto fue publicado en Mercado</p>
+              <p className="text-sm text-muted-foreground">Podés volver y revisar cómo se vería tu publicación en el listado.</p>
             </div>
           </div>
         </div>
@@ -133,7 +133,7 @@ export default function NewMarketplaceProductPage() {
 
         {!isValid ? <div className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">Completá estos campos: {missingFields.join(", ")}.</div> : null}
 
-        <Button type="submit" disabled={!isValid || isSubmitting} className="w-full bg-emerald-600 text-white hover:bg-emerald-700 sm:w-auto">{isSubmitting ? "Publicando..." : "Publicar producto"}</Button>
+        <Button type="submit" disabled={!isValid || isSubmitting} className="w-full bg-foreground text-background hover:bg-foreground/90 sm:w-auto">{isSubmitting ? "Publicando..." : "Publicar producto"}</Button>
       </form>
     </div>
   )

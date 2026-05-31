@@ -228,7 +228,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
 
   if (listings.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-emerald-200 bg-emerald-50 p-8 text-center">
+      <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center">
         <h3 className="text-base font-semibold text-foreground">
           No encontramos publicaciones
         </h3>
@@ -257,7 +257,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
         return (
           <article
             key={listing.id}
-            className={`group overflow-hidden rounded-[26px] border border-emerald-100/80 bg-card shadow-[0_12px_30px_rgba(16,185,129,0.045)] transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-[0_16px_36px_rgba(16,185,129,0.09)] active:scale-[0.995] ${
+            className={`group overflow-hidden rounded-[26px] border border-slate-100/80 bg-card shadow-[0_12px_30px_rgba(15,23,42,0.04)] transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-200 hover:shadow-[0_16px_36px_rgba(15,23,42,0.07)] active:scale-[0.995] ${
               isSold ? "opacity-75" : ""
             }`}
           >
@@ -300,7 +300,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
 
             <div className="flex flex-1 flex-col p-4">
               <div className="mb-3 flex flex-wrap gap-1.5 text-[11px] font-semibold">
-                <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-emerald-700">
+                <span className="rounded-full bg-slate-50 px-2.5 py-1 text-slate-600">
                   {activityInsights[0].label}
                 </span>
                 {listing.status === "Reservado" ? (
@@ -316,7 +316,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <Link href={detailHref} className="block">
-                    <h3 className="line-clamp-2 text-base font-semibold leading-snug text-foreground transition-colors hover:text-emerald-700">
+                    <h3 className="line-clamp-2 text-base font-semibold leading-snug text-foreground transition-colors hover:text-primary">
                       {listing.title}
                     </h3>
                   </Link>
@@ -339,14 +339,14 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                     />
                     <Badge
                       variant="outline"
-                      className="border-emerald-200 text-[10px] text-emerald-700"
+                      className="border-slate-200 text-[10px] text-slate-600"
                     >
                       Cerca tuyo
                     </Badge>
                     {saved && (
                       <Badge
                         variant="outline"
-                        className="gap-1 border-emerald-200 text-[10px] text-emerald-700"
+                        className="gap-1 border-slate-200 text-[10px] text-slate-600"
                       >
                         <Bookmark className="h-3 w-3" />
                         Guardado
@@ -360,11 +360,11 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                 {listing.description}
               </p>
 
-              <div className="mt-4 rounded-2xl border border-emerald-100 bg-emerald-50/80 px-3 py-2">
+              <div className="mt-4 rounded-2xl border border-slate-100 bg-slate-50/80 px-3 py-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex min-w-0 items-center gap-2">
                     <Avatar className="h-7 w-7">
-                      <AvatarFallback className="bg-emerald-100 text-[10px] font-medium text-emerald-700">
+                      <AvatarFallback className="bg-slate-100 text-[10px] font-medium text-slate-600">
                         {listing.initials}
                       </AvatarFallback>
                     </Avatar>
@@ -373,7 +373,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                       <p className="truncate text-xs font-medium text-foreground">
                         {listing.seller}
                       </p>
-                      <div className="flex items-center gap-1 text-[11px] text-emerald-700">
+                      <div className="flex items-center gap-1 text-[11px] text-slate-600">
                         <ShieldCheck className="h-3 w-3" />
                         Vecino de la zona
                       </div>
@@ -382,7 +382,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
 
                   <Link
                     href={detailHref}
-                    className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 transition-colors hover:text-emerald-800"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-primary transition-colors hover:text-primary/80"
                   >
                     <Eye className="h-3.5 w-3.5" />
                     Detalle
@@ -395,7 +395,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                   asChild
                   size="sm"
                   disabled={isSold}
-                  className="flex-1 gap-2 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50"
+                  className="flex-1 gap-2 bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50"
                 >
                   <a
                     href={whatsappUrl}
@@ -411,7 +411,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                   type="button"
                   variant="outline"
                   size="sm"
-                  className="gap-1.5 border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-700"
+                  className="gap-1.5 border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-700"
                   onClick={() =>
                     saveItem({
                       type: "marketplace_item",

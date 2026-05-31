@@ -143,7 +143,7 @@ export function NeighborRecommendations() {
           <DialogHeader>
             <DialogTitle>Sugerir un contacto</DialogTitle>
             <DialogDescription>
-              {"Compart\u00ed un prestador que conozcas con tu comunidad."}
+              {"Compart\u00ed un contacto de confianza con tu comunidad."}
             </DialogDescription>
           </DialogHeader>
 
@@ -160,7 +160,7 @@ export function NeighborRecommendations() {
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="rec-name">Nombre del prestador</Label>
+                <Label htmlFor="rec-name">Nombre del contacto</Label>
                 <Input
                   id="rec-name"
                   placeholder='Ej: "Mar\u00eda (la de las tortas)"'

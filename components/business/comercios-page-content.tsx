@@ -129,7 +129,7 @@ function CommercialListCard({
 
             <Badge
               variant="outline"
-              className="gap-1 border-emerald-200 text-emerald-700"
+              className="gap-1 border-slate-200 text-slate-600"
             >
               <MessageSquare className="h-3 w-3" />
               Pedido por WhatsApp
@@ -138,7 +138,7 @@ function CommercialListCard({
             {saved && (
               <Badge
                 variant="outline"
-                className="gap-1 border-emerald-200 text-emerald-700"
+                className="gap-1 border-slate-200 text-slate-600"
               >
                 <Bookmark className="h-3 w-3" />
                 Guardado

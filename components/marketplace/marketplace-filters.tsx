@@ -37,7 +37,7 @@ export function MarketplaceFilters({
           value={query}
           onChange={(e) => onQueryChange(e.target.value)}
           placeholder="Buscar productos..."
-          className="h-10 pl-9 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+          className="h-10 pl-9"
         />
       </div>
 
@@ -52,8 +52,8 @@ export function MarketplaceFilters({
               onClick={() => onCategoryChange(cat)}
               className={`cursor-pointer px-3 py-1 text-xs transition-colors ${
                 isActive
-                  ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                  : "bg-muted text-muted-foreground hover:bg-emerald-100 hover:text-emerald-700"
+                  ? "bg-foreground text-background hover:bg-foreground/90"
+                  : "bg-muted text-muted-foreground hover:bg-muted/70"
               }`}
             >
               {cat}

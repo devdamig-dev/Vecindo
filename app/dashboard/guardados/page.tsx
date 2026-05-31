@@ -104,7 +104,7 @@ function SavedCard({
             {item.subtitle}
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px]">
-            <span className="rounded-full bg-emerald-50 px-2 py-0.5 font-medium text-emerald-700">
+            <span className="rounded-full bg-primary/8 px-2 py-0.5 font-medium text-primary">
               {item.activity ?? fallbackActivity[item.type]}
             </span>
             <span className="text-muted-foreground">
@@ -218,7 +218,7 @@ export default function GuardadosPage() {
           <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:justify-center">
             <Button
               asChild
-              className="bg-emerald-700 text-white hover:bg-emerald-800"
+              className="bg-foreground text-background hover:bg-foreground/90"
             >
               <Link href="/dashboard/marketplace">Explorar Mercado</Link>
             </Button>

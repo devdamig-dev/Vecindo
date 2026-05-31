@@ -49,7 +49,7 @@ const categoryConfig: Record<
   personal: {
     label: "Personal",
     icon: Users,
-    color: "bg-green-500/10 text-green-600",
+    color: "bg-violet-500/10 text-violet-600",
   },
   urgente: {
     label: "Urgente",
@@ -94,7 +94,7 @@ export default function AyudaDetailPage() {
   const saved = isSaved(post.title, "ayuda", post.id);
   const isAuthor = isResident && post.authorId === "resident1"; // Demo: first resident is the author
 
-  const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VECINDO.`)}`;
+  const whatsappUrl = `https://wa.me/${post.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hola ${post.authorName}, te escribo por el aviso "${post.title}" en VEZI.`)}`;
 
   // Related posts (same category, excluding current)
   const relatedPosts = ayudaPosts

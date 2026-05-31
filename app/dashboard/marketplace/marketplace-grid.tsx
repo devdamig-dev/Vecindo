@@ -199,7 +199,7 @@ function getStatusBadgeClass(status: string) {
 export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
   if (listings.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-emerald-200 bg-emerald-50 p-8 text-center">
+      <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center">
         <h3 className="text-base font-semibold text-foreground">No encontramos publicaciones</h3>
         <p className="mt-1 text-sm text-muted-foreground">
           Probá con otra categoría o cambiá el texto de búsqueda.
@@ -212,7 +212,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
       {listings.map((listing) => {
         const whatsappUrl = `https://wa.me/${listing.whatsapp.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-          `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VECINDO.`
+          `Hola ${listing.seller}, me interesa "${listing.title}" (${listing.price}) publicado en VEZI.`
         )}`
 
         const detailHref = `/dashboard/marketplace/${listing.id}`
@@ -222,7 +222,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
         return (
           <article
             key={listing.id}
-            className={`group overflow-hidden rounded-2xl border border-border bg-card transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-300 hover:shadow-[0_12px_30px_rgba(16,185,129,0.10)] active:scale-[0.99] ${
+            className={`group overflow-hidden rounded-2xl border border-slate-100/80 bg-card transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-200 hover:shadow-[0_12px_30px_rgba(15,23,42,0.07)] active:scale-[0.99] ${
               isSold ? "opacity-75" : ""
             }`}
           >
@@ -266,7 +266,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <Link href={detailHref} className="block">
-                    <h3 className="line-clamp-2 text-base font-semibold leading-snug text-foreground transition-colors hover:text-emerald-700">
+                    <h3 className="line-clamp-2 text-base font-semibold leading-snug text-foreground transition-colors hover:text-primary">
                       {listing.title}
                     </h3>
                   </Link>
@@ -290,18 +290,18 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
 
               <ActivityChips insights={activityInsights.slice(1)} limit={2} className="mt-3" />
 
-              <div className="mt-4 rounded-xl border border-emerald-100 bg-emerald-50 px-3 py-2">
+              <div className="mt-4 rounded-xl border border-slate-100 bg-slate-50 px-3 py-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex min-w-0 items-center gap-2">
                     <Avatar className="h-7 w-7">
-                      <AvatarFallback className="bg-emerald-100 text-[10px] font-medium text-emerald-700">
+                      <AvatarFallback className="bg-slate-100 text-[10px] font-medium text-slate-600">
                         {listing.initials}
                       </AvatarFallback>
                     </Avatar>
 
                     <div className="min-w-0">
                       <p className="truncate text-xs font-medium text-foreground">{listing.seller}</p>
-                      <div className="flex items-center gap-1 text-[11px] text-emerald-700">
+                      <div className="flex items-center gap-1 text-[11px] text-slate-600">
                         <ShieldCheck className="h-3 w-3" />
                         Vecino de la zona
                       </div>
@@ -310,7 +310,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
 
                   <Link
                     href={detailHref}
-                    className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 transition-colors hover:text-emerald-800"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-primary transition-colors hover:text-primary/80"
                   >
                     <Eye className="h-3.5 w-3.5" />
                     Ver más
@@ -323,7 +323,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                   asChild
                   size="sm"
                   disabled={isSold}
-                  className="flex-1 gap-2 bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50"
+                  className="flex-1 gap-2 bg-foreground text-background hover:bg-foreground/90 disabled:opacity-50"
                 >
                   <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                     <MessageSquare className="h-3.5 w-3.5" />
@@ -335,7 +335,7 @@ export function MarketplaceGrid({ listings }: MarketplaceGridProps) {
                   asChild
                   variant="outline"
                   size="sm"
-                  className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:text-emerald-700"
+                  className="border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-700"
                 >
                   <Link href={detailHref}>
                     <Bookmark className="h-3.5 w-3.5" />
