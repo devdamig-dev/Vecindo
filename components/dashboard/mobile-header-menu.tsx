@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { BarChart3, Bookmark, Briefcase, CreditCard, HeartHandshake, HelpCircle, Home, Info, Menu, MessageCircle, Settings, Store, User, Wrench, ShoppingBag, type LucideIcon } from "lucide-react"
+import { BarChart3, Bookmark, Briefcase, Compass, CreditCard, HeartHandshake, HelpCircle, Home, Info, Menu, MessageCircle, Settings, Store, User, Users, Wrench, ShoppingBag, type LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/lib/auth-context"
 import { getVisibleNavItems, type CommercialModule, type VisibleNavItem } from "@/lib/commercial"
@@ -22,6 +22,8 @@ const iconByModule: Record<CommercialModule, LucideIcon> = {
   commercialSpace: Store,
   help: HeartHandshake,
   questions: MessageCircle,
+  discover: Compass,
+  community: Users,
   saved: Bookmark,
   usefulInfo: Info,
   subscriptions: CreditCard,
@@ -31,8 +33,8 @@ const iconByModule: Record<CommercialModule, LucideIcon> = {
   settings: Settings,
 }
 
-const primaryModules = new Set<CommercialModule>(["home", "marketplace", "services", "commercialSpace", "help"])
-const communitySecondaryModules: CommercialModule[] = ["questions", "saved", "usefulInfo", "subscriptions", "profile", "settings"]
+const primaryModules = new Set<CommercialModule>(["home", "services", "discover", "community"])
+const communitySecondaryModules: CommercialModule[] = ["saved", "usefulInfo", "subscriptions", "profile", "settings"]
 const contextualModules: CommercialModule[] = ["myBusiness", "serviceManagement", "professionalDashboard"]
 
 function sortMenuItems(items: VisibleNavItem[]) {
