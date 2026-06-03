@@ -9,7 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
 import { getAyudaCommunityInsights } from "@/lib/activity-insights";
-import { ayudaPosts, type AyudaCategory } from "../page";
+import { ayudaPosts } from "@/lib/mocks/ayuda";
+import type { AyudaCategory } from "@/lib/types/ayuda";
 import { BackButton } from "@/components/ui/back-button";
 import {
   ChevronLeft,

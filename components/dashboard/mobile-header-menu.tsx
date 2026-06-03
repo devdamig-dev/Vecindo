@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { BarChart3, Bookmark, Briefcase, Compass, CreditCard, HeartHandshake, HelpCircle, Home, Info, Menu, MessageCircle, Settings, Store, User, Users, Wrench, ShoppingBag, type LucideIcon } from "lucide-react"
+import { BarChart3, Bookmark, Briefcase, CreditCard, HandHelping, HelpCircle, Home, Info, Menu, Settings, Sparkles, Store, User, Wrench, type LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/lib/auth-context"
 import { getVisibleNavItems, type CommercialModule, type VisibleNavItem } from "@/lib/commercial"
@@ -16,24 +16,21 @@ import {
 
 const iconByModule: Record<CommercialModule, LucideIcon> = {
   home: Home,
+  necesito: HandHelping,
+  servicios: Wrench,
+  comercios: Store,
+  emprendimientos: Sparkles,
+  myBusiness: Briefcase,
+  serviceManagement: BarChart3,
   professionalDashboard: BarChart3,
-  marketplace: ShoppingBag,
-  services: Wrench,
-  commercialSpace: Store,
-  help: HeartHandshake,
-  questions: MessageCircle,
-  discover: Compass,
-  community: Users,
   saved: Bookmark,
   usefulInfo: Info,
   subscriptions: CreditCard,
-  myBusiness: Briefcase,
-  serviceManagement: BarChart3,
   profile: User,
   settings: Settings,
 }
 
-const primaryModules = new Set<CommercialModule>(["home", "services", "discover", "community"])
+const primaryModules = new Set<CommercialModule>(["home", "necesito", "servicios", "comercios", "emprendimientos"])
 const communitySecondaryModules: CommercialModule[] = ["saved", "usefulInfo", "subscriptions", "profile", "settings"]
 const contextualModules: CommercialModule[] = ["myBusiness", "serviceManagement", "professionalDashboard"]
 

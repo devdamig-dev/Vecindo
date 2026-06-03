@@ -4,10 +4,8 @@ import Link from "next/link";
 import {
   ArrowRight,
   Bookmark,
-  Heart,
+  HandHelping,
   Megaphone,
-  Radio,
-  ShoppingBag,
   Sparkles,
   Store,
   Wrench,
@@ -20,11 +18,9 @@ import { ZoneUpdatesCarousel } from "@/components/zone-updates/zone-updates-caro
 import { useAuth, type SavedItem } from "@/lib/auth-context";
 import { getHomeActivitySignals } from "@/lib/activity-insights";
 import {
-  canAccessMarketplace,
   getUserPrimaryRole,
   type UserPrimaryRole,
 } from "@/lib/commercial";
-import { getFeaturedCommercialPosts } from "@/lib/commercial-feed";
 
 type HomeRole = UserPrimaryRole;
 
@@ -48,36 +44,36 @@ type RoleNudge = {
 
 const mainModules: QuickAction[] = [
   {
-    label: "Servicios",
-    description: "Encontrá personas confiables para resolver necesidades reales",
-    icon: Wrench,
-    href: "/dashboard/services",
-    theme: "services",
-    chip: "Prioridad",
-  },
-  {
-    label: "Espacio comercial",
-    description: "Descubrí negocios, promos y novedades cerca tuyo",
-    icon: Store,
-    href: "/dashboard/espacio-comercial",
-    theme: "commercial",
-    chip: "Economía local",
-  },
-  {
-    label: "Ayuda comunitaria",
-    description: "Pedidos y recomendaciones entre personas de tu zona",
-    icon: Heart,
-    href: "/dashboard/ayuda",
+    label: "Necesito",
+    description: "Publicá lo que necesitás y recibí respuestas",
+    icon: HandHelping,
+    href: "/dashboard/necesito",
     theme: "help",
-    chip: "Comunidad",
+    chip: "Demanda",
   },
   {
-    label: "Mercado",
-    description: "Compra/venta casual como complemento",
-    icon: ShoppingBag,
-    href: "/dashboard/marketplace",
+    label: "Servicios",
+    description: "Profesionales de confianza para lo que precisás",
+    icon: Wrench,
+    href: "/dashboard/servicios",
+    theme: "services",
+    chip: "Confiable",
+  },
+  {
+    label: "Comercios",
+    description: "Locales físicos con catálogo y contacto directo",
+    icon: Store,
+    href: "/dashboard/comercios",
+    theme: "commercial",
+    chip: "Local",
+  },
+  {
+    label: "Emprendimientos",
+    description: "Marcas locales creadas por vecinos",
+    icon: Sparkles,
+    href: "/dashboard/emprendimientos",
     theme: "market",
-    chip: "Utility",
+    chip: "Comunidad",
   },
 ];
 
@@ -87,8 +83,8 @@ const roleNudges: Record<HomeRole, RoleNudge> = {
     title: "Tu zona está activa",
     insight:
       "Novedades, comercios, servicios y pedidos vecinales se actualizan durante el día.",
-    cta: "Explorar comunidad",
-    href: "/dashboard/questions",
+    cta: "Ver necesidades",
+    href: "/dashboard/necesito",
     icon: Sparkles,
   },
   services: {
@@ -120,14 +116,10 @@ const roleNudges: Record<HomeRole, RoleNudge> = {
   },
 };
 
-function MainModules({ showMarketplace }: { showMarketplace: boolean }) {
-  const modules = showMarketplace
-    ? mainModules
-    : mainModules.filter((action) => action.href !== "/dashboard/marketplace");
-
+function MainModules() {
   return (
     <div className="grid grid-cols-2 gap-3.5 md:gap-4">
-      {modules.map((action) => (
+      {mainModules.map((action) => (
         <ModuleCard key={action.href} {...action} />
       ))}
     </div>
@@ -152,23 +144,6 @@ function HomePositioningBanner() {
   );
 }
 
-function MarketplaceResidentNotice() {
-  return (
-    <section className="rounded-3xl border border-slate-200 bg-slate-50/70 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.035)]">
-      <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-white text-slate-500 shadow-sm">
-          <ShoppingBag className="h-5 w-5" />
-        </div>
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-foreground">Mercado es comunitario</p>
-          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-            Mercado funciona como espacio secundario para intercambio casual. El foco diario está en Servicios y Espacio comercial.
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function RoleNudgeCard({ role }: { role: HomeRole }) {
   const nudge = roleNudges[role];
@@ -253,77 +228,17 @@ function ReturnToSaved({ items }: { items: SavedItem[] }) {
   );
 }
 
-function CommercialPulse() {
-  const posts = getFeaturedCommercialPosts(3);
-
-  return (
-    <section className="rounded-3xl border border-violet-100 bg-violet-50/70 p-4 shadow-[0_10px_28px_rgba(76,29,149,0.05)]">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div>
-          <p className="text-sm font-semibold text-foreground">
-            Movimiento comercial cerca
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Promos, lanzamientos y negocios activos sin mezclar con Mercado.
-          </p>
-        </div>
-        <Link
-          href="/dashboard/espacio-comercial"
-          className="inline-flex items-center gap-1 rounded-full bg-violet-600 px-3 py-1.5 text-[11px] font-semibold text-white transition-transform hover:-translate-y-0.5"
-        >
-          Ver feed
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
-
-      <div className="grid gap-2 sm:grid-cols-3">
-        {posts.map((post) => (
-          <Link
-            key={post.id}
-            href={post.businessHref}
-            className="group overflow-hidden rounded-2xl border border-violet-100 bg-background transition-colors hover:bg-violet-50"
-          >
-            <div className="aspect-[16/9] overflow-hidden bg-muted">
-              <img
-                src={post.imageUrl}
-                alt={post.title}
-                className="h-full w-full object-cover transition-transform group-hover:scale-105"
-              />
-            </div>
-            <div className="p-3">
-              <div className="mb-1 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-violet-700">
-                <Radio className="h-3 w-3" />
-                {post.sponsored ? "Patrocinado" : "Actividad comercial"}
-              </div>
-              <p className="line-clamp-1 text-sm font-semibold text-foreground">
-                {post.title}
-              </p>
-              <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
-                {post.businessName} · {post.zone}
-              </p>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 export default function DashboardPage() {
   const { auth } = useAuth();
   const role = getUserPrimaryRole(auth);
-  const showMarketplace = canAccessMarketplace(auth);
 
   return (
     <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden pb-4">
       <ZoneUpdatesCarousel zoneId="berazategui" />
       <HomePositioningBanner />
 
-      <MainModules showMarketplace={showMarketplace} />
-
-      {!showMarketplace && <MarketplaceResidentNotice />}
-
-      <CommercialPulse />
+      <MainModules />
 
       <RecentActivity />
 

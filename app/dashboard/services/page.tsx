@@ -9,65 +9,15 @@ import { ServicesList, professionals } from "@/components/services/services-list
 import { SectionIntroBanner } from "@/components/ui/section-intro-banner"
 import { NeighborRecommendations } from "@/components/services/neighbor-recommendations"
 import { Button } from "@/components/ui/button"
-import { canAccessServiceManagement, hasPreviewAccessToModule, hasServiceProviderActivity, isResident } from "@/lib/commercial"
-import { Search as SearchIcon, Plus, Briefcase, Store, ChevronDown } from "lucide-react"
+import { canAccessServiceManagement, hasServiceProviderActivity, isResident } from "@/lib/commercial"
+import { Search as SearchIcon, Plus, Briefcase, ChevronDown } from "lucide-react"
 import { getServiceDemandInsights } from "@/lib/activity-insights"
 
-const necesidadCategories = [
-  { label: "Plomería", emoji: "🔧" },
-  { label: "Electricidad", emoji: "⚡" },
-  { label: "Jardinería", emoji: "🌿" },
-  { label: "Pintura", emoji: "🖌️" },
-  { label: "Limpieza", emoji: "🧹" },
-  { label: "Clases", emoji: "📚" },
-  { label: "Mudanza", emoji: "📦" },
-  { label: "Técnico", emoji: "🛠️" },
-]
-
-function NecesitoHero({ onCategorySelect }: { onCategorySelect: (cat: string) => void }) {
-  return (
-    <div className="overflow-hidden rounded-2xl border border-sky-200 bg-gradient-to-br from-sky-50 to-sky-100/60">
-      <div className="px-5 pt-5">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-sky-600">¿Qué necesitás?</p>
-        <h2 className="mt-1 text-lg font-bold text-foreground">Contanos tu necesidad</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Elegí una categoría y encontrá prestadores verificados de tu zona, o buscá directamente abajo.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-4 gap-2 p-4 sm:grid-cols-8">
-        {necesidadCategories.map((cat) => (
-          <button
-            key={cat.label}
-            onClick={() => onCategorySelect(cat.label)}
-            className="flex flex-col items-center gap-1.5 rounded-xl border border-sky-200 bg-white/80 px-2 py-3 text-center text-[11px] font-medium text-sky-800 transition-all hover:border-sky-400 hover:bg-sky-50 hover:shadow-sm active:scale-95"
-          >
-            <span className="text-xl">{cat.emoji}</span>
-            <span className="leading-tight">{cat.label}</span>
-          </button>
-        ))}
-      </div>
-
-      <div className="border-t border-sky-200 px-5 py-3">
-        <p className="text-xs text-muted-foreground">
-          ¿No encontrás tu categoría?{" "}
-          <button
-            onClick={() => onCategorySelect("Todos")}
-            className="font-medium text-sky-700 underline underline-offset-2"
-          >
-            Explorá todos los servicios
-          </button>
-        </p>
-      </div>
-    </div>
-  )
-}
 
 export default function ServicesPage() {
   const { auth } = useAuth()
   const isProfessional = hasServiceProviderActivity(auth) && !isResident(auth)
   const residentUser = isResident(auth)
-  const servicesPreview = hasPreviewAccessToModule(auth, "services")
   const [query, setQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState("Todos")
   const [showDirectory, setShowDirectory] = useState(false)
@@ -129,26 +79,6 @@ export default function ServicesPage() {
         <h1 className="text-2xl font-bold text-foreground">Servicios</h1>
         <p className="text-sm text-muted-foreground">Profesionales y vecinos de confianza para resolver lo que necesitás cerca tuyo.</p>
       </div>
-
-      {/* Necesito — hero de entrada */}
-      <NecesitoHero onCategorySelect={handleCategorySelect} />
-
-      {servicesPreview && (
-        <div className="rounded-[24px] border border-sky-200 bg-sky-50 p-5">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-100 text-sky-700"><Store className="h-5 w-5" /></div>
-              <div>
-                <p className="text-sm font-semibold text-foreground">Encontrá prestadores de la zona para resolver necesidades de tu negocio.</p>
-                <p className="mt-1 text-sm text-muted-foreground">Esta vista preview te ayuda a detectar colaboradores, oficios y proveedores cercanos.</p>
-              </div>
-            </div>
-            <Button asChild className="bg-sky-600 text-white hover:bg-sky-700">
-              <Link href="/dashboard/suscripciones">Activar acceso Comunidad</Link>
-            </Button>
-          </div>
-        </div>
-      )}
 
       {residentUser && canAccessServiceManagement(auth) && (
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-sky-200 bg-sky-100 px-4 py-4">
