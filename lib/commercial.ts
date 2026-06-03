@@ -2,19 +2,16 @@ import type { AuthState } from "@/lib/auth-context"
 
 export type CommercialModule =
   | "home"
+  | "necesito"
+  | "servicios"
+  | "comercios"
+  | "emprendimientos"
+  | "myBusiness"
+  | "serviceManagement"
   | "professionalDashboard"
-  | "marketplace"
-  | "services"
-  | "commercialSpace"
-  | "help"
-  | "questions"
-  | "discover"
-  | "community"
   | "saved"
   | "usefulInfo"
   | "subscriptions"
-  | "myBusiness"
-  | "serviceManagement"
   | "profile"
   | "settings"
 
@@ -28,46 +25,42 @@ export interface VisibleNavItem {
   priority: "primary" | "secondary"
 }
 
-const ALWAYS_FULL_MODULES: CommercialModule[] = ["home", "services", "discover", "community", "commercialSpace", "help", "questions", "saved", "usefulInfo", "subscriptions", "profile", "settings"]
+const ALWAYS_FULL_MODULES: CommercialModule[] = [
+  "home", "necesito", "servicios", "comercios", "emprendimientos",
+  "saved", "usefulInfo", "subscriptions", "profile", "settings",
+]
 
 const MODULE_LABELS: Record<CommercialModule, string> = {
-  home: "Inicio",
-  professionalDashboard: "Panel de servicios",
-  marketplace: "Mercado",
-  services: "Servicios",
-  commercialSpace: "Espacio comercial",
-  help: "Ayuda comunitaria",
-  questions: "Preguntas",
-  discover: "Descubrir",
-  community: "Comunidad",
-  saved: "Guardados",
-  usefulInfo: "Información útil",
-  subscriptions: "Planes y presencia",
+  home: "Novedades",
+  necesito: "Necesito",
+  servicios: "Servicios",
+  comercios: "Comercios",
+  emprendimientos: "Emprendimientos",
   myBusiness: "Mi negocio",
   serviceManagement: "Gestionar servicios",
+  professionalDashboard: "Panel profesional",
+  saved: "Guardados",
+  usefulInfo: "Información útil",
+  subscriptions: "Planes",
   profile: "Mi perfil",
   settings: "Configuración",
 }
 
 const MODULE_HREFS: Record<CommercialModule, string> = {
   home: "/dashboard",
+  necesito: "/dashboard/necesito",
+  servicios: "/dashboard/servicios",
+  comercios: "/dashboard/comercios",
+  emprendimientos: "/dashboard/emprendimientos",
+  myBusiness: "/dashboard/comercial",
+  serviceManagement: "/dashboard/pro",
   professionalDashboard: "/dashboard/pro",
-  marketplace: "/dashboard/marketplace",
-  services: "/dashboard/services",
-  commercialSpace: "/dashboard/espacio-comercial",
-  help: "/dashboard/comunidad",
-  questions: "/dashboard/comunidad",
-  discover: "/dashboard/descubrir",
-  community: "/dashboard/comunidad",
   saved: "/dashboard/guardados",
   usefulInfo: "/dashboard/informacion-util",
   subscriptions: "/dashboard/suscripciones",
-  myBusiness: "/dashboard/comercial",
-  serviceManagement: "/dashboard/pro",
   profile: "/dashboard/profile",
   settings: "/dashboard/settings",
 }
-
 
 export function isResident(auth: AuthState | null | undefined) {
   return auth?.accountType === "resident"
@@ -101,11 +94,6 @@ export function hasFullAccessToModule(auth: AuthState | null | undefined, module
   if (ALWAYS_FULL_MODULES.includes(module)) return true
   if (module === "serviceManagement" || module === "professionalDashboard") return hasServiceProviderActivity(auth)
   if (module === "myBusiness") return hasBusinessActivity(auth)
-  if (module === "marketplace") return Boolean(auth.capabilities.canAccessMarketplace)
-  return false
-}
-
-export function hasPreviewAccessToModule(_auth: AuthState | null | undefined, _module: CommercialModule) {
   return false
 }
 
@@ -118,9 +106,10 @@ export function getVisibleNavItems(auth: AuthState | null | undefined): VisibleN
 
   const orderedModules: CommercialModule[] = [
     "home",
-    "services",
-    "discover",
-    "community",
+    "necesito",
+    "servicios",
+    "comercios",
+    "emprendimientos",
     "myBusiness",
     "serviceManagement",
     "saved",
@@ -136,18 +125,9 @@ export function getVisibleNavItems(auth: AuthState | null | undefined): VisibleN
       label: MODULE_LABELS[module],
       href: MODULE_HREFS[module],
       module,
-      access: "full",
-      priority: index < 4 ? "primary" : "secondary",
+      access: "full" as const,
+      priority: index < 5 ? "primary" : "secondary",
     }))
-}
-
-export function canAccessMarketplace(auth: AuthState | null | undefined) {
-  return hasFullAccessToModule(auth, "marketplace")
-}
-
-export function canPublishMarketplaceItem(auth: AuthState | null | undefined) {
-  if (!auth) return false
-  return canAccessMarketplace(auth) && auth.capabilities.canSell
 }
 
 export function canAccessServiceManagement(auth: AuthState | null | undefined) {

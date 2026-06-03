@@ -1,38 +1,38 @@
-import { Wrench, ShoppingBag, Heart, Store } from "lucide-react"
+import { HandHelping, Wrench, Store, Sparkles } from "lucide-react"
 import { ModuleCard } from "@/components/dashboard/module-card"
 
 const actions = [
   {
-    label: "Mercado",
-    description: "Comprá y vendé en tu zona",
-    icon: ShoppingBag,
-    href: "/dashboard/marketplace",
-    theme: "market" as const,
-    chip: "Comunidad",
+    label: "Necesito",
+    description: "Publicá lo que necesitás y recibí respuestas",
+    icon: HandHelping,
+    href: "/dashboard/necesito",
+    theme: "help" as const,
+    chip: "Demanda",
   },
   {
     label: "Servicios",
-    description: "Ofrecé o encontrá servicios",
+    description: "Profesionales de confianza para lo que precisás",
     icon: Wrench,
-    href: "/dashboard/services",
+    href: "/dashboard/servicios",
     theme: "services" as const,
     chip: "Confiable",
   },
   {
-    label: "Espacio comercial",
-    description: "Negocios y emprendimientos",
+    label: "Comercios",
+    description: "Locales físicos con catálogo y contacto directo",
     icon: Store,
-    href: "/dashboard/espacio-comercial",
+    href: "/dashboard/comercios",
     theme: "commercial" as const,
     chip: "Local",
   },
   {
-    label: "Ayuda vecinal",
-    description: "Mascotas, seguridad, colectas y más",
-    icon: Heart,
-    href: "/dashboard/ayuda",
-    theme: "help" as const,
-    chip: "Solidario",
+    label: "Emprendimientos",
+    description: "Marcas locales creadas por vecinos",
+    icon: Sparkles,
+    href: "/dashboard/emprendimientos",
+    theme: "market" as const,
+    chip: "Comunidad",
   },
 ]
 
