@@ -8,6 +8,8 @@ export type CommercialModule =
   | "commercialSpace"
   | "help"
   | "questions"
+  | "discover"
+  | "community"
   | "saved"
   | "usefulInfo"
   | "subscriptions"
@@ -26,7 +28,7 @@ export interface VisibleNavItem {
   priority: "primary" | "secondary"
 }
 
-const ALWAYS_FULL_MODULES: CommercialModule[] = ["home", "services", "commercialSpace", "help", "questions", "saved", "usefulInfo", "subscriptions", "profile", "settings"]
+const ALWAYS_FULL_MODULES: CommercialModule[] = ["home", "services", "discover", "community", "commercialSpace", "help", "questions", "saved", "usefulInfo", "subscriptions", "profile", "settings"]
 
 const MODULE_LABELS: Record<CommercialModule, string> = {
   home: "Inicio",
@@ -35,7 +37,9 @@ const MODULE_LABELS: Record<CommercialModule, string> = {
   services: "Servicios",
   commercialSpace: "Espacio comercial",
   help: "Ayuda comunitaria",
-  questions: "Comunidad",
+  questions: "Preguntas",
+  discover: "Descubrir",
+  community: "Comunidad",
   saved: "Guardados",
   usefulInfo: "Información útil",
   subscriptions: "Planes y presencia",
@@ -51,8 +55,10 @@ const MODULE_HREFS: Record<CommercialModule, string> = {
   marketplace: "/dashboard/marketplace",
   services: "/dashboard/services",
   commercialSpace: "/dashboard/espacio-comercial",
-  help: "/dashboard/ayuda",
-  questions: "/dashboard/questions",
+  help: "/dashboard/comunidad",
+  questions: "/dashboard/comunidad",
+  discover: "/dashboard/descubrir",
+  community: "/dashboard/comunidad",
   saved: "/dashboard/guardados",
   usefulInfo: "/dashboard/informacion-util",
   subscriptions: "/dashboard/suscripciones",
@@ -113,12 +119,10 @@ export function getVisibleNavItems(auth: AuthState | null | undefined): VisibleN
   const orderedModules: CommercialModule[] = [
     "home",
     "services",
-    "commercialSpace",
-    "help",
-    "marketplace",
+    "discover",
+    "community",
     "myBusiness",
     "serviceManagement",
-    "questions",
     "saved",
     "usefulInfo",
     "subscriptions",
