@@ -6,28 +6,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { HandHelping, Plus, MapPin, Clock, ChevronRight, MessageSquare, Zap } from "lucide-react"
-
-type NecesidadCategory =
-  | "plomeria" | "electricidad" | "jardineria" | "pintura"
-  | "limpieza" | "mudanza" | "educacion" | "tecnologia"
-  | "cuidado" | "catering" | "diseno" | "otro"
-
-type NecesidadUrgencia = "inmediata" | "esta_semana" | "flexible"
-
-interface Necesidad {
-  id: string
-  userId: string
-  userName: string
-  userInitials: string
-  title: string
-  description: string
-  category: NecesidadCategory
-  urgency: NecesidadUrgencia
-  zone: string
-  respuestas: number
-  postedAt: string
-  budget?: string
-}
+import type { NecesidadCategory, NecesidadUrgencia, Necesidad } from "@/lib/types/necesito"
 
 const categoryConfig: Record<NecesidadCategory, { label: string; color: string; emoji: string }> = {
   plomeria:     { label: "Plomería",      color: "bg-blue-500/10 text-blue-700",    emoji: "🔧" },

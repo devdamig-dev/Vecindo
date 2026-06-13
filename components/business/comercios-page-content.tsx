@@ -346,9 +346,9 @@ export default function ComerciosPageContent({
             <div className="flex flex-wrap gap-2">
               {isResident(auth) && (
                 <Button asChild>
-                  <Link href="/dashboard/marketplace">
+                  <Link href="/dashboard/necesito">
                     <Package className="mr-2 h-4 w-4" />
-                    Publicar en Mercado
+                    Publicar necesidad
                   </Link>
                 </Button>
               )}

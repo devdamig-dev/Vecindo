@@ -220,14 +220,14 @@ export default function GuardadosPage() {
               asChild
               className="bg-foreground text-background hover:bg-foreground/90"
             >
-              <Link href="/dashboard/marketplace">Explorar Mercado</Link>
+              <Link href="/dashboard/comercios">Ver Comercios</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/dashboard/services">Ver Servicios</Link>
+              <Link href="/dashboard/servicios">Ver Servicios</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/dashboard/espacio-comercial">
-                Ver Espacio comercial
+              <Link href="/dashboard/emprendimientos">
+                Ver Emprendimientos
               </Link>
             </Button>
           </div>

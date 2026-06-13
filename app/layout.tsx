@@ -12,9 +12,9 @@ const dmSerif = DM_Serif_Display({
 })
 
 export const metadata: Metadata = {
-  title: "VEZI - Servicios de Confianza para tu Comunidad",
+  title: "VEZI – Tu red local de confianza",
   description:
-    "Plataforma privada de reputacion y servicios para comunidades cerradas. Encontra profesionales verificados, conecta con vecinos y construi confianza.",
+    "Conectá con servicios, comercios y emprendimientos de tu zona. Necesitás algo, publicalo. Ofrecés algo, aparecé. Todo cerca, todo con gente real.",
 }
 
 export const viewport: Viewport = {

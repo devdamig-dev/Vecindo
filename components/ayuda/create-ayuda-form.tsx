@@ -30,7 +30,7 @@ import {
   Users,
   AlertTriangle,
 } from "lucide-react"
-import type { AyudaCategory } from "@/app/dashboard/ayuda/page"
+import type { AyudaCategory } from "@/lib/types/ayuda"
 
 const categoryOptions: { value: AyudaCategory; label: string; icon: typeof PawPrint }[] = [
   { value: "mascotas", label: "Mascotas", icon: PawPrint },
