@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
 
-export default function QuestionsRedirect() {
+export default function ComunidadLegacyRedirect() {
   redirect("/dashboard/necesito")
 }
