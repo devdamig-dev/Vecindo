@@ -1,6 +1,7 @@
 "use client"
 
 import { Bell } from "lucide-react"
+import Link from "next/link"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { useAuth } from "@/lib/auth-context"
 import { SearchBar } from "@/components/dashboard/search-bar"
@@ -26,8 +27,8 @@ export function DashboardHeader() {
           </div>
 
           <div className="flex items-center justify-end gap-1">
-            <button
-              type="button"
+            <Link
+              href="/dashboard/notificaciones"
               className="relative rounded-xl p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
               aria-label="Notificaciones"
             >
@@ -36,7 +37,7 @@ export function DashboardHeader() {
                 aria-hidden="true"
                 className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive"
               />
-            </button>
+            </Link>
             <MobileHeaderMenu />
           </div>
         </div>

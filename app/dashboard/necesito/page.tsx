@@ -227,7 +227,7 @@ export default function NecesitoPage() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="text-sm font-semibold leading-snug text-foreground">{need.title}</p>
+                    <Link href={`/dashboard/necesito/${need.id}`} className="text-sm font-semibold leading-snug text-foreground hover:text-amber-700 hover:underline">{need.title}</Link>
                     <p className="mt-0.5 text-xs text-muted-foreground">
                       {need.userName} · <MapPin className="mr-0.5 inline-block h-3 w-3" />{need.zone}
                     </p>
@@ -261,9 +261,8 @@ export default function NecesitoPage() {
                     {need.postedAt}
                   </span>
                 </div>
-                <Button size="sm" variant="outline" className="h-7 gap-1 border-amber-200 px-3 text-xs text-amber-700 hover:bg-amber-50">
-                  <Zap className="h-3 w-3" />
-                  Responder
+                <Button asChild size="sm" variant="outline" className="h-7 gap-1 border-amber-200 px-3 text-xs text-amber-700 hover:bg-amber-50">
+                  <Link href={`/dashboard/necesito/${need.id}`}><Zap className="h-3 w-3" /> Responder</Link>
                 </Button>
               </div>
             </div>

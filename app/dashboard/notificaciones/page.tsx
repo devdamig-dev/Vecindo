@@ -1,0 +1,6 @@
+import Link from "next/link"
+import { Bell, CheckCircle2, MessageSquare } from "lucide-react"
+
+export default function NotificationsPage() {
+  return <div className="space-y-5"><header className="rounded-3xl bg-slate-900 p-6 text-white"><Bell className="h-6 w-6 text-amber-300" /><h1 className="mt-3 text-2xl font-bold">Notificaciones</h1><p className="mt-1 text-sm text-slate-300">Respuestas a tus necesidades y actividad relevante, sin ruido.</p></header><section className="space-y-3"><Link href="/dashboard/necesito/1" className="flex gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4"><MessageSquare className="mt-0.5 h-5 w-5 text-amber-700" /><div><p className="text-sm font-bold">Nueva respuesta a tu necesidad</p><p className="mt-1 text-xs text-muted-foreground">Una profesional de Educación respondió a tu búsqueda.</p><p className="mt-2 text-[11px] font-semibold text-amber-700">Hace 20 min · Ver respuesta</p></div></Link><div className="flex gap-3 rounded-2xl border bg-white p-4"><CheckCircle2 className="mt-0.5 h-5 w-5 text-emerald-600" /><div><p className="text-sm font-bold">Tu necesidad está publicada</p><p className="mt-1 text-xs text-muted-foreground">La notificaremos a perfiles compatibles de Hudson.</p></div></div></section></div>
+}

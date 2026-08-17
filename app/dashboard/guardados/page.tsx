@@ -29,8 +29,8 @@ const typeLabels: Record<
   product: { label: "Producto", plural: "Productos guardados", icon: Package },
   service: { label: "Servicio", plural: "Servicios guardados", icon: Search },
   marketplace_item: {
-    label: "Mercado",
-    plural: "Publicaciones de Mercado",
+    label: "Legado",
+    plural: "Guardados de una versión anterior",
     icon: ShoppingBag,
   },
   commercial_post: {
@@ -61,7 +61,7 @@ const filterOptions: { key: SavedItemType | "all"; label: string }[] = [
   { key: "commerce", label: "Comercios" },
   { key: "product", label: "Productos" },
   { key: "service", label: "Servicios" },
-  { key: "marketplace_item", label: "Mercado" },
+  { key: "marketplace_item", label: "Anteriores" },
   { key: "commercial_post", label: "Comercial" },
   { key: "ayuda", label: "Ayuda" },
 ];
@@ -220,14 +220,14 @@ export default function GuardadosPage() {
               asChild
               className="bg-foreground text-background hover:bg-foreground/90"
             >
-              <Link href="/dashboard/marketplace">Explorar Mercado</Link>
+              <Link href="/dashboard/necesito">Ver necesidades</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/dashboard/services">Ver Servicios</Link>
+              <Link href="/dashboard/servicios">Ver servicios</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/dashboard/espacio-comercial">
-                Ver Espacio comercial
+              <Link href="/dashboard/comercios">
+                Ver comercios
               </Link>
             </Button>
           </div>
