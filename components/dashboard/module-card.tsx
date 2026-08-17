@@ -14,9 +14,9 @@ type ModuleCardProps = {
 
 const themeStyles = {
   market: {
-    card: "border-slate-200/80 bg-gradient-to-br from-slate-50 via-white to-slate-100/60",
-    iconWrap: "bg-gradient-to-br from-slate-500 to-slate-700 text-white shadow-slate-500/40",
-    accent: "bg-slate-500/10 text-slate-600",
+    card: "border-emerald-200/80 bg-gradient-to-br from-emerald-100 via-white to-teal-200/60",
+    iconWrap: "bg-gradient-to-br from-emerald-500 to-teal-700 text-white shadow-emerald-500/40",
+    accent: "bg-emerald-500/10 text-emerald-700",
   },
   services: {
     card: "border-sky-200/80 bg-gradient-to-br from-sky-100 via-white to-blue-200/55",

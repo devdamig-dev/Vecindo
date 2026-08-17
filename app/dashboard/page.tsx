@@ -1,259 +1,60 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import {
-  ArrowRight,
-  Bookmark,
-  HandHelping,
-  Megaphone,
-  Sparkles,
-  Store,
-  Wrench,
-  type LucideIcon,
-} from "lucide-react";
-import { ActivityChips } from "@/components/activity/activity-chips";
-import { ModuleCard } from "@/components/dashboard/module-card";
-import { RecentActivity } from "@/components/dashboard/recent-activity";
-import { ZoneUpdatesCarousel } from "@/components/zone-updates/zone-updates-carousel";
-import { useAuth, type SavedItem } from "@/lib/auth-context";
-import { getHomeActivitySignals } from "@/lib/activity-insights";
-import {
-  getUserPrimaryRole,
-  type UserPrimaryRole,
-} from "@/lib/commercial";
+import Link from "next/link"
+import { ArrowRight, BellRing, HandHelping, MapPin, MessageSquare, Sparkles, Store, Wrench } from "lucide-react"
+import { ZoneUpdatesCarousel } from "@/components/zone-updates/zone-updates-carousel"
 
-type HomeRole = UserPrimaryRole;
+const activeNeeds = [
+  { id: "1", title: "Profesora particular de matemática", zone: "Hudson", replies: 3, urgency: "Esta semana" },
+  { id: "2", title: "Plomero para una pérdida en el baño", zone: "Berazategui", replies: 5, urgency: "Urgente" },
+]
 
-type QuickAction = {
-  label: string;
-  description: string;
-  icon: LucideIcon;
-  href: string;
-  theme: "market" | "services" | "commercial" | "help";
-  chip: string;
-};
-
-type RoleNudge = {
-  eyebrow: string;
-  title: string;
-  insight: string;
-  cta: string;
-  href: string;
-  icon: LucideIcon;
-};
-
-const mainModules: QuickAction[] = [
-  {
-    label: "Necesito",
-    description: "Publicá lo que necesitás y recibí respuestas",
-    icon: HandHelping,
-    href: "/dashboard/necesito",
-    theme: "help",
-    chip: "Demanda",
-  },
-  {
-    label: "Servicios",
-    description: "Profesionales de confianza para lo que precisás",
-    icon: Wrench,
-    href: "/dashboard/servicios",
-    theme: "services",
-    chip: "Confiable",
-  },
-  {
-    label: "Comercios",
-    description: "Locales físicos con catálogo y contacto directo",
-    icon: Store,
-    href: "/dashboard/comercios",
-    theme: "commercial",
-    chip: "Local",
-  },
-  {
-    label: "Emprendimientos",
-    description: "Marcas locales creadas por vecinos",
-    icon: Sparkles,
-    href: "/dashboard/emprendimientos",
-    theme: "market",
-    chip: "Comunidad",
-  },
-];
-
-const roleNudges: Record<HomeRole, RoleNudge> = {
-  universal: {
-    eyebrow: "Hudson – Berazategui",
-    title: "Tu zona está activa",
-    insight:
-      "Novedades, comercios, servicios y pedidos vecinales se actualizan durante el día.",
-    cta: "Ver necesidades",
-    href: "/dashboard/necesito",
-    icon: Sparkles,
-  },
-  services: {
-    eyebrow: "Prestador",
-    title: "Servicios con movimiento cerca",
-    insight:
-      "4 vecinos buscaron electricistas y arreglos del hogar esta semana.",
-    cta: "Gestionar servicios",
-    href: "/dashboard/pro",
-    icon: Wrench,
-  },
-  hybrid: {
-    eyebrow: "Comercio vecino",
-    title: "Tu negocio convive con la comunidad",
-    insight:
-      "Productos locales y recomendaciones del barrio siguen generando interés cerca tuyo.",
-    cta: "Ir a Mi negocio",
-    href: "/dashboard/comercial",
-    icon: Store,
-  },
-  business: {
-    eyebrow: "Comercio local",
-    title: "Presencia local con impacto real",
-    insight:
-      "Activá herramientas de negocio y presencia premium para ganar visibilidad en tu zona.",
-    cta: "Ir a Mi negocio",
-    href: "/dashboard/comercial",
-    icon: Megaphone,
-  },
-};
-
-function MainModules() {
-  return (
-    <div className="grid grid-cols-2 gap-3.5 md:gap-4">
-      {mainModules.map((action) => (
-        <ModuleCard key={action.href} {...action} />
-      ))}
-    </div>
-  );
-}
-
-function HomePositioningBanner() {
-  return (
-    <section className="relative overflow-hidden rounded-3xl border border-primary/20 bg-[radial-gradient(circle_at_15%_18%,rgba(56,189,248,0.22),transparent_45%),radial-gradient(circle_at_86%_14%,rgba(168,85,247,0.2),transparent_48%),linear-gradient(130deg,rgba(255,255,255,0.92),rgba(248,250,255,0.95))] p-5 shadow-[0_18px_45px_rgba(30,64,175,0.16)]">
-      <div className="pointer-events-none absolute -left-10 top-6 h-28 w-28 rounded-full bg-sky-300/30 blur-2xl" />
-      <div className="pointer-events-none absolute right-2 top-1 h-24 w-24 rounded-full bg-violet-300/30 blur-2xl" />
-      <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
-        Red local VEZI
-      </p>
-      <h1 className="mt-1.5 text-xl font-semibold leading-tight text-foreground sm:text-2xl">
-        Tu zona, más viva: servicios, comercios y personas en movimiento
-      </h1>
-      <p className="mt-2 text-sm text-slate-600">
-        Encontrá oportunidades reales cerca tuyo con una experiencia social y moderna pensada para abrir todos los días.
-      </p>
-    </section>
-  );
-}
-
-
-function RoleNudgeCard({ role }: { role: HomeRole }) {
-  const nudge = roleNudges[role];
-  const Icon = nudge.icon;
-
-  return (
-    <section className="rounded-3xl border border-primary/10 bg-card/80 p-3 shadow-[0_8px_22px_rgba(15,23,42,0.035)]">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-          <Icon className="h-5 w-5" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-primary">
-            {nudge.eyebrow}
-          </p>
-          <p className="mt-0.5 text-sm font-semibold text-foreground">
-            {nudge.title}
-          </p>
-          <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-            {nudge.insight}
-          </p>
-        </div>
-        <Link
-          href={nudge.href}
-          className="inline-flex w-fit shrink-0 items-center gap-1 rounded-full bg-foreground px-3 py-1.5 text-[11px] font-semibold text-background transition-transform hover:-translate-y-0.5"
-        >
-          {nudge.cta}
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
-    </section>
-  );
-}
-
-function ReturnToSaved({ items }: { items: SavedItem[] }) {
-  const recentItems = items.slice(0, 3);
-
-  if (recentItems.length === 0) return null;
-
-  return (
-    <section className="rounded-3xl border border-border/70 bg-card/95 p-4 shadow-[0_10px_28px_rgba(15,23,42,0.04)]">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <div>
-          <p className="text-sm font-semibold text-foreground">Volvé a ver</p>
-          <p className="text-xs text-muted-foreground">
-            Tus últimos guardados para retomar sin volver a buscar.
-          </p>
-        </div>
-        <Link
-          href="/dashboard/guardados"
-          className="inline-flex items-center gap-1 rounded-full bg-muted px-3 py-1.5 text-[11px] font-semibold text-muted-foreground hover:text-foreground"
-        >
-          Ver todos
-          <ArrowRight className="h-3.5 w-3.5" />
-        </Link>
-      </div>
-
-      <div className="grid gap-2 sm:grid-cols-3">
-        {recentItems.map((item) => (
-          <Link
-            key={item.id}
-            href={item.href ?? "/dashboard/guardados"}
-            className="group rounded-2xl border border-border/70 bg-muted/20 p-3 transition-colors hover:bg-muted/45"
-          >
-            <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wide text-primary">
-              <Bookmark className="h-3.5 w-3.5" />
-              Guardado {item.savedAt}
-            </div>
-            <p className="mt-2 line-clamp-1 text-sm font-semibold text-foreground group-hover:text-primary">
-              {item.title}
-            </p>
-            <p className="mt-1 line-clamp-1 text-xs text-muted-foreground">
-              {item.subtitle}
-            </p>
-            <p className="mt-2 text-[11px] text-primary">
-              {item.activity ?? "Tiene movimiento reciente"}
-            </p>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
-
+const discovery = [
+  { title: "Servicios que pueden ayudarte", copy: "Profesionales y personas que ofrecen soluciones cerca tuyo.", href: "/dashboard/servicios", icon: Wrench, className: "bg-sky-600 text-white", cta: "Explorar servicios" },
+  { title: "Comercios de la zona", copy: "Negocios con local, catálogo y contacto directo.", href: "/dashboard/comercios", icon: Store, className: "bg-violet-600 text-white", cta: "Ver comercios" },
+  { title: "Emprendimientos locales", copy: "Proyectos independientes, productos y propuestas con identidad propia.", href: "/dashboard/emprendimientos", icon: Sparkles, className: "bg-emerald-600 text-white", cta: "Descubrir emprendimientos" },
+]
 
 export default function DashboardPage() {
-  const { auth } = useAuth();
-  const role = getUserPrimaryRole(auth);
-
   return (
-    <div className="flex min-w-0 flex-col gap-6 overflow-x-hidden pb-4">
-      <ZoneUpdatesCarousel zoneId="berazategui" />
-      <HomePositioningBanner />
-
-      <MainModules />
-
-      <RecentActivity />
-
-      <section className="flex min-w-0 flex-col gap-3">
-        <ActivityChips
-          insights={getHomeActivitySignals(role)}
-          limit={3}
-          className="px-1"
-        />
-        <RoleNudgeCard role={role} />
+    <div className="flex min-w-0 flex-col gap-7 overflow-x-hidden pb-4">
+      <section className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-amber-500 via-orange-500 to-rose-600 px-5 py-7 text-white shadow-[0_24px_55px_rgba(234,88,12,.28)] sm:px-7">
+        <div className="absolute -right-12 -top-12 h-44 w-44 rounded-full border-[28px] border-white/10" />
+        <div className="relative max-w-xl">
+          <p className="text-xs font-bold uppercase tracking-[.16em] text-amber-100">Necesidades · la demanda activa VEZI</p>
+          <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl">¿Qué necesitás?</h1>
+          <p className="mt-2 max-w-md text-sm leading-relaxed text-white/90 sm:text-base">Contalo en pocas palabras. VEZI usa la categoría y tu ubicación para acercarlo a quienes pueden resolverlo.</p>
+          <Link href="/dashboard/necesito/nueva" className="mt-5 inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-bold text-orange-700 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+            <HandHelping className="h-5 w-5" /> Publicar una necesidad <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
       </section>
 
-      <section className="flex min-w-0 flex-col gap-5">
-        <ReturnToSaved items={auth.savedItems} />
+      <section aria-labelledby="active-needs">
+        <div className="mb-3 flex items-end justify-between gap-3">
+          <div><p className="text-xs font-bold uppercase tracking-wider text-amber-700">Demanda cerca tuyo</p><h2 id="active-needs" className="text-xl font-bold">Necesidades activas</h2></div>
+          <Link href="/dashboard/necesito" className="text-xs font-bold text-amber-700">Ver todas →</Link>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2">
+          {activeNeeds.map((need) => (
+            <Link key={need.id} href={`/dashboard/necesito/${need.id}`} className="group rounded-3xl border border-amber-200 bg-amber-50 p-4 transition hover:-translate-y-0.5 hover:border-amber-400 hover:shadow-md">
+              <div className="flex items-center justify-between"><span className="rounded-full bg-orange-600 px-2.5 py-1 text-[10px] font-bold text-white">{need.urgency}</span><ArrowRight className="h-4 w-4 text-amber-700 transition group-hover:translate-x-1" /></div>
+              <h3 className="mt-3 font-bold leading-snug">{need.title}</h3>
+              <div className="mt-3 flex gap-3 text-xs text-amber-900/70"><span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{need.zone}</span><span className="flex items-center gap-1"><MessageSquare className="h-3.5 w-3.5" />{need.replies} respuestas</span></div>
+            </Link>
+          ))}
+        </div>
       </section>
+
+      <section className="grid gap-3 sm:grid-cols-3" aria-label="Oferta para resolver necesidades">
+        {discovery.map(({ icon: Icon, ...item }) => <Link key={item.href} href={item.href} className={`group flex min-h-52 flex-col rounded-3xl p-5 shadow-lg transition hover:-translate-y-1 ${item.className}`}><Icon className="h-7 w-7" /><h2 className="mt-7 text-lg font-bold leading-tight">{item.title}</h2><p className="mt-2 text-sm leading-relaxed text-white/80">{item.copy}</p><span className="mt-auto pt-4 text-xs font-bold">{item.cta} <ArrowRight className="inline h-3.5 w-3.5 transition group-hover:translate-x-1" /></span></Link>)}
+      </section>
+
+      <section className="rounded-3xl bg-slate-900 p-5 text-white">
+        <div className="flex items-start gap-3"><div className="rounded-2xl bg-white/10 p-3"><BellRing className="h-5 w-5 text-amber-300" /></div><div><h2 className="font-bold">VEZI conecta oferta y demanda</h2><p className="mt-1 text-sm leading-relaxed text-slate-300">Cuando publiques, prestadores, comercios o emprendimientos compatibles podrán responderte. Las respuestas y notificaciones estarán en un mismo lugar.</p></div></div>
+      </section>
+
+      <section><div className="mb-3"><p className="text-xs font-bold uppercase tracking-wider text-rose-700">Capa de comunidad</p><h2 className="text-xl font-bold">Novedades cerca tuyo</h2></div><ZoneUpdatesCarousel zoneId="berazategui" /></section>
     </div>
-  );
+  )
 }
