@@ -21,7 +21,7 @@ export default function NuevaNecesidadPage() {
     setSubmitted(true)
   }
 
-  if (submitted) return <section className="rounded-[2rem] bg-emerald-600 p-7 text-center text-white shadow-xl"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-emerald-700"><Check /></div><h1 className="mt-4 text-2xl font-bold">Necesidad publicada</h1><p className="mx-auto mt-2 max-w-md text-sm text-emerald-50">Ya está visible para personas y negocios de tu zona que podrían resolverla. Te avisaremos cuando llegue una respuesta.</p><Button onClick={() => router.push("/dashboard/necesito")} className="mt-6 bg-white text-emerald-800 hover:bg-emerald-50">Ver necesidades</Button></section>
+  if (submitted) return <section className="rounded-[2rem] bg-emerald-600 p-7 text-center text-white shadow-xl"><div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-white text-emerald-700"><Check /></div><h1 className="mt-4 text-2xl font-bold">Simulación completada</h1><p className="mx-auto mt-2 max-w-md text-sm text-emerald-50">La experiencia de publicación funciona en esta demo, pero la necesidad todavía no se guarda ni se envía a personas o negocios hasta conectar la persistencia real.</p><Button onClick={() => router.push("/dashboard/necesito")} className="mt-6 bg-white text-emerald-800 hover:bg-emerald-50">Volver a necesidades</Button></section>
 
   return <form onSubmit={submit} className="space-y-6">
     <button type="button" onClick={() => router.back()} className="inline-flex items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground"><ArrowLeft className="h-4 w-4" /> Volver</button>
