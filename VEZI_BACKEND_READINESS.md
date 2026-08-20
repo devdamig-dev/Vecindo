@@ -50,3 +50,18 @@ Listados y detalles de los cuatro módulos; creación y respuesta de necesidades
 ## Recomendación
 
 **NOT READY**. El core y los contratos principales están claros, pero antes de conectar Supabase hay que cerrar taxonomía, privacidad/permisos, estados/transiciones y una capa de acceso a datos consistente. Es razonable iniciar un spike técnico aislado, no una migración integral.
+
+## Contrato de búsqueda para Supabase
+
+La UI demo consulta un índice unificado, pero la implementación real debe exponer un endpoint/RPC que devuelva resultados agrupables con `id`, `entity_type`, `title`, `subtitle`, `url`, `location`, `category_id`, `distance`, `availability` y `rank`. Debe consultar `needs`, `services`, `businesses` y `products`; estos últimos mantienen su relación obligatoria `business_id` y nunca constituyen un marketplace separado.
+
+Campos buscables: nombre/título, descripción, rubro/categoría, especialidades/tags y nombre/descripción de producto. Normalizar acentos, mayúsculas y sinónimos simples. Se recomiendan índices B-tree para claves/estado/categoría/ubicación y GIN sobre `tsvector` por entidad; trigramas solo si las pruebas reales justifican tolerancia a errores. El ranking inicial debe combinar relevancia textual, vigencia, misma zona, disponibilidad y cercanía simple, sin geolocalización compleja. Reservar un atributo explícito para resultados promocionados futuros sin incorporarlo al ranking orgánico ahora.
+
+La API debe aceptar `query`, `entity_types`, `category_ids`, `location_id`, `limit` y `cursor`, devolver totales por tipo y no revelar contactos privados. Autocomplete requiere respuesta compacta y cancelable; la pantalla completa necesita paginación. Historial (`search_history`) y favoritos (`favorites`) requieren consentimiento, políticas RLS y borrado; no son requisito del primer release. Disponibilidad debe provenir de servicios/negocios activos, y ubicación de relaciones normalizadas, no de strings libres.
+
+### Interfaz frontend pendiente
+
+- Reemplazar `searchVezi()` por un adapter con estados `idle/loading/success/empty/error`, cancelación y debounce corto.
+- Mantener la conversión del vacío en “Publicar necesidad”, conservando el texto buscado como borrador con consentimiento.
+- Registrar clic/result impression solo tras definir privacidad y analytics; distinguir autocomplete de resultados completos.
+- Aplicar RLS a necesidades, perfiles, negocios, productos, favoritos e historial; excluir borradores, pausados, bloqueados y vencidos.

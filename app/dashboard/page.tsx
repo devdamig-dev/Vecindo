@@ -30,6 +30,8 @@ export default function DashboardPage() {
         </div>
       </section>
 
+      <section className="rounded-3xl border border-rose-100 bg-rose-50/60 p-4"><div className="mb-3"><p className="text-xs font-bold uppercase tracking-wider text-rose-700">Actividad reciente</p><h2 className="text-xl font-bold">Novedades cerca tuyo</h2></div><ZoneUpdatesCarousel zoneId="berazategui" /></section>
+
       <section aria-labelledby="active-needs">
         <div className="mb-3 flex items-end justify-between gap-3">
           <div><p className="text-xs font-bold uppercase tracking-wider text-amber-700">Demanda cerca tuyo</p><h2 id="active-needs" className="text-xl font-bold">Necesidades activas</h2></div>
@@ -53,8 +55,6 @@ export default function DashboardPage() {
       <section className="rounded-3xl bg-slate-900 p-5 text-white">
         <div className="flex items-start gap-3"><div className="rounded-2xl bg-white/10 p-3"><BellRing className="h-5 w-5 text-amber-300" /></div><div><h2 className="font-bold">VEZI conecta oferta y demanda</h2><p className="mt-1 text-sm leading-relaxed text-slate-300">Cuando publiques, prestadores, comercios o emprendimientos compatibles podrán responderte. Las respuestas y notificaciones estarán en un mismo lugar.</p></div></div>
       </section>
-
-      <section><div className="mb-3"><p className="text-xs font-bold uppercase tracking-wider text-rose-700">Capa de comunidad</p><h2 className="text-xl font-bold">Novedades cerca tuyo</h2></div><ZoneUpdatesCarousel zoneId="berazategui" /></section>
     </div>
   )
 }

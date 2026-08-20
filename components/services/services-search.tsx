@@ -1,8 +1,7 @@
 "use client"
 
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Search, SlidersHorizontal } from "lucide-react"
+import { Search, X } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 
 const categories = [
@@ -38,18 +37,11 @@ export function ServicesSearch({
           <Input
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
-            placeholder="Buscar servicios, habilidades o personas..."
-            className="h-10 pl-9 focus:border-sky-500 focus:ring-2 focus:ring-sky-500"
+            placeholder="Buscar profesión, servicio, nombre o especialidad"
+            className="h-12 rounded-2xl pl-9 pr-10 focus:border-sky-500 focus:ring-2 focus:ring-sky-500"
           />
+          {query && <button onClick={() => onQueryChange("")} aria-label="Limpiar búsqueda" className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full hover:bg-sky-50"><X className="h-4 w-4" /></button>}
         </div>
-        <Button
-          variant="outline"
-          size="icon"
-          className="h-10 w-10 shrink-0 border-sky-200 hover:bg-sky-100 hover:text-sky-700"
-          aria-label="Filtros"
-        >
-          <SlidersHorizontal className="h-4 w-4" />
-        </Button>
       </div>
 
       <div className="flex flex-wrap gap-2">
