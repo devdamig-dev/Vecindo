@@ -5,7 +5,9 @@ import Link from "next/link"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { commerces } from "@/lib/commerces-data"
-import { Sparkles, MapPin, Star, ChevronRight, MessageSquare, Package } from "lucide-react"
+import { Sparkles, MapPin, Star, ChevronRight, MessageSquare, Package, Search, X } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { normalizeSearch } from "@/lib/search"
 
 const emprendimientos = commerces.filter((c) => c.type === "entrepreneur")
 
@@ -33,10 +35,13 @@ function getCategory(cat: string): CategoryFilter {
 
 export default function EmprendimientosPage() {
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>("todas")
+  const [query, setQuery] = useState("")
 
-  const filtered = emprendimientos.filter(
-    (e) => activeCategory === "todas" || getCategory(e.category) === activeCategory,
-  )
+  const filtered = emprendimientos.filter((e) => {
+    const categoryMatches = activeCategory === "todas" || getCategory(e.category) === activeCategory
+    const haystack = normalizeSearch([e.name, e.category, e.description, ...e.products.flatMap((p) => [p.name, p.shortDescription])].join(" "))
+    return categoryMatches && haystack.includes(normalizeSearch(query))
+  })
 
   return (
     <div className="flex max-w-full flex-col gap-6">
@@ -66,6 +71,12 @@ export default function EmprendimientosPage() {
             <p className="text-[11px] leading-snug text-emerald-800">{item.text}</p>
           </div>
         ))}
+      </div>
+
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-emerald-600" />
+        <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Buscar emprendimiento o producto" className="h-12 rounded-2xl border-emerald-200 pl-10 pr-10 focus-visible:ring-emerald-500" />
+        {query && <button onClick={() => setQuery("")} aria-label="Limpiar búsqueda" className="absolute right-2 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full hover:bg-emerald-50"><X className="h-4 w-4" /></button>}
       </div>
 
       {/* Filtros */}
@@ -143,7 +154,7 @@ export default function EmprendimientosPage() {
 
       {filtered.length === 0 && (
         <p className="py-12 text-center text-sm text-muted-foreground">
-          No hay emprendimientos en esta categoría todavía.
+          No encontramos emprendimientos o productos con esos filtros.
         </p>
       )}
     </div>
