@@ -7,7 +7,6 @@ import {
   canAccessMyBusiness,
   canAccessServiceManagement,
   hasServiceProviderActivity,
-  isResident,
 } from "@/lib/commercial";
 import { ActivityChips } from "@/components/activity/activity-chips";
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Bookmark,
   Clock,
-  Package,
   Store,
   Sparkles,
   MapPin,
@@ -234,7 +232,7 @@ export default function ComerciosPageContent({
   return (
     <div className="space-y-6">
       <BackButton
-        label={isCommerceTab ? "Volver al espacio comercial" : "Volver al espacio comercial"}
+        label={isCommerceTab ? "Volver a Comercios" : "Volver a Emprendimientos"}
       />
 
       <div
@@ -344,14 +342,6 @@ export default function ComerciosPageContent({
             </div>
           ) : (
             <div className="flex flex-wrap gap-2">
-              {isResident(auth) && (
-                <Button asChild>
-                  <Link href="/dashboard/marketplace">
-                    <Package className="mr-2 h-4 w-4" />
-                    Publicar en Mercado
-                  </Link>
-                </Button>
-              )}
               <Button asChild variant="outline">
                 <Link href="/dashboard/services/new">Ofrecer servicios</Link>
               </Button>

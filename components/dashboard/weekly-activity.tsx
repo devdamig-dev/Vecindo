@@ -2,7 +2,7 @@ import { ShoppingBag, MessageCircle, Star, Sparkles } from "lucide-react"
 
 const weeklyStats = [
   {
-    label: "Publicaciones en mercado",
+    label: "Necesidades activas",
     value: 14,
     icon: ShoppingBag,
   },

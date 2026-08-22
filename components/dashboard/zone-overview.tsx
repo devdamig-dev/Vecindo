@@ -3,7 +3,7 @@ import { Users, Wrench, ShoppingBag, PawPrint } from "lucide-react"
 const stats = [
   { label: "Residentes", value: "342", icon: Users },
   { label: "Profesionales activos", value: "87", icon: Wrench },
-  { label: "Publicaciones en mercado", value: "23", icon: ShoppingBag },
+  { label: "Necesidades activas", value: "23", icon: ShoppingBag },
   { label: "Alertas de mascotas", value: "3", icon: PawPrint },
 ]
 

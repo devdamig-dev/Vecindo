@@ -678,15 +678,6 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                         </button>
                       </div>
 
-                      <Button
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleAddToCart(product.id);
-                        }}
-                      >
-                        Agregar
-                      </Button>
                     </div>
 
                     <div className="mt-4 flex flex-wrap gap-2">
@@ -700,7 +691,7 @@ export default function CommerceProfileClient({ commerce, activeTab }: Props) {
                         }}
                       >
                         <ShoppingCart className="h-3.5 w-3.5" />
-                        Agregar al carrito{qty ? ` (${qty})` : ""}
+                        Agregar al pedido{qty ? ` (${qty})` : ""}
                       </Button>
 
                       <Button

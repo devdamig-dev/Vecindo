@@ -1,46 +1,25 @@
-import { Building2, Megaphone, Radio, Search, Sparkles, Store, Wrench } from "lucide-react"
+import { ArrowDown, ArrowRight, HandHelping, Megaphone, MessageCircle, Search, Sparkles, Store, Wrench } from "lucide-react"
 
-const sections = [
-  {
-    id: "como-funciona",
-    title: "Cómo funciona VEZI",
-    description: "Entrás, elegís tu zona, descubrís movimiento real y activás lo que necesitás: servicios, comercio o sponsor.",
-    bullets: ["Un perfil único", "Flujo social y comercial integrado", "Experiencia rápida mobile-first"],
-    icon: Sparkles,
-  },
-  {
-    id: "servicios",
-    title: "Servicios cerca tuyo",
-    description: "El corazón de VEZI: perfiles activos, reputación visible y disponibilidad real para resolver cosas hoy.",
-    bullets: ["Categorías útiles", "Reseñas y confianza", "Actividad reciente en cada perfil"],
-    icon: Wrench,
-  },
-  { id: "comercios", title: "Comercios y emprendimientos", description: "Showrooms modernos para descubrir productos, promos e historias de negocios locales.", bullets: ["Catálogo visual", "Promociones destacadas", "Descubrimiento por cercanía"], icon: Store },
-  { id: "movimiento", title: "Movimiento local en tiempo real", description: "Novedades de la zona, pedidos, recomendaciones y actividad comercial en un mismo flujo vivo.", bullets: ["Feed dinámico", "Historias locales", "Señales de actividad"], icon: Radio },
-  { id: "publicaciones", title: "Publicaciones e historias", description: "Personas y marcas comparten actualizaciones que generan conversación y descubrimiento continuo.", bullets: ["Formato social", "Contenido útil", "Interacción contextual"], icon: Megaphone },
-  { id: "perfiles", title: "Perfiles comerciales", description: "Cada negocio muestra identidad, servicios, métricas y pruebas sociales para convertir más cerca suyo.", bullets: ["Showroom + métricas", "Promos activas", "Posicionamiento local"], icon: Building2 },
-  { id: "sponsor", title: "Sponsors destacados", description: "Sponsor es un upgrade premium para ganar prioridad visual en Home, Cerca tuyo, Stories y feed comercial.", bullets: ["Boost aspiracional", "Mayor alcance", "Prioridad de exposición"], icon: Search },
+const examples = ["Busco electricista para hoy", "¿Dónde consigo alimento balanceado?", "¿Quién hace tortas personalizadas?", "Necesito arreglar una pérdida de agua"]
+const modules = [
+  { title: "Necesito", copy: "Publicá lo que buscás.", icon: HandHelping, style: "bg-orange-500 text-white" },
+  { title: "Servicios", copy: "Encontrá personas y profesionales.", icon: Wrench, style: "bg-sky-600 text-white" },
+  { title: "Comercios", copy: "Descubrí negocios cerca tuyo.", icon: Store, style: "bg-violet-600 text-white" },
+  { title: "Emprendimientos", copy: "Conocé marcas y productores locales.", icon: Sparkles, style: "bg-emerald-600 text-white" },
 ]
 
 export function LandingFeatures() {
-  return (
-    <section id="features" className="py-20 md:py-28">
-      <div className="mx-auto max-w-6xl space-y-5 px-6">
-        {sections.map((section) => (
-          <article key={section.id} id={section.id} className="rounded-3xl border border-white/60 bg-gradient-to-br from-white via-sky-50/60 to-violet-50/60 p-6 shadow-[0_16px_45px_rgba(14,116,144,0.1)]">
-            <div className="flex items-start gap-4">
-              <div className="mt-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg"><section.icon className="h-5 w-5" /></div>
-              <div>
-                <h3 className="text-xl font-semibold text-foreground">{section.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{section.description}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {section.bullets.map((bullet) => <span key={bullet} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">{bullet}</span>)}
-                </div>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  )
+  return <>
+    <section aria-labelledby="examples-title" className="bg-[#f7f2e8] py-16 sm:py-20"><div className="mx-auto max-w-6xl px-5 sm:px-6"><p className="text-xs font-bold uppercase tracking-[.16em] text-orange-700">Situaciones de todos los días</p><h2 id="examples-title" className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">¿Para qué usarías VEZI?</h2><div className="mt-8 flex snap-x gap-3 overflow-x-auto pb-3 sm:grid sm:grid-cols-2 sm:overflow-visible lg:grid-cols-4">{examples.map(example => <div key={example} className="min-w-[78vw] snap-start rounded-3xl border border-orange-200 bg-white p-5 text-lg font-bold shadow-sm sm:min-w-0">“{example}”</div>)}</div></div></section>
+
+    <section id="como-funciona" className="bg-gradient-to-br from-orange-500 via-rose-500 to-fuchsia-600 py-20 text-white"><div className="mx-auto max-w-6xl px-5 sm:px-6"><p className="text-xs font-bold uppercase tracking-[.16em] text-white/70">Necesidad → matching local → solución</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">¿Cómo funciona VEZI?</h2><div className="mt-10 grid gap-4 md:grid-cols-3">{[[Search,"1. Decí qué necesitás","Buscalo o publicalo con tus palabras."],[ArrowRight,"2. VEZI organiza las opciones","Encontrá servicios, comercios y emprendimientos relevantes de tu zona."],[MessageCircle,"3. Conectate","Consultá, respondé o coordiná directamente."]].map(([Icon,title,copy], index) => { const I=Icon as typeof Search; return <article key={String(title)} className="relative rounded-3xl bg-white p-6 text-slate-950 shadow-lg"><I className="h-6 w-6 text-rose-600"/><h3 className="mt-8 text-xl font-black">{String(title)}</h3><p className="mt-2 text-sm leading-relaxed text-slate-600">{String(copy)}</p>{index<2 && <ArrowDown className="absolute -bottom-3 left-1/2 z-10 h-6 w-6 rounded-full bg-slate-950 p-1 text-white md:-right-3 md:bottom-auto md:left-auto md:top-1/2 md:-translate-y-1/2 md:-rotate-90"/>}</article>})}</div></div></section>
+
+    <section id="universos" className="bg-[#f7f2e8] py-20"><div className="mx-auto max-w-6xl px-5 sm:px-6"><p className="text-xs font-bold uppercase tracking-[.16em] text-orange-700">Los cuatro universos VEZI</p><h2 className="mt-3 max-w-2xl text-3xl font-black tracking-tight sm:text-5xl">Una necesidad puede tener distintas respuestas cerca.</h2><div className="mt-10 grid gap-4 sm:grid-cols-2">{modules.map(({title,copy,icon:Icon,style}) => <article key={title} className={`min-h-56 rounded-[2rem] p-6 ${style}`}><Icon className="h-7 w-7"/><h3 className="mt-16 text-2xl font-black">{title}</h3><p className="mt-2 text-white/80">{copy}</p></article>)}</div></div></section>
+
+    <section id="producto" className="bg-slate-950 py-20 text-white"><div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-6 lg:grid-cols-2 lg:items-center"><div><p className="text-xs font-bold uppercase tracking-[.16em] text-orange-400">Necesidades, en el centro</p><h2 className="mt-3 text-3xl font-black sm:text-5xl">¿Qué necesitás hoy?</h2><p className="mt-4 max-w-lg leading-relaxed text-slate-300">Escribilo como lo dirías. VEZI reúne el movimiento local relacionado para que puedas encontrar una respuesta y contactar directo.</p><div className="mt-7 flex flex-wrap gap-2">{["electricista","profesora de matemática","torta de cumpleaños","ferretería","arreglo de aire"].map(x=><span key={x} className="rounded-full border border-white/20 px-3 py-2 text-xs">{x}</span>)}</div></div><div className="rounded-[2rem] bg-white p-4 text-slate-950 sm:p-6"><div className="rounded-2xl border-2 border-orange-400 p-4 text-sm font-medium">Necesito profesora particular de matemática</div><div className="mx-auto h-8 w-px bg-slate-300"/><div className="space-y-2"><div className="rounded-2xl bg-sky-50 p-4"><b className="text-sky-800">Servicio</b><p className="mt-1 text-sm">Laura — Profesora de matemática · 1,2 km</p></div><div className="rounded-2xl bg-orange-50 p-4"><b className="text-orange-800">Necesidad relacionada</b><p className="mt-1 text-sm">Otra familia busca apoyo escolar.</p></div><div className="rounded-2xl bg-violet-50 p-4"><b className="text-violet-800">Comercio relacionado</b><p className="mt-1 text-sm">Librería y materiales educativos.</p></div></div></div></div></section>
+
+    <section id="para-ofrecer" className="bg-[#f7f2e8] py-20"><div className="mx-auto max-w-6xl px-5 sm:px-6"><h2 className="max-w-3xl text-3xl font-black tracking-tight sm:text-5xl">Si ofrecés algo, VEZI también trabaja para vos.</h2><div className="mt-10 grid gap-4 md:grid-cols-3">{[[Wrench,"Prestadores","Mostrá tu servicio y recibí oportunidades de personas que necesitan lo que hacés."],[Store,"Comercios","Hacé visible tu negocio, catálogo y promociones para personas de tu zona."],[Sparkles,"Emprendimientos","Mostrá lo que producís y conectate con clientes cercanos."]].map(([Icon,title,copy])=>{const I=Icon as typeof Wrench;return <article key={String(title)} className="rounded-3xl border border-slate-200 bg-white p-6"><I className="h-6 w-6 text-fuchsia-600"/><h3 className="mt-8 text-xl font-black">{String(title)}</h3><p className="mt-2 text-sm leading-relaxed text-slate-600">{String(copy)}</p></article>})}</div></div></section>
+
+    <section id="novedades" className="bg-emerald-600 py-20 text-white"><div className="mx-auto grid max-w-6xl gap-10 px-5 sm:px-6 lg:grid-cols-[.8fr_1.2fr] lg:items-center"><div><Megaphone className="h-8 w-8"/><h2 className="mt-6 text-3xl font-black sm:text-5xl">Tu zona también tiene movimiento.</h2><p className="mt-4 text-emerald-50">Promociones, aperturas, recomendaciones, publicaciones y actividad reciente hacen que VEZI se sienta vivo.</p></div><div className="grid gap-3 sm:grid-cols-2"><div className="rounded-3xl bg-white p-5 text-slate-950"><b>Nuevo cerca</b><p className="mt-2 text-sm text-slate-600">Abrió una cafetería de especialidad en Hudson.</p></div><div className="rounded-3xl bg-emerald-950 p-5"><b>Promo local</b><p className="mt-2 text-sm text-emerald-100">Panadería artesanal compartió una novedad.</p></div></div></div></section>
+  </>
 }

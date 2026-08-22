@@ -3,7 +3,7 @@
 import { useAuth } from "@/lib/auth-context"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
-import { Search, ShoppingBag, PawPrint, Megaphone } from "lucide-react"
+import { Search, Store, PawPrint, Megaphone } from "lucide-react"
 
 export function CapabilitiesToggles() {
   const { auth, setCapability } = useAuth()
@@ -27,9 +27,9 @@ export function CapabilitiesToggles() {
     },
     {
       key: "canSell" as const,
-      label: "Vender en Mercado",
+      label: "Gestionar catálogos",
       description: "Publica productos y crea un perfil de negocio con catálogo.",
-      icon: ShoppingBag,
+      icon: Store,
       visible: isResident,
     },
     {

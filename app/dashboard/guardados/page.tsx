@@ -15,7 +15,6 @@ import {
   Megaphone,
   Package,
   Search,
-  ShoppingBag,
   Sparkles,
   Store,
   Trash2,
@@ -28,11 +27,7 @@ const typeLabels: Record<
   commerce: { label: "Comercio", plural: "Comercios guardados", icon: Store },
   product: { label: "Producto", plural: "Productos guardados", icon: Package },
   service: { label: "Servicio", plural: "Servicios guardados", icon: Search },
-  marketplace_item: {
-    label: "Legado",
-    plural: "Guardados de una versión anterior",
-    icon: ShoppingBag,
-  },
+  marketplace_item: { label: "Producto", plural: "Productos guardados", icon: Package },
   commercial_post: {
     label: "Comercial",
     plural: "Publicaciones comerciales",
@@ -50,7 +45,6 @@ const sectionOrder: SavedItemType[] = [
   "commerce",
   "product",
   "service",
-  "marketplace_item",
   "commercial_post",
   "ayuda",
   "zone_update",
@@ -61,7 +55,6 @@ const filterOptions: { key: SavedItemType | "all"; label: string }[] = [
   { key: "commerce", label: "Comercios" },
   { key: "product", label: "Productos" },
   { key: "service", label: "Servicios" },
-  { key: "marketplace_item", label: "Anteriores" },
   { key: "commercial_post", label: "Comercial" },
   { key: "ayuda", label: "Ayuda" },
 ];
@@ -70,7 +63,7 @@ const fallbackActivity: Record<SavedItemType, string> = {
   commerce: "Popular esta semana",
   product: "Volvió a estar disponible",
   service: "Responde rápido",
-  marketplace_item: "Guardado por 3 personas",
+  marketplace_item: "Guardado anteriormente",
   commercial_post: "Promo activa en tu zona",
   ayuda: "3 vecinos también lo siguen",
   zone_update: "Actualizado recientemente",
@@ -149,10 +142,11 @@ export default function GuardadosPage() {
     "all",
   );
 
+  const currentSavedItems = auth.savedItems.filter((item) => item.type !== "marketplace_item");
   const visibleItems =
     activeFilter === "all"
-      ? auth.savedItems
-      : auth.savedItems.filter((item) => item.type === activeFilter);
+      ? currentSavedItems
+      : currentSavedItems.filter((item) => item.type === activeFilter);
 
   const groupedItems = useMemo(() => {
     return sectionOrder
@@ -163,7 +157,7 @@ export default function GuardadosPage() {
       .filter((section) => section.items.length > 0);
   }, [visibleItems]);
 
-  const hasSavedItems = auth.savedItems.length > 0;
+  const hasSavedItems = currentSavedItems.length > 0;
 
   return (
     <div className="flex flex-col gap-6">
