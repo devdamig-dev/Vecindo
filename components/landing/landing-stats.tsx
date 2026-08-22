@@ -1,21 +1,12 @@
-export function LandingStats() {
-  const stats = [
-    { value: "+18k", label: "interacciones locales por mes" },
-    { value: "+2.7k", label: "servicios y perfiles activos" },
-    { value: "420", label: "comercios y emprendimientos" },
-    { value: "4.9", label: "valoración promedio" },
-  ]
+import { MapPin, MessageCircle, PenLine, Store } from "lucide-react"
 
-  return (
-    <section className="border-y border-white/60 bg-gradient-to-r from-sky-50/70 via-white to-violet-50/70">
-      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-px bg-white/40 md:grid-cols-4">
-        {stats.map((stat) => (
-          <div key={stat.label} className="flex flex-col items-center gap-1 bg-transparent px-6 py-10 text-center">
-            <span className="text-3xl font-bold tracking-tight text-foreground">{stat.value}</span>
-            <span className="text-sm text-muted-foreground">{stat.label}</span>
-          </div>
-        ))}
-      </div>
-    </section>
-  )
+const benefits = [
+  { icon: MapPin, title: "Encontrá cerca", copy: "Resultados relevantes de tu zona." },
+  { icon: PenLine, title: "Publicá en segundos", copy: "Contá lo que necesitás con tus palabras." },
+  { icon: MessageCircle, title: "Contactá directo", copy: "Coordiná sin intermediarios innecesarios." },
+  { icon: Store, title: "Apoyá lo local", copy: "Servicios, comercios y emprendimientos de tu comunidad." },
+]
+
+export function LandingStats() {
+  return <section id="beneficios" className="bg-slate-950 text-white"><div className="mx-auto grid max-w-6xl gap-px bg-white/15 sm:grid-cols-2 lg:grid-cols-4">{benefits.map(({ icon: Icon, title, copy }) => <article key={title} className="bg-slate-950 p-6 sm:p-8"><Icon className="h-5 w-5 text-orange-400" /><h2 className="mt-5 font-bold">{title}</h2><p className="mt-1 text-sm leading-relaxed text-slate-400">{copy}</p></article>)}</div></section>
 }

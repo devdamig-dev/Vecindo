@@ -188,7 +188,7 @@ export function getHomeActivitySignals(role: HomeActivityRole): ActivityInsight[
 export function getZonalActivitySignals(role: HomeActivityRole): ZonalActivitySignal[] {
   const common: ZonalActivitySignal[] = [
     { eyebrow: "Tendencia", label: "Hogar y reparaciones", description: "Electricidad, plomería y jardinería concentraron más búsquedas locales.", tone: "sky" },
-    { eyebrow: "Búsqueda frecuente", label: "Mesa, bici y herramientas", description: "Productos usados con retiro simple se están moviendo mejor esta semana.", tone: "emerald" },
+    { eyebrow: "Búsqueda frecuente", label: "Hogar y herramientas", description: "Comercios y servicios para resolver arreglos reciben más consultas esta semana.", tone: "emerald" },
     { eyebrow: "Nuevo cerca", label: "Emprendimiento en Hudson", description: "Un catálogo de pastelería se sumó a la zona con pedidos coordinados.", tone: "violet" },
   ]
 

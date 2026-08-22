@@ -16,13 +16,16 @@ type ActivityChipsProps = {
   limit?: number
   className?: string
   chipClassName?: string
+  /** Las señales se reemplazarán por agregados de eventos del backend. */
+  demo?: boolean
 }
 
-export function ActivityChips({ insights, limit, className, chipClassName }: ActivityChipsProps) {
+export function ActivityChips({ insights, limit, className, chipClassName, demo = true }: ActivityChipsProps) {
   const visibleInsights = typeof limit === "number" ? insights.slice(0, limit) : insights
 
   return (
-    <div className={cn("flex flex-wrap gap-1.5", className)}>
+    <div className={cn("flex flex-wrap items-center gap-1.5", className)} aria-label={demo ? "Señales de actividad de demostración" : "Señales de actividad"}>
+      {demo && <span className="text-[9px] font-bold uppercase tracking-wide text-muted-foreground" title="Datos de demostración">Demo</span>}
       {visibleInsights.map((insight) => (
         <Badge
           key={insight.label}

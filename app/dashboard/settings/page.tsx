@@ -90,7 +90,7 @@ export default function SettingsPage() {
       </div>
       {capabilities.canSell && (
         <div className="rounded-xl border border-border bg-card p-5">
-          <div className="mb-2 flex items-center gap-2"><Store className="h-5 w-5 text-primary" /><h2 className="text-lg font-semibold text-foreground">Espacio comercial</h2></div>
+          <div className="mb-2 flex items-center gap-2"><Store className="h-5 w-5 text-primary" /><h2 className="text-lg font-semibold text-foreground">Perfiles de comercio y emprendimiento</h2></div>
           <p className="mb-4 text-sm text-muted-foreground">Gestioná tu perfil comercial y los productos que mostrás dentro de VEZI.</p>
           <BusinessProfileEditor />
         </div>
