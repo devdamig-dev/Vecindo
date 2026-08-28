@@ -8,5 +8,5 @@ const benefits = [
 ]
 
 export function LandingStats() {
-  return <section id="beneficios" className="bg-slate-950 text-white"><div className="mx-auto grid max-w-6xl gap-px bg-white/15 sm:grid-cols-2 lg:grid-cols-4">{benefits.map(({ icon: Icon, title, copy }) => <article key={title} className="bg-slate-950 p-6 sm:p-8"><Icon className="h-5 w-5 text-orange-400" /><h2 className="mt-5 font-bold">{title}</h2><p className="mt-1 text-sm leading-relaxed text-slate-400">{copy}</p></article>)}</div></section>
+  return <section id="beneficios" className="bg-vezi-ink text-white"><div className="mx-auto grid max-w-6xl gap-px bg-white/15 sm:grid-cols-2 lg:grid-cols-4">{benefits.map(({ icon: Icon, title, copy }) => <article key={title} className="bg-vezi-ink p-6 sm:p-8"><Icon className="h-5 w-5 text-[#FF7C87]" /><h2 className="mt-5 font-bold">{title}</h2><p className="mt-1 text-sm leading-relaxed text-slate-400">{copy}</p></article>)}</div></section>
 }

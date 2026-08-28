@@ -7,10 +7,11 @@ export const metadata: Metadata = {
   title: "VEZI — Encontrá, pedí y resolvé cerca tuyo",
   description:
     "Buscá, descubrí, pedí, contactá o publicá lo que necesitás en tu red local.",
+  icons: { icon: "/icon.svg", apple: "/apple-icon.png" },
 }
 
 export const viewport: Viewport = {
-  themeColor: "#0f172a",
+  themeColor: "#0E1321",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
