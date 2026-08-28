@@ -4,13 +4,13 @@ import "./globals.css"
 import { Providers } from "@/components/providers"
 
 export const metadata: Metadata = {
-  title: "VEZI — Lo que necesitás, cerca tuyo",
+  title: "VEZI — Encontrá, pedí y resolvé cerca tuyo",
   description:
-    "Conectá lo que necesitás con servicios, comercios y emprendimientos cerca tuyo.",
+    "Buscá, descubrí, pedí, contactá o publicá lo que necesitás en tu red local.",
 }
 
 export const viewport: Viewport = {
-  themeColor: "#2d6a4f",
+  themeColor: "#0f172a",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
