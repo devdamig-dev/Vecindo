@@ -10,21 +10,21 @@ const activeNeeds = [
 ]
 
 const discovery = [
-  { title: "Servicios que pueden ayudarte", copy: "Profesionales y personas que ofrecen soluciones cerca tuyo.", href: "/dashboard/servicios", icon: Wrench, className: "bg-sky-600 text-white", cta: "Explorar servicios" },
-  { title: "Comercios de la zona", copy: "Negocios con local, catálogo y contacto directo.", href: "/dashboard/comercios", icon: Store, className: "bg-violet-600 text-white", cta: "Ver comercios" },
-  { title: "Emprendimientos locales", copy: "Proyectos independientes, productos y propuestas con identidad propia.", href: "/dashboard/emprendimientos", icon: Sparkles, className: "bg-emerald-600 text-white", cta: "Descubrir emprendimientos" },
+  { title: "Servicios que pueden ayudarte", copy: "Profesionales y personas que ofrecen soluciones cerca tuyo.", href: "/dashboard/servicios", icon: Wrench, className: "border border-blue-200 bg-white text-foreground", cta: "Explorar servicios" },
+  { title: "Comercios de la zona", copy: "Negocios con local, catálogo y contacto directo.", href: "/dashboard/comercios", icon: Store, className: "border border-teal-200 bg-white text-foreground", cta: "Ver comercios" },
+  { title: "Emprendimientos locales", copy: "Proyectos independientes, productos y propuestas con identidad propia.", href: "/dashboard/emprendimientos", icon: Sparkles, className: "border border-violet-200 bg-white text-foreground", cta: "Descubrir emprendimientos" },
 ]
 
 export default function DashboardPage() {
   return (
     <div className="flex min-w-0 flex-col gap-7 overflow-x-hidden pb-4">
-      <section className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-amber-500 via-orange-500 to-rose-600 px-5 py-7 text-white shadow-[0_24px_55px_rgba(234,88,12,.28)] sm:px-7">
+      <section className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#FF5A67] to-[#D81BFF] px-5 py-7 text-white shadow-[0_12px_32px_rgba(14,19,33,.12)] sm:px-7">
         <div className="absolute -right-12 -top-12 h-44 w-44 rounded-full border-[28px] border-white/10" />
         <div className="relative max-w-xl">
           <p className="text-xs font-bold uppercase tracking-[.16em] text-amber-100">Necesidades · la demanda activa VEZI</p>
           <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl">¿Qué necesitás?</h1>
           <p className="mt-2 max-w-md text-sm leading-relaxed text-white/90 sm:text-base">Contalo en pocas palabras. VEZI usa la categoría y tu ubicación para acercarlo a quienes pueden resolverlo.</p>
-          <Link href="/dashboard/necesito/nueva" className="mt-5 inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-bold text-orange-700 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
+          <Link href="/dashboard/necesito/nueva" className="mt-5 inline-flex min-h-12 items-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-bold text-[#b42336] shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl">
             <HandHelping className="h-5 w-5" /> Publicar una necesidad <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -49,10 +49,10 @@ export default function DashboardPage() {
       </section>
 
       <section className="grid gap-3 sm:grid-cols-3" aria-label="Oferta para resolver necesidades">
-        {discovery.map(({ icon: Icon, ...item }) => <Link key={item.href} href={item.href} className={`group flex min-h-52 flex-col rounded-3xl p-5 shadow-lg transition hover:-translate-y-1 ${item.className}`}><Icon className="h-7 w-7" /><h2 className="mt-7 text-lg font-bold leading-tight">{item.title}</h2><p className="mt-2 text-sm leading-relaxed text-white/80">{item.copy}</p><span className="mt-auto pt-4 text-xs font-bold">{item.cta} <ArrowRight className="inline h-3.5 w-3.5 transition group-hover:translate-x-1" /></span></Link>)}
+        {discovery.map(({ icon: Icon, ...item }) => <Link key={item.href} href={item.href} className={`group flex min-h-52 flex-col rounded-3xl p-5 shadow-lg transition hover:-translate-y-1 ${item.className}`}><Icon className="h-7 w-7" /><h2 className="mt-7 text-lg font-bold leading-tight">{item.title}</h2><p className="mt-2 text-sm leading-relaxed text-muted-foreground">{item.copy}</p><span className="mt-auto pt-4 text-xs font-bold">{item.cta} <ArrowRight className="inline h-3.5 w-3.5 transition group-hover:translate-x-1" /></span></Link>)}
       </section>
 
-      <section className="rounded-3xl bg-slate-900 p-5 text-white">
+      <section className="rounded-3xl bg-vezi-ink p-5 text-white">
         <div className="flex items-start gap-3"><div className="rounded-2xl bg-white/10 p-3"><BellRing className="h-5 w-5 text-amber-300" /></div><div><h2 className="font-bold">VEZI conecta oferta y demanda</h2><p className="mt-1 text-sm leading-relaxed text-slate-300">Cuando publiques, prestadores, comercios o emprendimientos compatibles podrán responderte. Las respuestas y notificaciones estarán en un mismo lugar.</p></div></div>
       </section>
     </div>

@@ -7,7 +7,7 @@ import { LandingFooter } from "@/components/landing/landing-footer"
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen overflow-x-hidden bg-[#f7f2e8]">
+    <div className="min-h-screen overflow-x-hidden bg-background">
       <LandingNav />
       <main>
         <LandingHero />
